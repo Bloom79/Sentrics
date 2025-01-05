@@ -11,15 +11,64 @@ import {
   Legend,
 } from "recharts";
 
-// Mock data - replace with actual API call
+// Updated mock data to include split consumption
 const data = [
-  { time: "00:00", solar: 0, wind: 50, consumption: 200, storage: -150 },
-  { time: "04:00", solar: 0, wind: 150, consumption: 180, storage: -30 },
-  { time: "08:00", solar: 200, wind: 100, consumption: 250, storage: 50 },
-  { time: "12:00", solar: 400, wind: 80, consumption: 300, storage: 180 },
-  { time: "16:00", solar: 300, wind: 120, consumption: 280, storage: 140 },
-  { time: "20:00", solar: 50, wind: 180, consumption: 220, storage: 10 },
-  { time: "23:59", solar: 0, wind: 140, consumption: 190, storage: -50 },
+  { 
+    time: "00:00", 
+    solar: 0, 
+    wind: 50, 
+    directConsumption: 120,
+    gridDelivery: 80,
+    storage: -150 
+  },
+  { 
+    time: "04:00", 
+    solar: 0, 
+    wind: 150, 
+    directConsumption: 100,
+    gridDelivery: 80,
+    storage: -30 
+  },
+  { 
+    time: "08:00", 
+    solar: 200, 
+    wind: 100, 
+    directConsumption: 150,
+    gridDelivery: 100,
+    storage: 50 
+  },
+  { 
+    time: "12:00", 
+    solar: 400, 
+    wind: 80, 
+    directConsumption: 180,
+    gridDelivery: 120,
+    storage: 180 
+  },
+  { 
+    time: "16:00", 
+    solar: 300, 
+    wind: 120, 
+    directConsumption: 160,
+    gridDelivery: 120,
+    storage: 140 
+  },
+  { 
+    time: "20:00", 
+    solar: 50, 
+    wind: 180, 
+    directConsumption: 140,
+    gridDelivery: 80,
+    storage: 10 
+  },
+  { 
+    time: "23:59", 
+    solar: 0, 
+    wind: 140, 
+    directConsumption: 110,
+    gridDelivery: 80,
+    storage: -50 
+  },
 ];
 
 interface SiteProductionGraphProps {
@@ -57,10 +106,18 @@ const SiteProductionGraph = ({ siteId }: SiteProductionGraphProps) => {
               />
               <Line
                 type="monotone"
-                dataKey="consumption"
+                dataKey="directConsumption"
                 stroke="#ef4444"
                 strokeWidth={2}
-                name="Consumption"
+                name="Direct Consumption"
+              />
+              <Line
+                type="monotone"
+                dataKey="gridDelivery"
+                stroke="#dc2626"
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                name="Grid Delivery (Terna)"
               />
               <Line
                 type="monotone"

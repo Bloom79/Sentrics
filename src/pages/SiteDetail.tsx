@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Battery, Cloud, Wind } from "lucide-react";
+import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
@@ -60,7 +60,7 @@ const SiteDetail = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Solar Production</CardTitle>
@@ -87,6 +87,32 @@ const SiteDetail = () => {
             </div>
             <p className="text-xs text-muted-foreground">
               of {site.energySources.find(s => s.type === "eolic")?.capacity} kW capacity
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Direct Consumption</CardTitle>
+            <Zap className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">160 kW</div>
+            <p className="text-xs text-muted-foreground">
+              Local usage
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Grid Delivery</CardTitle>
+            <Share2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">120 kW</div>
+            <p className="text-xs text-muted-foreground">
+              To Terna
             </p>
           </CardContent>
         </Card>
