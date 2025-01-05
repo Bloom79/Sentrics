@@ -6,9 +6,10 @@ import { StorageUnit } from "@/types/site";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Mock data - replace with actual data later
-const mockStorageUnits: StorageUnit[] = [
+const mockStorageUnits: (StorageUnit & { siteName: string })[] = [
   {
     id: "1",
+    siteName: "Milano Nord",
     capacity: 100,
     currentCharge: 85,
     status: "charging",
@@ -17,11 +18,21 @@ const mockStorageUnits: StorageUnit[] = [
   },
   {
     id: "2",
+    siteName: "Roma Est",
     capacity: 150,
     currentCharge: 120,
     status: "discharging",
     health: 95,
     temperature: 27,
+  },
+  {
+    id: "3",
+    siteName: "Milano Nord",
+    capacity: 120,
+    currentCharge: 90,
+    status: "charging",
+    health: 97,
+    temperature: 26,
   },
 ];
 
@@ -42,7 +53,10 @@ const BatteryStatus = () => {
             {storageUnits.map((unit) => (
               <div key={unit.id} className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Storage Unit {unit.id}</span>
+                  <div>
+                    <span className="text-sm font-medium">Storage Unit {unit.id}</span>
+                    <p className="text-xs text-muted-foreground">{unit.siteName}</p>
+                  </div>
                   <span className="text-sm text-muted-foreground">
                     {(unit.currentCharge / unit.capacity * 100).toFixed(0)}%
                   </span>
