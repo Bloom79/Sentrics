@@ -1,7 +1,9 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import MapComponent from "./MapComponent";
+import dynamic from 'react-dynamic-import';
+
+const MapComponent = React.lazy(() => import("./MapComponent"));
 
 const SiteMap = () => {
   const { t } = useLanguage();
@@ -14,7 +16,9 @@ const SiteMap = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <MapComponent />
+        <React.Suspense fallback={<div>Loading map...</div>}>
+          <MapComponent />
+        </React.Suspense>
       </CardContent>
     </Card>
   );
