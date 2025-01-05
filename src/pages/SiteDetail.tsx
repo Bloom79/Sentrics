@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import { Battery, Cloud, Wind } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
+import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
 import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
 import SiteServiceLinks from "@/components/SiteAnalysis/SiteServiceLinks";
 import { Site } from "@/types/site";
 
-// Mock data - replace with actual API call later
 const mockSite: Site = {
   id: "1",
   name: "North Site",
@@ -38,7 +38,7 @@ const mockSite: Site = {
 
 const SiteDetail = () => {
   const { siteId } = useParams();
-  const site = mockSite; // Replace with actual data fetching
+  const site = mockSite;
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -107,41 +107,10 @@ const SiteDetail = () => {
         </Card>
       </div>
 
-      {/* Graphs Section */}
+      {/* Graphs and Storage Status Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SiteProductionGraph siteId={site.id} />
-        <Card>
-          <CardHeader>
-            <CardTitle>Grid Connection Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium">Frequency</p>
-                  <p className="text-2xl font-bold">{site.gridConnection.frequency} Hz</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Voltage</p>
-                  <p className="text-2xl font-bold">{site.gridConnection.voltage} V</p>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm font-medium">Congestion Level</p>
-                <div className="flex items-center mt-1">
-                  <div className={`w-3 h-3 rounded-full mr-2 ${
-                    site.gridConnection.congestionLevel === "Low" 
-                      ? "bg-green-500" 
-                      : site.gridConnection.congestionLevel === "Medium"
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
-                  }`} />
-                  <p className="text-sm">{site.gridConnection.congestionLevel}</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <StorageStatus siteId={site.id} />
       </div>
 
       {/* Service Links and Alerts */}

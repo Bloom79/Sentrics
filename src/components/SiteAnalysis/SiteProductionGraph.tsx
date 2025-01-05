@@ -13,13 +13,13 @@ import {
 
 // Mock data - replace with actual API call
 const data = [
-  { time: "00:00", solar: 0, wind: 50, consumption: 200 },
-  { time: "04:00", solar: 0, wind: 150, consumption: 180 },
-  { time: "08:00", solar: 200, wind: 100, consumption: 250 },
-  { time: "12:00", solar: 400, wind: 80, consumption: 300 },
-  { time: "16:00", solar: 300, wind: 120, consumption: 280 },
-  { time: "20:00", solar: 50, wind: 180, consumption: 220 },
-  { time: "23:59", solar: 0, wind: 140, consumption: 190 },
+  { time: "00:00", solar: 0, wind: 50, consumption: 200, storage: -150 },
+  { time: "04:00", solar: 0, wind: 150, consumption: 180, storage: -30 },
+  { time: "08:00", solar: 200, wind: 100, consumption: 250, storage: 50 },
+  { time: "12:00", solar: 400, wind: 80, consumption: 300, storage: 180 },
+  { time: "16:00", solar: 300, wind: 120, consumption: 280, storage: 140 },
+  { time: "20:00", solar: 50, wind: 180, consumption: 220, storage: 10 },
+  { time: "23:59", solar: 0, wind: 140, consumption: 190, storage: -50 },
 ];
 
 interface SiteProductionGraphProps {
@@ -30,7 +30,7 @@ const SiteProductionGraph = ({ siteId }: SiteProductionGraphProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Production vs. Consumption</CardTitle>
+        <CardTitle>Production, Consumption & Storage</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">
@@ -61,6 +61,13 @@ const SiteProductionGraph = ({ siteId }: SiteProductionGraphProps) => {
                 stroke="#ef4444"
                 strokeWidth={2}
                 name="Consumption"
+              />
+              <Line
+                type="monotone"
+                dataKey="storage"
+                stroke="#10b981"
+                strokeWidth={2}
+                name="Storage"
               />
             </LineChart>
           </ResponsiveContainer>
