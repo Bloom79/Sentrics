@@ -12,8 +12,9 @@ const siteLocations = [
 
 // Create the map component
 const MapComponent = () => {
-  const { MapContainer, TileLayer, Marker, Popup } = require('react-leaflet');
-  const L = require('leaflet');
+  // Import react-leaflet components
+  const { MapContainer, TileLayer, Marker, Popup } = await import('react-leaflet');
+  const L = await import('leaflet');
   const defaultCenter: [number, number] = [42.8333, 12.8333]; // Center of Italy
 
   // Fix the icon issue
@@ -54,12 +55,16 @@ const MapComponent = () => {
 };
 
 // Lazy load the map component
-const LazyMap = lazy(() => new Promise((resolve) => {
-  // Only load the component on the client side
-  if (typeof window !== 'undefined') {
-    resolve({ default: MapComponent });
-  }
-}));
+const LazyMap = lazy(() => 
+  Promise.resolve({
+    default: () => {
+      if (typeof window === 'undefined') {
+        return null;
+      }
+      return <MapComponent />;
+    }
+  })
+);
 
 const SiteMap = () => {
   const { t } = useLanguage();
