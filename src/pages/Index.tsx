@@ -1,15 +1,25 @@
 import React from "react";
 import { Activity, Battery, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
 import BatteryStatus from "@/components/Dashboard/BatteryStatus";
 import GridStatus from "@/components/Dashboard/GridStatus";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-8">SentricS Dashboard</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">SentricS Dashboard</h1>
+          <Link to="/grid-analysis">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Activity className="w-4 h-4" />
+              Grid Analysis
+            </Button>
+          </Link>
+        </div>
         
         <div className="grid gap-6">
           <EnergyFlow />
