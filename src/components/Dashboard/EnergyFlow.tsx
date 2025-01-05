@@ -1,5 +1,5 @@
 import React from "react";
-import { Battery, Zap, Home, Sun, Wind } from "lucide-react";
+import { Battery, Zap, Home, Sun, Wind, Factory, Grid } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const EnergyFlow = () => {
@@ -7,7 +7,8 @@ const EnergyFlow = () => {
   const totalSolarOutput = 630; // kW
   const totalWindOutput = 400; // kW
   const totalStorageLevel = 85; // percentage
-  const totalLoad = 820; // kW
+  const directConsumption = 520; // kW
+  const gridDelivery = 300; // kW
 
   return (
     <Card className="p-6">
@@ -52,12 +53,23 @@ const EnergyFlow = () => {
           </div>
         </div>
         
-        <div className="flex flex-col items-center">
-          <div className="p-4 bg-primary rounded-full">
-            <Home className="w-8 h-8 text-white" />
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex gap-4">
+            <div className="flex flex-col items-center">
+              <div className="p-4 bg-primary rounded-full">
+                <Factory className="w-8 h-8 text-white" />
+              </div>
+              <span className="mt-2 text-sm font-medium">Direct Consumption</span>
+              <span className="text-xs text-muted-foreground">{directConsumption} kW</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="p-4 bg-red-500 rounded-full">
+                <Grid className="w-8 h-8 text-white" />
+              </div>
+              <span className="mt-2 text-sm font-medium">Grid Delivery</span>
+              <span className="text-xs text-muted-foreground">{gridDelivery} kW</span>
+            </div>
           </div>
-          <span className="mt-2 text-sm font-medium">Load</span>
-          <span className="text-xs text-muted-foreground">{totalLoad} kW</span>
         </div>
       </div>
     </Card>
