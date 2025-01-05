@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React from "react";
+import dynamic from 'next/dynamic';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 // Mock data for site locations
@@ -12,22 +11,57 @@ const siteLocations = [
   { id: "3", name: "Torino Sud", position: [45.0703, 7.6869] },
 ];
 
-const SiteMap = () => {
-  const { t } = useLanguage();
+// Dynamically import the Map component to avoid SSR issues
+const MapComponent = () => {
+  const { MapContainer, TileLayer, Marker, Popup } = require('react-leaflet');
+  const L = require('leaflet');
   const defaultCenter: [number, number] = [42.8333, 12.8333]; // Center of Italy
 
-  useEffect(() => {
-    // Fix the icon issue
-    const L2 = L as any;
-    delete L2.Icon.Default.prototype._getIconUrl;
-    L2.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    });
-  }, []);
+  // Fix the icon issue
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  });
 
-  if (typeof window === 'undefined') return null;
+  return (
+    <div className="h-[400px] w-full relative">
+      <MapContainer
+        center={defaultCenter}
+        zoom={6}
+        scrollWheelZoom={false}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {siteLocations.map((site) => (
+          <Marker 
+            key={site.id} 
+            position={site.position as [number, number]}
+          >
+            <Popup>
+              <div className="p-2">
+                <h3 className="font-semibold">{site.name}</h3>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
+  );
+};
+
+// Dynamically load the map component only on client side
+const Map = dynamic(() => Promise.resolve(MapComponent), {
+  ssr: false,
+  loading: () => <div className="h-[400px] w-full bg-gray-100 animate-pulse" />
+});
+
+const SiteMap = () => {
+  const { t } = useLanguage();
 
   return (
     <Card className="col-span-1">
@@ -37,31 +71,7 @@ const SiteMap = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[400px] w-full relative">
-          <MapContainer
-            center={defaultCenter}
-            zoom={6}
-            scrollWheelZoom={false}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {siteLocations.map((site) => (
-              <Marker 
-                key={site.id} 
-                position={site.position as [number, number]}
-              >
-                <Popup>
-                  <div className="p-2">
-                    <h3 className="font-semibold">{site.name}</h3>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div>
+        <Map />
       </CardContent>
     </Card>
   );
