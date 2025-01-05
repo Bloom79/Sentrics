@@ -89,7 +89,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <DetailedMetrics selectedSiteId={selectedSiteIds.length > 0 ? selectedSiteIds[0] : null} />
+            <DetailedMetrics selectedSiteId={selectedSiteIds.length === 1 ? selectedSiteIds[0] : null} />
           </div>
         </div>
       </div>
