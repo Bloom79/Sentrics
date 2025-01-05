@@ -13,9 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
 const Index = () => {
   const { language, setLanguage, t } = useLanguage();
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -79,11 +81,11 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <SiteMonitoring />
+            <SiteMonitoring onSiteSelect={setSelectedSiteId} />
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <DetailedMetrics />
+            <DetailedMetrics selectedSiteId={selectedSiteId} />
           </div>
         </div>
       </div>

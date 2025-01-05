@@ -45,9 +45,19 @@ const mockSites: SiteStatus[] = [
   },
 ];
 
-const SiteMonitoring = () => {
+interface SiteMonitoringProps {
+  onSiteSelect: (siteId: string | null) => void;
+}
+
+const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
   const { t } = useLanguage();
   const [selectedSite, setSelectedSite] = useState<string | null>(null);
+
+  const handleSiteClick = (siteId: string) => {
+    const newSelectedSite = selectedSite === siteId ? null : siteId;
+    setSelectedSite(newSelectedSite);
+    onSiteSelect(newSelectedSite);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -69,7 +79,7 @@ const SiteMonitoring = () => {
                       ? "border-primary bg-primary/5"
                       : "border-gray-100 dark:border-gray-700 hover:border-primary/50"
                   }`}
-                  onClick={() => setSelectedSite(site.id)}
+                  onClick={() => handleSiteClick(site.id)}
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-primary">{site.name}</h3>
