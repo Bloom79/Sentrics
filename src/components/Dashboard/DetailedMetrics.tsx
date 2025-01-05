@@ -60,19 +60,19 @@ const DetailedMetrics = () => {
           config={{
             solarProduction: {
               theme: {
-                light: "#F97316", // Bright Orange for Solar
+                light: "#F97316",
                 dark: "#F97316",
               },
             },
             windProduction: {
               theme: {
-                light: "#0EA5E9", // Ocean Blue for Wind
+                light: "#0EA5E9",
                 dark: "#0EA5E9",
               },
             },
             consumption: {
               theme: {
-                light: "#8B5CF6", // Vivid Purple for Consumption
+                light: "#8B5CF6",
                 dark: "#8B5CF6",
               },
             },
@@ -113,19 +113,19 @@ const DetailedMetrics = () => {
               <Bar 
                 dataKey="solarProduction" 
                 name="solarProduction" 
-                fill="currentColor"
+                fill="#F97316"
                 radius={[4, 4, 0, 0]}
               />
               <Bar 
                 dataKey="windProduction" 
                 name="windProduction" 
-                fill="currentColor"
+                fill="#0EA5E9"
                 radius={[4, 4, 0, 0]}
               />
               <Bar 
                 dataKey="consumption" 
                 name="consumption" 
-                fill="currentColor"
+                fill="#8B5CF6"
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>
