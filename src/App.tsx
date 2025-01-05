@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import GridAnalysis from "./pages/GridAnalysis";
+import SiteDetail from "./pages/SiteDetail";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/grid-analysis" element={<GridAnalysis />} />
+            <Route path="/site/:siteId" element={<SiteDetail />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

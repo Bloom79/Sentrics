@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Home, Sun, Wind, Battery, Activity } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useNavigate } from "react-router-dom";
 import BatteryStatus from "./BatteryStatus";
 
 type SiteStatus = {
@@ -51,6 +52,7 @@ interface SiteMonitoringProps {
 
 const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [selectedSites, setSelectedSites] = useState<string[]>([]);
 
   const handleSiteClick = (siteId: string) => {
@@ -64,6 +66,10 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
     
     setSelectedSites(newSelectedSites);
     onSiteSelect(newSelectedSites.length > 0 ? newSelectedSites : null);
+  };
+
+  const handleSiteDoubleClick = (siteId: string) => {
+    navigate(`/site/${siteId}`);
   };
 
   return (
@@ -87,6 +93,7 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
                       : "border-gray-100 dark:border-gray-700 hover:border-primary/50"
                   }`}
                   onClick={() => handleSiteClick(site.id)}
+                  onDoubleClick={() => handleSiteDoubleClick(site.id)}
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-primary">{site.name}</h3>
