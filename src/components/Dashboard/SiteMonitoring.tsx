@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Home, Sun, Wind, Battery, Activity } from "lucide-react";
+import { Home, Sun, Wind, Battery, Activity, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import BatteryStatus from "./BatteryStatus";
 
 type SiteStatus = {
@@ -136,6 +137,18 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
                       </div>
                     </div>
                   </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full mt-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/site/${site.id}`);
+                    }}
+                  >
+                    View Details
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
                 </div>
               ))}
             </div>
