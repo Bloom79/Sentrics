@@ -61,12 +61,37 @@ interface DetailedMetricsProps {
 const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId }) => {
   const { t } = useLanguage();
   
-  const data = selectedSiteId ? mockData[selectedSiteId] || [] : [];
+  // If no site is selected, aggregate data from all sites
+  const data = selectedSiteId 
+    ? mockData[selectedSiteId] || []
+    : Object.values(mockData).reduce((acc, siteData) => {
+        return siteData.map((monthData, index) => {
+          const existingMonth = acc[index] || {
+            month: monthData.month,
+            solarProduction: 0,
+            windProduction: 0,
+            consumption: 0,
+            efficiency: 0
+          };
+          
+          return {
+            month: monthData.month,
+            solarProduction: existingMonth.solarProduction + monthData.solarProduction,
+            windProduction: existingMonth.windProduction + monthData.windProduction,
+            consumption: existingMonth.consumption + monthData.consumption,
+            efficiency: Math.round((existingMonth.efficiency + monthData.efficiency) / 2) // Average efficiency
+          };
+        });
+      }, []);
 
   return (
     <Card className="col-span-2">
       <CardHeader>
-        <CardTitle>{t('dashboard.productionVsConsumption')}</CardTitle>
+        <CardTitle>
+          {selectedSiteId 
+            ? `${t('dashboard.productionVsConsumption')} - ${t('dashboard.site')} ${selectedSiteId}`
+            : t('dashboard.productionVsConsumption')} - ${t('dashboard.allSites')}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {data.length > 0 ? (
@@ -148,7 +173,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId }) => 
           </ChartContainer>
         ) : (
           <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-            {t('dashboard.selectSite')}
+            {t('dashboard.noDataAvailable')}
           </div>
         )}
       </CardContent>
