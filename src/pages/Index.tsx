@@ -17,7 +17,11 @@ import { useState } from "react";
 
 const Index = () => {
   const { language, setLanguage, t } = useLanguage();
-  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
+  const [selectedSiteIds, setSelectedSiteIds] = useState<string[]>([]);
+
+  const handleSiteSelect = (siteIds: string[] | null) => {
+    setSelectedSiteIds(siteIds || []);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -81,11 +85,11 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <SiteMonitoring onSiteSelect={setSelectedSiteId} />
+            <SiteMonitoring onSiteSelect={handleSiteSelect} />
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <DetailedMetrics selectedSiteId={selectedSiteId} />
+            <DetailedMetrics selectedSiteId={selectedSiteIds.length > 0 ? selectedSiteIds[0] : null} />
           </div>
         </div>
       </div>
