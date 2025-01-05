@@ -1,5 +1,4 @@
-import React from "react";
-import dynamic from 'next/dynamic';
+import React, { Suspense, lazy } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import 'leaflet/dist/leaflet.css';
@@ -11,7 +10,7 @@ const siteLocations = [
   { id: "3", name: "Torino Sud", position: [45.0703, 7.6869] },
 ];
 
-// Dynamically import the Map component to avoid SSR issues
+// Create the map component
 const MapComponent = () => {
   const { MapContainer, TileLayer, Marker, Popup } = require('react-leaflet');
   const L = require('leaflet');
@@ -54,11 +53,13 @@ const MapComponent = () => {
   );
 };
 
-// Dynamically load the map component only on client side
-const Map = dynamic(() => Promise.resolve(MapComponent), {
-  ssr: false,
-  loading: () => <div className="h-[400px] w-full bg-gray-100 animate-pulse" />
-});
+// Lazy load the map component
+const LazyMap = lazy(() => new Promise((resolve) => {
+  // Only load the component on the client side
+  if (typeof window !== 'undefined') {
+    resolve({ default: MapComponent });
+  }
+}));
 
 const SiteMap = () => {
   const { t } = useLanguage();
@@ -71,7 +72,11 @@ const SiteMap = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Map />
+        <Suspense fallback={
+          <div className="h-[400px] w-full bg-gray-100 animate-pulse" />
+        }>
+          <LazyMap />
+        </Suspense>
       </CardContent>
     </Card>
   );
