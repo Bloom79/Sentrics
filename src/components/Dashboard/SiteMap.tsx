@@ -1,20 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/leaflet.css';
-
-// Fix for default marker icons in React Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: iconRetina,
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-});
 
 // Mock data for site locations
 const siteLocations = [
@@ -27,6 +16,19 @@ const SiteMap = () => {
   const { t } = useLanguage();
   const defaultCenter: [number, number] = [42.8333, 12.8333]; // Center of Italy
 
+  useEffect(() => {
+    // Fix the icon issue
+    const L2 = L as any;
+    delete L2.Icon.Default.prototype._getIconUrl;
+    L2.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    });
+  }, []);
+
+  if (typeof window === 'undefined') return null;
+
   return (
     <Card className="col-span-1">
       <CardHeader>
@@ -35,16 +37,16 @@ const SiteMap = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div style={{ height: "400px", width: "100%" }}>
+        <div className="h-[400px] w-full relative">
           <MapContainer
-            style={{ height: "100%", width: "100%" }}
             center={defaultCenter}
             zoom={6}
             scrollWheelZoom={false}
+            style={{ height: "100%", width: "100%" }}
           >
             <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {siteLocations.map((site) => (
               <Marker 
