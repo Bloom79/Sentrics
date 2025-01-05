@@ -4,6 +4,7 @@ import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
 import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
+import SiteMap from "@/components/Dashboard/SiteMap";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -84,8 +85,9 @@ const Index = () => {
             <EnergyFlow />
           </div>
           
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <SiteMonitoring onSiteSelect={handleSiteSelect} />
+            <SiteMap />
           </div>
           
           <div className="grid grid-cols-1 gap-4">
