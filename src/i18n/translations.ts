@@ -1,6 +1,16 @@
 export const translations = {
   en: {
     dashboard: {
+      subtitle: "Renewable Energy Management Platform",
+      gridAnalysis: "Grid Analysis",
+      totalProduction: "Total Production",
+      productionChange: "+20.1% from last hour",
+      solarProduction: "Solar Production",
+      solarArrays: "12 active arrays",
+      windProduction: "Wind Production",
+      windTurbines: "8 active turbines",
+      storageEfficiency: "Storage Efficiency",
+      optimalPerformance: "Optimal performance",
       siteStatus: "Sites Status",
       congestionLevel: "Congestion Level",
       gridFrequency: "Grid Frequency",
@@ -19,6 +29,16 @@ export const translations = {
   },
   it: {
     dashboard: {
+      subtitle: "Piattaforma di Gestione Energie Rinnovabili",
+      gridAnalysis: "Analisi Rete",
+      totalProduction: "Produzione Totale",
+      productionChange: "+20.1% dall'ultima ora",
+      solarProduction: "Produzione Solare",
+      solarArrays: "12 array attivi",
+      windProduction: "Produzione Eolica",
+      windTurbines: "8 turbine attive",
+      storageEfficiency: "Efficienza Storage",
+      optimalPerformance: "Performance ottimale",
       siteStatus: "Stato dei Siti",
       congestionLevel: "Livello di Congestione",
       gridFrequency: "Frequenza di Rete",

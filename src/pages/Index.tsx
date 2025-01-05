@@ -8,8 +8,18 @@ import GridStatus from "@/components/Dashboard/GridStatus";
 import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Index = () => {
+  const { language, setLanguage, t } = useLanguage();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container py-8">
@@ -17,14 +27,23 @@ const Index = () => {
           <div>
             <h1 className="text-3xl font-bold text-primary">SentricS Dashboard</h1>
             <p className="text-muted-foreground mt-2">
-              Piattaforma di Gestione Energie Rinnovabili
+              {t('dashboard.subtitle')}
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="it">Italiano</SelectItem>
+              </SelectContent>
+            </Select>
             <Link to="/grid-analysis">
               <Button variant="outline" className="flex items-center gap-2">
                 <Activity className="w-4 h-4" />
-                Analisi Rete
+                {t('dashboard.gridAnalysis')}
               </Button>
             </Link>
           </div>
@@ -33,27 +52,27 @@ const Index = () => {
         <div className="grid gap-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <MetricsCard
-              title="Produzione Totale"
+              title={t('dashboard.totalProduction')}
               value="1,030 kW"
-              description="+20.1% dall'ultima ora"
+              description={t('dashboard.productionChange')}
               icon={<Zap className="w-4 h-4 text-accent" />}
             />
             <MetricsCard
-              title="Produzione Solare"
+              title={t('dashboard.solarProduction')}
               value="630 kW"
-              description="12 array attivi"
+              description={t('dashboard.solarArrays')}
               icon={<Sun className="w-4 h-4 text-yellow-500" />}
             />
             <MetricsCard
-              title="Produzione Eolica"
+              title={t('dashboard.windProduction')}
               value="400 kW"
-              description="8 turbine attive"
+              description={t('dashboard.windTurbines')}
               icon={<Wind className="w-4 h-4 text-blue-500" />}
             />
             <MetricsCard
-              title="Efficienza Storage"
+              title={t('dashboard.storageEfficiency')}
               value="92%"
-              description="Performance ottimale"
+              description={t('dashboard.optimalPerformance')}
               icon={<Battery className="w-4 h-4 text-secondary" />}
             />
           </div>
