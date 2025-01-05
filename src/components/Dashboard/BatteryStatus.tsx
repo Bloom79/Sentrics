@@ -40,14 +40,14 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
 ];
 
 interface BatteryStatusProps {
-  selectedSiteId: string | null;
+  selectedSiteId: string[] | null;
 }
 
 const BatteryStatus: React.FC<BatteryStatusProps> = ({ selectedSiteId }) => {
   const { t } = useLanguage();
   
   const filteredStorageUnits = selectedSiteId
-    ? mockStorageUnits.filter(unit => unit.siteId === selectedSiteId)
+    ? mockStorageUnits.filter(unit => selectedSiteId.includes(unit.siteId))
     : mockStorageUnits;
 
   return (

@@ -46,17 +46,24 @@ const mockSites: SiteStatus[] = [
 ];
 
 interface SiteMonitoringProps {
-  onSiteSelect: (siteId: string | null) => void;
+  onSiteSelect: (siteIds: string[] | null) => void;
 }
 
 const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
   const { t } = useLanguage();
-  const [selectedSite, setSelectedSite] = useState<string | null>(null);
+  const [selectedSites, setSelectedSites] = useState<string[]>([]);
 
   const handleSiteClick = (siteId: string) => {
-    const newSelectedSite = selectedSite === siteId ? null : siteId;
-    setSelectedSite(newSelectedSite);
-    onSiteSelect(newSelectedSite);
+    let newSelectedSites: string[];
+    
+    if (selectedSites.includes(siteId)) {
+      newSelectedSites = selectedSites.filter(id => id !== siteId);
+    } else {
+      newSelectedSites = [...selectedSites, siteId];
+    }
+    
+    setSelectedSites(newSelectedSites);
+    onSiteSelect(newSelectedSites.length > 0 ? newSelectedSites : null);
   };
 
   return (
@@ -75,7 +82,7 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
                 <div
                   key={site.id}
                   className={`rounded-lg border p-4 space-y-4 cursor-pointer transition-colors ${
-                    selectedSite === site.id
+                    selectedSites.includes(site.id)
                       ? "border-primary bg-primary/5"
                       : "border-gray-100 dark:border-gray-700 hover:border-primary/50"
                   }`}
@@ -129,7 +136,7 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
         </CardContent>
       </Card>
       
-      <BatteryStatus selectedSiteId={selectedSite} />
+      <BatteryStatus selectedSiteId={selectedSites} />
     </div>
   );
 };
