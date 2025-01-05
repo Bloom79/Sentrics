@@ -1,17 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 // Fix Leaflet's default icon issue
-const icon = L.icon({
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
 // Mock data for site locations
@@ -22,8 +19,15 @@ const siteLocations = [
 ];
 
 const MapComponent = () => {
+  useEffect(() => {
+    // Force a resize event after the map is loaded
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
+  }, []);
+
   return (
-    <div className="h-[400px] w-full">
+    <div className="h-[400px] w-full relative">
       <MapContainer
         center={[42.8333, 12.8333]}
         zoom={6}
@@ -38,7 +42,6 @@ const MapComponent = () => {
           <Marker 
             key={site.id} 
             position={site.position as [number, number]}
-            icon={icon}
           >
             <Popup>
               <div className="p-2">
