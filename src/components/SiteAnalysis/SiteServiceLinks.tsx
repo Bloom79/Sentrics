@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings, BarChart2, Tool, Calendar } from "lucide-react";
+import { Settings, BarChart2, Wrench, Calendar } from "lucide-react";
 
 const serviceLinks = [
   {
@@ -14,7 +14,7 @@ const serviceLinks = [
     description: "View detailed performance analytics",
   },
   {
-    icon: Tool,
+    icon: Wrench,
     title: "Diagnostics",
     description: "Run system diagnostics and tests",
   },
