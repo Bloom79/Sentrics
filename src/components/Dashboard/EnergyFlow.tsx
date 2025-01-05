@@ -1,5 +1,6 @@
 import React from "react";
 import { Battery, Zap, Home, Sun, Wind } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 const EnergyFlow = () => {
   // Mock data - replace with actual aggregated data later
@@ -9,8 +10,8 @@ const EnergyFlow = () => {
   const totalLoad = 820; // kW
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-xl font-semibold mb-4">Energy Flow</h2>
+    <Card className="p-6">
+      <h2 className="text-xl font-semibold mb-6">Energy Flow Overview</h2>
       <div className="relative flex items-center justify-between">
         <div className="flex flex-col items-center gap-4">
           <div className="flex gap-4">
@@ -19,14 +20,14 @@ const EnergyFlow = () => {
                 <Sun className="w-8 h-8 text-white" />
               </div>
               <span className="mt-2 text-sm font-medium">Solar</span>
-              <span className="text-xs text-gray-500">{totalSolarOutput} kW</span>
+              <span className="text-xs text-muted-foreground">{totalSolarOutput} kW</span>
             </div>
             <div className="flex flex-col items-center">
               <div className="p-4 bg-blue-500 rounded-full">
                 <Wind className="w-8 h-8 text-white" />
               </div>
               <span className="mt-2 text-sm font-medium">Wind</span>
-              <span className="text-xs text-gray-500">{totalWindOutput} kW</span>
+              <span className="text-xs text-muted-foreground">{totalWindOutput} kW</span>
             </div>
           </div>
         </div>
@@ -42,7 +43,7 @@ const EnergyFlow = () => {
             <Battery className="w-8 h-8 text-white" />
           </div>
           <span className="mt-2 text-sm font-medium">Storage</span>
-          <span className="text-xs text-gray-500">{totalStorageLevel}%</span>
+          <span className="text-xs text-muted-foreground">{totalStorageLevel}%</span>
         </div>
         
         <div className="flex-1 mx-4 h-2 bg-gray-100 relative">
@@ -56,10 +57,10 @@ const EnergyFlow = () => {
             <Home className="w-8 h-8 text-white" />
           </div>
           <span className="mt-2 text-sm font-medium">Load</span>
-          <span className="text-xs text-gray-500">{totalLoad} kW</span>
+          <span className="text-xs text-muted-foreground">{totalLoad} kW</span>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 
