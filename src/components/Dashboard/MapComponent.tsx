@@ -3,12 +3,15 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Fix Leaflet's icon paths
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
+// Fix Leaflet's default icon issue
+const icon = L.icon({
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
   iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
 });
 
 // Mock data for site locations
@@ -20,9 +23,9 @@ const siteLocations = [
 
 const MapComponent = () => {
   return (
-    <div className="h-[400px] w-full relative">
+    <div className="h-[400px] w-full">
       <MapContainer
-        center={[42.8333, 12.8333]} // Center of Italy
+        center={[42.8333, 12.8333]}
         zoom={6}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
@@ -35,6 +38,7 @@ const MapComponent = () => {
           <Marker 
             key={site.id} 
             position={site.position as [number, number]}
+            icon={icon}
           >
             <Popup>
               <div className="p-2">
