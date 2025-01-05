@@ -5,6 +5,8 @@ import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
 import BatteryStatus from "@/components/Dashboard/BatteryStatus";
 import GridStatus from "@/components/Dashboard/GridStatus";
+import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
+import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -15,14 +17,14 @@ const Index = () => {
           <div>
             <h1 className="text-3xl font-bold text-primary">SentricS Dashboard</h1>
             <p className="text-muted-foreground mt-2">
-              Renewable Energy Management Platform
+              Piattaforma di Gestione Energie Rinnovabili
             </p>
           </div>
           <div className="flex gap-4">
             <Link to="/grid-analysis">
               <Button variant="outline" className="flex items-center gap-2">
                 <Activity className="w-4 h-4" />
-                Grid Analysis
+                Analisi Rete
               </Button>
             </Link>
           </div>
@@ -31,33 +33,38 @@ const Index = () => {
         <div className="grid gap-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <MetricsCard
-              title="Total Production"
+              title="Produzione Totale"
               value="1,030 kW"
-              description="+20.1% from last hour"
+              description="+20.1% dall'ultima ora"
               icon={<Zap className="w-4 h-4 text-accent" />}
             />
             <MetricsCard
-              title="Solar Generation"
+              title="Produzione Solare"
               value="630 kW"
-              description="12 active arrays"
+              description="12 array attivi"
               icon={<Sun className="w-4 h-4 text-yellow-500" />}
             />
             <MetricsCard
-              title="Wind Generation"
+              title="Produzione Eolica"
               value="400 kW"
-              description="8 active turbines"
+              description="8 turbine attive"
               icon={<Wind className="w-4 h-4 text-blue-500" />}
             />
             <MetricsCard
-              title="Storage Efficiency"
+              title="Efficienza Storage"
               value="92%"
-              description="Optimal performance"
+              description="Performance ottimale"
               icon={<Battery className="w-4 h-4 text-secondary" />}
             />
           </div>
 
           <div className="grid grid-cols-1 gap-4">
             <EnergyFlow />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <SiteMonitoring />
+            <DetailedMetrics />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
