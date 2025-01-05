@@ -1,10 +1,7 @@
-import React from "react";
 import { Activity, Battery, Zap, Sun, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
-import BatteryStatus from "@/components/Dashboard/BatteryStatus";
-import GridStatus from "@/components/Dashboard/GridStatus";
 import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import { Button } from "@/components/ui/button";
@@ -81,14 +78,12 @@ const Index = () => {
             <EnergyFlow />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <SiteMonitoring />
-            <DetailedMetrics />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <BatteryStatus />
-            <GridStatus />
+          <div className="grid grid-cols-1 gap-4">
+            <DetailedMetrics />
           </div>
         </div>
       </div>
