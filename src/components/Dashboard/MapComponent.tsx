@@ -21,6 +21,30 @@ const siteLocations = [
   { id: "3", name: "Torino Sud", position: [45.0703, 7.6869] },
 ];
 
+const MapContent = () => {
+  return (
+    <>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {siteLocations.map((site) => (
+        <Marker 
+          key={site.id} 
+          position={site.position as [number, number]}
+          icon={icon}
+        >
+          <Popup>
+            <div className="p-2">
+              <h3 className="font-semibold">{site.name}</h3>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+};
+
 const MapComponent = () => {
   return (
     <div className="h-[400px] w-full">
@@ -30,23 +54,7 @@ const MapComponent = () => {
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {siteLocations.map((site) => (
-          <Marker 
-            key={site.id} 
-            position={site.position as [number, number]}
-            icon={icon}
-          >
-            <Popup>
-              <div className="p-2">
-                <h3 className="font-semibold">{site.name}</h3>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        <MapContent />
       </MapContainer>
     </div>
   );
