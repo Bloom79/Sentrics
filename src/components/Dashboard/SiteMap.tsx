@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import 'leaflet/dist/leaflet.css';
@@ -12,18 +12,33 @@ const siteLocations = [
 
 // Create the map component
 const MapComponent = () => {
-  // Import react-leaflet components
-  const { MapContainer, TileLayer, Marker, Popup } = await import('react-leaflet');
-  const L = await import('leaflet');
+  const [MapComponents, setMapComponents] = useState<any>(null);
   const defaultCenter: [number, number] = [42.8333, 12.8333]; // Center of Italy
 
-  // Fix the icon issue
-  delete L.Icon.Default.prototype._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  });
+  useEffect(() => {
+    const loadComponents = async () => {
+      const { MapContainer, TileLayer, Marker, Popup } = await import('react-leaflet');
+      const L = await import('leaflet');
+
+      // Fix the icon issue
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      });
+
+      setMapComponents({ MapContainer, TileLayer, Marker, Popup });
+    };
+
+    loadComponents();
+  }, []);
+
+  if (!MapComponents) {
+    return <div className="h-[400px] w-full bg-gray-100 animate-pulse" />;
+  }
+
+  const { MapContainer, TileLayer, Marker, Popup } = MapComponents;
 
   return (
     <div className="h-[400px] w-full relative">
@@ -54,18 +69,6 @@ const MapComponent = () => {
   );
 };
 
-// Lazy load the map component
-const LazyMap = lazy(() => 
-  Promise.resolve({
-    default: () => {
-      if (typeof window === 'undefined') {
-        return null;
-      }
-      return <MapComponent />;
-    }
-  })
-);
-
 const SiteMap = () => {
   const { t } = useLanguage();
 
@@ -80,7 +83,7 @@ const SiteMap = () => {
         <Suspense fallback={
           <div className="h-[400px] w-full bg-gray-100 animate-pulse" />
         }>
-          <LazyMap />
+          <MapComponent />
         </Suspense>
       </CardContent>
     </Card>
