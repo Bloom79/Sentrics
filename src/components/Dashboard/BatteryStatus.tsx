@@ -80,25 +80,25 @@ const BatteryStatus: React.FC<BatteryStatusProps> = ({ selectedSiteId }) => {
                 />
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-medium">{t('dashboard.status')}</p>
+                    <p className="text-sm font-medium">Status</p>
                     <p className="text-sm text-muted-foreground capitalize">
                       {unit.status}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{t('dashboard.power')}</p>
+                    <p className="text-sm font-medium">Power</p>
                     <p className="text-sm text-muted-foreground">
                       {unit.currentCharge.toFixed(1)} kWh
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{t('dashboard.temperature')}</p>
+                    <p className="text-sm font-medium">Temperature</p>
                     <p className="text-sm text-muted-foreground">
                       {unit.temperature}°C
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{t('dashboard.health')}</p>
+                    <p className="text-sm font-medium">Health</p>
                     <p className="text-sm text-muted-foreground">{unit.health}%</p>
                   </div>
                 </div>
