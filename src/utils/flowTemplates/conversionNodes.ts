@@ -7,22 +7,16 @@ export const getConversionNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'inverter-1',
     type: 'inverter',
-    position: { x: CONVERSION_X, y: 100 },
-    style: {
-      width: 160,
-      height: 100,
-      padding: '16px'
-    },
+    position: { x: CONVERSION_X, y: 75 },
     data: {
       id: 'inverter-1',
       type: 'inverter',
       label: 'Inverter',
       specs: {
-        inputVoltage: 600,
-        outputVoltage: 400,
-        inputPower: 580,
-        outputPower: 570,
+        inputPower: 600,
+        outputPower: 580,
         efficiency: 96.7,
+        temperature: 40,
       },
       status: 'active',
       onNodeClick: () => {},
@@ -31,21 +25,16 @@ export const getConversionNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'transformer-1',
     type: 'transformer',
-    position: { x: CONVERSION_X + 200, y: 100 },
-    style: {
-      width: 160,
-      height: 100,
-      padding: '16px'
-    },
+    position: { x: CONVERSION_X + 150, y: 75 },
     data: {
       id: 'transformer-1',
       type: 'transformer',
       label: 'Transformer',
       specs: {
-        inputVoltage: 400,
-        outputVoltage: 230,
-        power: 570,
+        inputPower: 720,
+        outputPower: 230,
         efficiency: 98,
+        temperature: 55,
       },
       status: 'active',
       onNodeClick: () => {},

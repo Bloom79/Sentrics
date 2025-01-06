@@ -8,11 +8,6 @@ export const getConsumptionNodes = (): Node<FlowNodeData>[] => [
     id: 'consumer-residential',
     type: 'consumer',
     position: { x: CONSUMPTION_X, y: 0 },
-    style: {
-      width: 180,
-      height: 120,
-      padding: '16px'
-    },
     data: {
       id: 'consumer-residential',
       type: 'residential',
@@ -32,12 +27,7 @@ export const getConsumptionNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'consumer-industrial',
     type: 'consumer',
-    position: { x: CONSUMPTION_X, y: 200 },
-    style: {
-      width: 180,
-      height: 120,
-      padding: '16px'
-    },
+    position: { x: CONSUMPTION_X, y: 150 },
     data: {
       id: 'consumer-industrial',
       type: 'industrial',
@@ -57,12 +47,7 @@ export const getConsumptionNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'grid-1',
     type: 'grid',
-    position: { x: CONSUMPTION_X, y: 400 },
-    style: {
-      width: 180,
-      height: 120,
-      padding: '16px'
-    },
+    position: { x: CONSUMPTION_X, y: 300 },
     data: {
       id: 'grid-1',
       type: 'grid',
