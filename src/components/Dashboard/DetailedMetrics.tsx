@@ -1,13 +1,50 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity } from "lucide-react";
+import { Activity, ChevronDown, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { StatusIcon } from "./DetailedMetrics/StatusIcon";
 import { EnergySourceInfo } from "./DetailedMetrics/EnergySourceInfo";
 import { StorageInfo } from "./DetailedMetrics/StorageInfo";
 import { GridConnectionInfo } from "./DetailedMetrics/GridConnectionInfo";
+
+interface Plant {
+  id: string;
+  name: string;
+  type: "solar" | "wind";
+  capacity: number;
+  currentOutput: number;
+  efficiency: number;
+  status: string;
+}
+
+interface Site {
+  id: string;
+  name: string;
+  status: string;
+  lastUpdate: string;
+  dailyProduction: number;
+  monthlyProduction: number;
+  efficiency: number;
+  co2Saved: number;
+  plants: Plant[];
+  energySources: {
+    type: string;
+    output: number;
+    capacity: number;
+  }[];
+  storage: {
+    capacity: number;
+    currentCharge: number;
+  };
+  gridConnection: {
+    status: string;
+    frequency: number;
+    voltage: number;
+    congestion: string;
+  };
+}
 
 interface DetailedMetricsProps {
   selectedSiteId: string | null;
@@ -17,8 +54,8 @@ interface DetailedMetricsProps {
   selectedTimeRange: string;
 }
 
-// Mock data - replace with actual data later
-const mockSiteData = [
+// Mock data with plants
+const mockSiteData: Site[] = [
   {
     id: "1",
     name: "Milano Nord",
@@ -28,6 +65,26 @@ const mockSiteData = [
     monthlyProduction: 75000,
     efficiency: 92,
     co2Saved: 45.2,
+    plants: [
+      {
+        id: "p1",
+        name: "Solar Farm Alpha",
+        type: "solar",
+        capacity: 2000,
+        currentOutput: 1500,
+        efficiency: 90,
+        status: "online"
+      },
+      {
+        id: "p2",
+        name: "Wind Farm Beta",
+        type: "wind",
+        capacity: 1500,
+        currentOutput: 1000,
+        efficiency: 94,
+        status: "online"
+      }
+    ],
     energySources: [
       { type: "solar", output: 1500, capacity: 2000 },
       { type: "wind", output: 1000, capacity: 1500 }
@@ -77,6 +134,15 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
   selectedTimeRange 
 }) => {
   const { t } = useLanguage();
+  const [expandedSites, setExpandedSites] = React.useState<string[]>([]);
+
+  const toggleSiteExpansion = (siteId: string) => {
+    setExpandedSites(prev => 
+      prev.includes(siteId) 
+        ? prev.filter(id => id !== siteId)
+        : [...prev, siteId]
+    );
+  };
 
   const filteredSites = mockSiteData.filter(site => {
     const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -99,7 +165,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5 text-accent" />
-            Sites Overview
+            Sites & Plants Overview
           </CardTitle>
           <div className="flex items-center space-x-2">
             <Badge variant="outline">{selectedTimeRange}</Badge>
@@ -112,8 +178,9 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-8"></TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Site Name</TableHead>
+                <TableHead>Site/Plant Name</TableHead>
                 <TableHead>Energy Sources</TableHead>
                 <TableHead>Storage</TableHead>
                 <TableHead>Grid Connection</TableHead>
@@ -125,37 +192,70 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
             </TableHeader>
             <TableBody>
               {filteredSites.map((site) => (
-                <TableRow
-                  key={site.id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => onSiteSelect?.(site.id)}
-                >
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <StatusIcon status={site.status} />
-                      <span className="text-sm font-medium">
-                        {site.status.charAt(0).toUpperCase() + site.status.slice(1)}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">{site.name}</TableCell>
-                  <TableCell>
-                    <EnergySourceInfo sources={site.energySources} />
-                  </TableCell>
-                  <TableCell>
-                    <StorageInfo storage={site.storage} />
-                  </TableCell>
-                  <TableCell>
-                    <GridConnectionInfo connection={site.gridConnection} />
-                  </TableCell>
-                  <TableCell className="text-right">{site.dailyProduction.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{site.monthlyProduction.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{site.efficiency}%</TableCell>
-                  <TableCell className="text-right">{site.co2Saved.toFixed(1)}</TableCell>
-                </TableRow>
+                <React.Fragment key={site.id}>
+                  <TableRow
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => toggleSiteExpansion(site.id)}
+                  >
+                    <TableCell>
+                      {expandedSites.includes(site.id) ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <StatusIcon status={site.status} />
+                        <span className="text-sm font-medium">
+                          {site.status.charAt(0).toUpperCase() + site.status.slice(1)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium">{site.name}</TableCell>
+                    <TableCell>
+                      <EnergySourceInfo sources={site.energySources} />
+                    </TableCell>
+                    <TableCell>
+                      <StorageInfo storage={site.storage} />
+                    </TableCell>
+                    <TableCell>
+                      <GridConnectionInfo connection={site.gridConnection} />
+                    </TableCell>
+                    <TableCell className="text-right">{site.dailyProduction.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">{site.monthlyProduction.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">{site.efficiency}%</TableCell>
+                    <TableCell className="text-right">{site.co2Saved.toFixed(1)}</TableCell>
+                  </TableRow>
+                  {expandedSites.includes(site.id) && site.plants.map(plant => (
+                    <TableRow key={plant.id} className="bg-muted/30">
+                      <TableCell></TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <StatusIcon status={plant.status} />
+                          <span className="text-sm font-medium">
+                            {plant.status.charAt(0).toUpperCase() + plant.status.slice(1)}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="pl-8 font-medium text-sm text-muted-foreground">
+                        {plant.name}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{plant.type}</Badge>
+                      </TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell className="text-right">{plant.currentOutput.toLocaleString()}</TableCell>
+                      <TableCell className="text-right">-</TableCell>
+                      <TableCell className="text-right">{plant.efficiency}%</TableCell>
+                      <TableCell className="text-right">-</TableCell>
+                    </TableRow>
+                  ))}
+                </React.Fragment>
               ))}
               <TableRow className="font-semibold bg-muted/50">
-                <TableCell colSpan={5}>Total / Average</TableCell>
+                <TableCell colSpan={6}>Total / Average</TableCell>
                 <TableCell className="text-right">{totals.dailyProduction.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{totals.monthlyProduction.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{totals.efficiency.toFixed(1)}%</TableCell>
