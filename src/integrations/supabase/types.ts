@@ -11,37 +11,67 @@ export type Database = {
     Tables: {
       contracts: {
         Row: {
+          auto_renewal: boolean
+          billing_cycle: string
           consumer_id: string
           created_at: string
           end_date: string
           id: string
           minimum_purchase: number
+          off_peak_rate: number | null
+          payment_terms: number
+          peak_rate: number | null
+          penalties_for_breach: string | null
           rate: number
           start_date: string
           status: Database["public"]["Enums"]["contract_status"] | null
+          termination_notice_days: number
+          type: string
           updated_at: string
+          variable_rate_adjustment_formula: string | null
+          variable_rate_base: number | null
         }
         Insert: {
+          auto_renewal?: boolean
+          billing_cycle?: string
           consumer_id: string
           created_at?: string
           end_date: string
           id?: string
           minimum_purchase: number
+          off_peak_rate?: number | null
+          payment_terms?: number
+          peak_rate?: number | null
+          penalties_for_breach?: string | null
           rate: number
           start_date: string
           status?: Database["public"]["Enums"]["contract_status"] | null
+          termination_notice_days?: number
+          type?: string
           updated_at?: string
+          variable_rate_adjustment_formula?: string | null
+          variable_rate_base?: number | null
         }
         Update: {
+          auto_renewal?: boolean
+          billing_cycle?: string
           consumer_id?: string
           created_at?: string
           end_date?: string
           id?: string
           minimum_purchase?: number
+          off_peak_rate?: number | null
+          payment_terms?: number
+          peak_rate?: number | null
+          penalties_for_breach?: string | null
           rate?: number
           start_date?: string
           status?: Database["public"]["Enums"]["contract_status"] | null
+          termination_notice_days?: number
+          type?: string
           updated_at?: string
+          variable_rate_adjustment_formula?: string | null
+          variable_rate_base?: number | null
         }
         Relationships: [
           {
