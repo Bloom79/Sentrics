@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
+import { Consumer } from "@/types/site";
 
 const ConsumerManagement = () => {
-  const mockConsumers = [
+  const mockConsumers: Consumer[] = [
     {
       id: "1",
       name: "Industrial Park A",

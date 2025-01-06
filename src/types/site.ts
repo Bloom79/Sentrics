@@ -97,14 +97,6 @@ export type Consumer = {
   };
 };
 
-export type Site = {
-  id: string;
-  name: string;
-  location: string;
-  plants: Plant[];
-  consumers: Consumer[];
-};
-
 export type StorageUnit = {
   id: string;
   name: string;
@@ -112,4 +104,50 @@ export type StorageUnit = {
   capacity: number;
   currentCharge: number;
   status: string;
+  health: number;
+  temperature: number;
+  powerRating: number;
+  efficiency: number;
+};
+
+export type GridConnection = {
+  status: "connected" | "disconnected";
+  frequency: number;
+  voltage: number;
+  congestion: "Low" | "Medium" | "High";
+};
+
+export type EnergySource = {
+  type: "solar" | "wind";
+  output: number;
+  capacity: number;
+  currentOutput: number;
+  status: "online" | "offline" | "maintenance";
+};
+
+export type Site = {
+  id: string;
+  name: string;
+  location: string;
+  type: "solar" | "wind" | "hybrid";
+  status: "online" | "offline" | "maintenance";
+  capacity: number;
+  efficiency: number;
+  co2Saved: number;
+  dailyProduction: number;
+  monthlyProduction: number;
+  plants: Plant[];
+  consumers: Consumer[];
+  storageUnits: StorageUnit[];
+  energySources: EnergySource[];
+  storage: {
+    capacity: number;
+    currentCharge: number;
+  };
+  gridConnection: GridConnection;
+  lastUpdate?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 };
