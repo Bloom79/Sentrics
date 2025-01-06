@@ -13,6 +13,8 @@ import { getEdgeOptions } from "../FlowEdgeOptions";
 import { nodeTypes } from "./FlowNodeTypes";
 import { useReactFlow } from "@xyflow/react";
 import { FlowNodeData } from "@/types/flowComponents";
+import { Card } from "@/components/ui/card";
+import { Sun, Wind, Battery, Factory, Grid, Zap, Cable } from "lucide-react";
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -26,6 +28,54 @@ interface FlowCanvasProps {
   onNodeClick: (event: React.MouseEvent, node: Node) => void;
   isEditMode: boolean;
 }
+
+const FlowLegend = () => (
+  <Card className="absolute bottom-4 right-4 p-4 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <h4 className="text-sm font-medium mb-2">Legend</h4>
+    <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-xs">
+      <div className="flex items-center gap-2">
+        <Sun className="w-4 h-4 text-yellow-500" />
+        <span>Solar Generation</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Wind className="w-4 h-4 text-blue-500" />
+        <span>Wind Generation</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Battery className="w-4 h-4 text-green-500" />
+        <span>Energy Storage</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Factory className="w-4 h-4 text-purple-500" />
+        <span>Consumption</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Grid className="w-4 h-4 text-red-500" />
+        <span>Power Grid</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Zap className="w-4 h-4 text-orange-500" />
+        <span>Inverter</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Cable className="w-4 h-4 text-indigo-500" />
+        <span>Transformer</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-4 h-0.5 bg-green-500" />
+        <span>High Flow (>500kW)</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-4 h-0.5 bg-yellow-500" />
+        <span>Medium Flow (200-500kW)</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-4 h-0.5 bg-red-500" />
+        <span>Low Flow (<200kW)</span>
+      </div>
+    </div>
+  </Card>
+);
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
   nodes,
@@ -119,6 +169,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     >
       <Background />
       <Controls showInteractive={false} />
+      <FlowLegend />
     </ReactFlow>
   );
 };
