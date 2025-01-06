@@ -6,7 +6,7 @@ import { TimeRange, EnergyFlow } from "@/types/flowComponents";
 import TimeRangeSelector from "./TimeRangeSelector";
 import FlowChartDialog from "./FlowChartDialog";
 import FlowEdgeTooltip from "./FlowEdgeTooltip";
-import { getInitialLayout, getEdgeStyle } from "@/utils/flowLayout";
+import { getInitialLayout, getEdgeStyle, generateEdges } from "@/utils/flowLayout";
 import { useToast } from "@/components/ui/use-toast";
 
 // Import your node components
@@ -54,15 +54,21 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     };
   }, []);
 
+  const { nodes, edges } = React.useMemo(() => {
+    const layout = getInitialLayout(site.energySources.length);
+    const edges = generateEdges(layout.nodes);
+    return { nodes: layout.nodes, edges };
+  }, [site.energySources.length]);
+
   // Update flow data periodically
   useEffect(() => {
     if (timeRange === 'realtime' && !isPaused) {
       const interval = setInterval(() => {
         setFlowData(prev => {
           const newData = { ...prev };
-          Object.keys(newData).forEach(edgeId => {
-            const newFlow = generateFlowData(edgeId);
-            newData[edgeId] = [...(newData[edgeId] || []), newFlow].slice(-50);
+          edges.forEach(edge => {
+            const newFlow = generateFlowData(edge.id);
+            newData[edge.id] = [...(newData[edge.id] || []), newFlow].slice(-50);
           });
           return newData;
         });
@@ -70,40 +76,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
 
       return () => clearInterval(interval);
     }
-  }, [timeRange, isPaused, generateFlowData]);
-
-  const { nodes, edges } = React.useMemo(() => {
-    const layout = getInitialLayout(site.energySources.length);
-    
-    const edges = layout.nodes.flatMap((node, index) => {
-      const edgeConnections = [];
-      
-      // Add your edge generation logic here based on node types
-      // Example:
-      if (node.type === 'cell') {
-        edgeConnections.push({
-          id: `${node.id}-to-string`,
-          source: node.id,
-          target: `string-${Math.floor(index / 3)}`,
-          animated: true,
-          style: getEdgeStyle(250),
-          data: {
-            energyFlow: generateFlowData(`${node.id}-to-string`),
-            efficiency: 98,
-            status: 'active' as const,
-            type: 'solar' as const,
-          },
-        });
-      }
-      
-      return edgeConnections;
-    });
-
-    return {
-      nodes: layout.nodes,
-      edges,
-    };
-  }, [site.energySources.length, generateFlowData]);
+  }, [timeRange, isPaused, generateFlowData, edges]);
 
   const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
     setSelectedEdge(edge);

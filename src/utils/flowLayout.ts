@@ -1,5 +1,5 @@
 import { Node } from "@xyflow/react";
-import { FlowNodeData } from "@/types/flowComponents";
+import { FlowNodeData, ConsumerType } from "@/types/flowComponents";
 
 const HORIZONTAL_SPACING = 200;
 const VERTICAL_SPACING = 100;
@@ -23,6 +23,7 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
         type: 'cell',
         position: calculateNodePosition(0, baseY / VERTICAL_SPACING + i),
         data: {
+          id: `cell-${sourceIndex}-${i}`,
           type: 'cell',
           label: `Solar Cell ${i + 1}`,
           specs: {
@@ -39,6 +40,7 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
       type: 'string',
       position: calculateNodePosition(1, baseY / VERTICAL_SPACING + 1),
       data: {
+        id: `string-${sourceIndex}`,
         type: 'string',
         label: `String ${sourceIndex + 1}`,
         specs: {
@@ -55,10 +57,12 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     type: 'inverter',
     position: calculateNodePosition(2, 2),
     data: {
+      id: 'inverter-1',
       type: 'inverter',
       label: 'Inverter',
       specs: {
         power: 735,
+        efficiency: 98,
       },
       onNodeClick: () => {},
     },
@@ -70,6 +74,7 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     type: 'transformer',
     position: calculateNodePosition(3, 2),
     data: {
+      id: 'transformer-1',
       type: 'transformer',
       label: 'Transformer',
       specs: {
@@ -86,6 +91,7 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
       type: 'storage',
       position: calculateNodePosition(4, index * 2 + 1),
       data: {
+        id: `storage-${storageType}`,
         type: 'storage',
         label: `${storageType.charAt(0).toUpperCase() + storageType.slice(1)} Storage`,
         specs: {
@@ -103,6 +109,7 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     type: 'grid',
     position: calculateNodePosition(4, 4),
     data: {
+      id: 'grid',
       type: 'grid',
       label: 'Power Grid',
       specs: {
@@ -116,9 +123,10 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
   ['residential', 'industrial', 'commercial'].forEach((type, index) => {
     nodes.push({
       id: `consumer-${type}`,
-      type: type as ConsumerType,
+      type: 'consumer',
       position: calculateNodePosition(6, index * 2 + 1),
       data: {
+        id: `consumer-${type}`,
         type: type as ConsumerType,
         label: `${type.charAt(0).toUpperCase() + type.slice(1)} Consumer`,
         consumption: 150 + (index * 100),
@@ -134,4 +142,150 @@ export const getEdgeStyle = (flow: number) => {
   if (flow > 500) return { stroke: '#22c55e', strokeWidth: 3 }; // Green for high flow
   if (flow > 200) return { stroke: '#eab308', strokeWidth: 2 }; // Yellow for medium flow
   return { stroke: '#ef4444', strokeWidth: 1 }; // Red for low flow
+};
+
+export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
+  const edges = [];
+
+  // Connect cells to strings
+  nodes.forEach(node => {
+    if (node.type === 'cell') {
+      const stringId = `string-${node.id.split('-')[1]}`;
+      edges.push({
+        id: `${node.id}-to-${stringId}`,
+        source: node.id,
+        target: stringId,
+        animated: true,
+        style: getEdgeStyle(250),
+        data: {
+          energyFlow: {
+            currentValue: 250,
+            maxValue: 300,
+            minValue: 200,
+            avgValue: 250,
+            timestamp: new Date(),
+          },
+          efficiency: 98,
+          status: 'active' as const,
+          type: 'solar' as const,
+        },
+      });
+    }
+  });
+
+  // Connect strings to inverter
+  nodes.forEach(node => {
+    if (node.type === 'string') {
+      edges.push({
+        id: `${node.id}-to-inverter`,
+        source: node.id,
+        target: 'inverter-1',
+        animated: true,
+        style: getEdgeStyle(750),
+        data: {
+          energyFlow: {
+            currentValue: 750,
+            maxValue: 800,
+            minValue: 700,
+            avgValue: 750,
+            timestamp: new Date(),
+          },
+          efficiency: 98,
+          status: 'active' as const,
+          type: 'solar' as const,
+        },
+      });
+    }
+  });
+
+  // Connect inverter to transformer
+  edges.push({
+    id: 'inverter-to-transformer',
+    source: 'inverter-1',
+    target: 'transformer-1',
+    animated: true,
+    style: getEdgeStyle(735),
+    data: {
+      energyFlow: {
+        currentValue: 735,
+        maxValue: 750,
+        minValue: 720,
+        avgValue: 735,
+        timestamp: new Date(),
+      },
+      efficiency: 98,
+      status: 'active' as const,
+      type: 'power' as const,
+    },
+  });
+
+  // Connect transformer to storage and grid
+  ['main', 'backup'].forEach(storageType => {
+    edges.push({
+      id: `transformer-to-storage-${storageType}`,
+      source: 'transformer-1',
+      target: `storage-${storageType}`,
+      animated: true,
+      style: getEdgeStyle(360),
+      data: {
+        energyFlow: {
+          currentValue: 360,
+          maxValue: 400,
+          minValue: 320,
+          avgValue: 360,
+          timestamp: new Date(),
+        },
+        efficiency: 98,
+        status: 'active' as const,
+        type: 'storage' as const,
+      },
+    });
+  });
+
+  // Connect storage and grid to consumers
+  ['residential', 'industrial', 'commercial'].forEach((consumerType, index) => {
+    const storageType = index === 0 ? 'main' : 'backup';
+    edges.push({
+      id: `storage-${storageType}-to-consumer-${consumerType}`,
+      source: `storage-${storageType}`,
+      target: `consumer-${consumerType}`,
+      animated: true,
+      style: getEdgeStyle(150 + index * 100),
+      data: {
+        energyFlow: {
+          currentValue: 150 + index * 100,
+          maxValue: 200 + index * 100,
+          minValue: 100 + index * 100,
+          avgValue: 150 + index * 100,
+          timestamp: new Date(),
+        },
+        efficiency: 98,
+        status: 'active' as const,
+        type: 'consumption' as const,
+      },
+    });
+
+    // Connect grid to consumers
+    edges.push({
+      id: `grid-to-consumer-${consumerType}`,
+      source: 'grid',
+      target: `consumer-${consumerType}`,
+      animated: true,
+      style: getEdgeStyle(100 + index * 50),
+      data: {
+        energyFlow: {
+          currentValue: 100 + index * 50,
+          maxValue: 150 + index * 50,
+          minValue: 50 + index * 50,
+          avgValue: 100 + index * 50,
+          timestamp: new Date(),
+        },
+        efficiency: 98,
+        status: 'active' as const,
+        type: 'grid' as const,
+      },
+    });
+  });
+
+  return edges;
 };
