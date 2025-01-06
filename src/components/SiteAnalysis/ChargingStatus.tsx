@@ -9,22 +9,44 @@ interface ChargingStatusProps {
   siteId: string;
 }
 
+type ChargingDirection = "charging" | "discharging";
+
+interface BatteryDetail {
+  id: string;
+  name: string;
+  currentPower: number;
+  direction: ChargingDirection;
+  batteryLevel: number;
+  timeRemaining: string;
+  temperature: number;
+  voltage: number;
+  current: number;
+}
+
+interface AggregatedData {
+  totalCapacity: number;
+  currentTotalCharge: number;
+  averageTemperature: number;
+  totalPower: number;
+  overallDirection: ChargingDirection;
+}
+
 const ChargingStatus = ({ siteId }: ChargingStatusProps) => {
   // Mock data - replace with real-time data fetch
-  const aggregatedData = {
+  const aggregatedData: AggregatedData = {
     totalCapacity: 300,
     currentTotalCharge: 225,
     averageTemperature: 25.5,
     totalPower: 45.5,
-    overallDirection: "charging" as const,
+    overallDirection: "charging",
   };
 
-  const batteryDetails = [
+  const batteryDetails: BatteryDetail[] = [
     {
       id: "1",
       name: "Battery Unit 1",
       currentPower: 20.5,
-      direction: "charging" as const,
+      direction: "charging",
       batteryLevel: 85,
       timeRemaining: "1.5 hours",
       temperature: 24,
@@ -35,7 +57,7 @@ const ChargingStatus = ({ siteId }: ChargingStatusProps) => {
       id: "2",
       name: "Battery Unit 2",
       currentPower: 15.0,
-      direction: "charging" as const,
+      direction: "charging",
       batteryLevel: 65,
       timeRemaining: "3 hours",
       temperature: 26,
@@ -46,7 +68,7 @@ const ChargingStatus = ({ siteId }: ChargingStatusProps) => {
       id: "3",
       name: "Battery Unit 3",
       currentPower: 10.0,
-      direction: "discharging" as const,
+      direction: "discharging",
       batteryLevel: 75,
       timeRemaining: "4 hours",
       temperature: 25,
@@ -54,6 +76,13 @@ const ChargingStatus = ({ siteId }: ChargingStatusProps) => {
       current: 140,
     },
   ];
+
+  const renderChargingDirection = (direction: ChargingDirection) => {
+    if (direction === "charging") {
+      return <ArrowUp className="h-4 w-4 text-green-500" />;
+    }
+    return <ArrowDown className="h-4 w-4 text-amber-500" />;
+  };
 
   return (
     <Card>
@@ -85,11 +114,7 @@ const ChargingStatus = ({ siteId }: ChargingStatusProps) => {
               <div className="space-y-1">
                 <p className="text-sm font-medium">Overall Status</p>
                 <div className="flex items-center gap-1">
-                  {aggregatedData.overallDirection === "charging" ? (
-                    <ArrowUp className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <ArrowDown className="h-4 w-4 text-amber-500" />
-                  )}
+                  {renderChargingDirection(aggregatedData.overallDirection)}
                   <p className="text-sm text-muted-foreground capitalize">
                     {aggregatedData.overallDirection}
                   </p>
@@ -133,11 +158,7 @@ const ChargingStatus = ({ siteId }: ChargingStatusProps) => {
                       <div className="space-y-1">
                         <p className="text-sm font-medium">Status</p>
                         <div className="flex items-center gap-1">
-                          {battery.direction === "charging" ? (
-                            <ArrowUp className="h-4 w-4 text-green-500" />
-                          ) : (
-                            <ArrowDown className="h-4 w-4 text-amber-500" />
-                          )}
+                          {renderChargingDirection(battery.direction)}
                           <p className="text-sm text-muted-foreground capitalize">
                             {battery.direction}
                           </p>
