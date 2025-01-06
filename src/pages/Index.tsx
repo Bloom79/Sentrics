@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import { useLanguage } from "@/contexts/LanguageContext";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
@@ -7,7 +6,10 @@ import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import SitesList from "@/components/Dashboard/SitesList";
 import ForecastOverview from "@/components/Dashboard/Overview/ForecastOverview";
+import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
+import GridStatus from "@/components/Dashboard/GridStatus";
 
+// Mock data - replace with actual API data later
 const sites = [
   {
     id: "1",
@@ -46,6 +48,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("24h");
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
   const filteredSites = sites.filter((site) => {
     const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -68,6 +71,7 @@ const Index = () => {
         />
 
         <div className="grid gap-6">
+          {/* Top Row KPIs */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <ProductionOverview />
             <SolarProduction />
@@ -75,16 +79,23 @@ const Index = () => {
             <StorageStatus />
           </div>
 
-          <div className="grid grid-cols-1 gap-4">
+          {/* Forecast & Grid Status */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ForecastOverview />
+            <GridStatus />
           </div>
 
+          {/* Detailed Metrics */}
           <div className="grid grid-cols-1 gap-4">
-            <EnergyFlow />
+            <DetailedMetrics selectedSiteId={selectedSiteId} />
           </div>
 
+          {/* Sites List */}
           <div className="grid grid-cols-1 gap-4">
-            <SitesList sites={filteredSites} selectedTimeRange={selectedTimeRange} />
+            <SitesList 
+              sites={filteredSites} 
+              selectedTimeRange={selectedTimeRange} 
+            />
           </div>
         </div>
       </div>
