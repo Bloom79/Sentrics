@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Battery, Factory, Building2, Users, Power } from "lucide-react";
+import { Battery, Factory, Building2, Users, CircuitBoard } from "lucide-react";
 import BatteryDetails from "./BatteryDetails";
 
 interface NodeDialogProps {
@@ -30,6 +30,7 @@ const NodeDialog: React.FC<NodeDialogProps> = ({ open, onClose, nodeType, nodeId
             <div className="mt-4">
               <BatteryDetails
                 battery={{
+                  id: nodeId,
                   name: `Storage Unit ${nodeId}`,
                   batteryLevel: 85,
                   direction: "charging",
@@ -68,7 +69,7 @@ const NodeDialog: React.FC<NodeDialogProps> = ({ open, onClose, nodeType, nodeId
           <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Power className="w-5 h-5" />
+                <CircuitBoard className="w-5 h-5" />
                 Power Grid Details
               </DialogTitle>
             </DialogHeader>

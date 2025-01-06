@@ -20,10 +20,18 @@ const nodeTypes = {
 };
 
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
-  const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
+  const [selectedNodes, setSelectedNodes] = useState<Array<{ id: string; type: string }>>([]);
 
   const handleNodeClick = (nodeId: string, nodeType: string) => {
-    setSelectedNode({ id: nodeId, type: nodeType });
+    const existingNodeIndex = selectedNodes.findIndex(node => node.id === nodeId);
+    
+    if (existingNodeIndex >= 0) {
+      // Remove node if already selected
+      setSelectedNodes(prev => prev.filter((_, index) => index !== existingNodeIndex));
+    } else {
+      // Add new node to selection
+      setSelectedNodes(prev => [...prev, { id: nodeId, type: nodeType }]);
+    }
   };
 
   const nodes: Node[] = [
@@ -138,12 +146,17 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         <Controls />
       </ReactFlow>
       
-      <NodeDialog
-        open={!!selectedNode}
-        onClose={() => setSelectedNode(null)}
-        nodeType={selectedNode?.type || ''}
-        nodeId={selectedNode?.id || ''}
-      />
+      {selectedNodes.map((node, index) => (
+        <NodeDialog
+          key={node.id}
+          open={true}
+          onClose={() => {
+            setSelectedNodes(prev => prev.filter((_, i) => i !== index));
+          }}
+          nodeType={node.type}
+          nodeId={node.id}
+        />
+      ))}
     </div>
   );
 };
