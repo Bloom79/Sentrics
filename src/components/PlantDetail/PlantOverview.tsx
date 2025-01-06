@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plant } from "@/types/site";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Battery, Sun, Wind, Gauge, Calendar } from "lucide-react";
+import { Battery, Sun, Wind, Gauge, Calendar, Leaf, Zap, Activity, Cpu } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 interface PlantOverviewProps {
@@ -34,7 +34,7 @@ const PlantOverview: React.FC<PlantOverviewProps> = ({ plant }) => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Current Output</CardTitle>
-            <Gauge className="h-4 w-4 text-muted-foreground" />
+            <Zap className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{plant.currentOutput} kW</div>
@@ -46,41 +46,39 @@ const PlantOverview: React.FC<PlantOverviewProps> = ({ plant }) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Capacity</CardTitle>
+            <CardTitle className="text-sm font-medium">Plant Type</CardTitle>
             {getPlantTypeIcon()}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{plant.capacity} kW</div>
+            <div className="text-2xl font-bold capitalize">{plant.type}</div>
             <p className="text-xs text-muted-foreground">
-              Installed capacity
+              Total Capacity: {plant.capacity} kW
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Efficiency</CardTitle>
-            <Battery className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Performance</CardTitle>
+            <Activity className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{plant.efficiency}%</div>
             <p className="text-xs text-muted-foreground">
-              Current efficiency rate
+              Operating Efficiency
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Last Update</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Status</CardTitle>
+            <Cpu className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {formatDistanceToNow(lastUpdate, { addSuffix: true })}
-            </div>
+            <div className="text-2xl font-bold capitalize">{plant.status}</div>
             <p className="text-xs text-muted-foreground">
-              Last data refresh
+              Last Update: {formatDistanceToNow(lastUpdate, { addSuffix: true })}
             </p>
           </CardContent>
         </Card>
