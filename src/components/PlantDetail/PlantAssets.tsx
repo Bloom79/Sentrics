@@ -84,9 +84,9 @@ const PlantAssets: React.FC<PlantAssetsProps> = ({ plant }) => {
   // Filter assets based on plant type
   const filteredAssets = mockAssets.filter(asset => {
     if (plant.type === "solar") {
-      return ["panel", "inverter", "transformer", "battery"].includes(asset.type);
+      return asset.type === "panel" || asset.type === "inverter" || asset.type === "transformer" || asset.type === "battery";
     } else if (plant.type === "wind") {
-      return ["turbine", "transformer", "battery"].includes(asset.type);
+      return asset.type === "turbine" || asset.type === "transformer" || asset.type === "battery";
     }
     // For hybrid plants, show all assets
     return true;
