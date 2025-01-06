@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Consumer } from "@/types/site";
+import { Consumer, ConsumerSpecs } from "@/types/site";
 import ConsumerContract from "./ConsumerContract";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,7 @@ const ConsumerDetail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const { data: consumer, isLoading, error } = useQuery({
+  const { data: consumer, isLoading } = useQuery({
     queryKey: ['consumer', consumerId],
     queryFn: async () => {
       if (!consumerId) {
@@ -26,19 +26,52 @@ const ConsumerDetail = () => {
         .eq('id', consumerId)
         .maybeSingle();
 
-      if (error) throw error;
-      if (!data) throw new Error('Consumer not found');
+      if (error) {
+        console.error('Error fetching consumer:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load consumer details. Please try again.",
+        });
+        navigate('/consumers');
+        throw error;
+      }
 
-      return data as Consumer;
-    },
-    onError: (error) => {
-      console.error('Error fetching consumer:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load consumer details. Please try again.",
-      });
-      navigate('/consumers');
+      if (!data) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Consumer not found.",
+        });
+        navigate('/consumers');
+        throw new Error('Consumer not found');
+      }
+
+      // Transform the data to match our Consumer type
+      const consumer: Consumer = {
+        id: data.id,
+        full_name: data.full_name || '',
+        type: data.type || 'residential',
+        consumption: data.consumption || 0,
+        status: data.status || 'active',
+        specs: data.specs || {
+          peakDemand: 0,
+          dailyUsage: 0,
+          powerFactor: 0,
+          connectionType: 'low-voltage'
+        },
+        address: data.address,
+        city: data.city,
+        postal_code: data.postal_code,
+        country: data.country,
+        contact_person: data.contact_person,
+        email: data.email,
+        phone: data.phone,
+        vat_number: data.vat_number,
+        notes: data.notes
+      };
+
+      return consumer;
     }
   });
 
@@ -46,14 +79,14 @@ const ConsumerDetail = () => {
     return <div>Loading consumer details...</div>;
   }
 
-  if (error || !consumer) {
-    return <div>Error loading consumer details. Please try again.</div>;
+  if (!consumer) {
+    return <div>Consumer not found.</div>;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{consumer.name}</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{consumer.full_name}</h1>
         <p className="text-muted-foreground">Consumer Details and Management</p>
       </div>
 
@@ -83,7 +116,7 @@ const ConsumerDetail = () => {
                   </div>
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Connection Type</dt>
-                    <dd className="text-sm font-medium">{consumer.specs?.connectionType || 'N/A'}</dd>
+                    <dd className="text-sm font-medium">{consumer.specs.connectionType}</dd>
                   </div>
                 </dl>
               </CardContent>
@@ -101,15 +134,15 @@ const ConsumerDetail = () => {
                   </div>
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Peak Demand</dt>
-                    <dd className="text-sm font-medium">{consumer.specs?.peakDemand || 'N/A'} kW</dd>
+                    <dd className="text-sm font-medium">{consumer.specs.peakDemand} kW</dd>
                   </div>
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Daily Usage</dt>
-                    <dd className="text-sm font-medium">{consumer.specs?.dailyUsage || 'N/A'} kWh</dd>
+                    <dd className="text-sm font-medium">{consumer.specs.dailyUsage} kWh</dd>
                   </div>
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">Power Factor</dt>
-                    <dd className="text-sm font-medium">{consumer.specs?.powerFactor || 'N/A'}</dd>
+                    <dd className="text-sm font-medium">{consumer.specs.powerFactor}</dd>
                   </div>
                 </dl>
               </CardContent>

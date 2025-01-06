@@ -15,18 +15,30 @@ export type Plant = {
   lastUpdate?: string;
 };
 
+export type ConsumerSpecs = {
+  peakDemand: number;
+  dailyUsage: number;
+  powerFactor: number;
+  connectionType: string;
+};
+
 export type Consumer = {
   id: string;
-  name: string;
+  full_name: string;
   type: "residential" | "industrial" | "commercial";
   consumption: number;
   status: string;
-  specs: {
-    peakDemand: number;
-    dailyUsage: number;
-    powerFactor: number;
-    connectionType: string;
-  };
+  specs: ConsumerSpecs;
+  // Additional fields from profiles table
+  address?: string;
+  city?: string;
+  postal_code?: string;
+  country?: string;
+  contact_person?: string;
+  email?: string;
+  phone?: string;
+  vat_number?: string;
+  notes?: string;
 };
 
 export type StorageUnit = {
