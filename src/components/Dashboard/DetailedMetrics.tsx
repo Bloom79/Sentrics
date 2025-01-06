@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Activity } from "lucide-react";
@@ -78,15 +77,6 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
   selectedTimeRange 
 }) => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
-
-  const handleSiteClick = (siteId: string) => {
-    if (onSiteSelect) {
-      onSiteSelect(siteId);
-    } else {
-      navigate(`/site/${siteId}`);
-    }
-  };
 
   const filteredSites = mockSiteData.filter(site => {
     const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -138,7 +128,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
                 <TableRow
                   key={site.id}
                   className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleSiteClick(site.id)}
+                  onClick={() => onSiteSelect?.(site.id)}
                 >
                   <TableCell>
                     <div className="flex items-center gap-2">

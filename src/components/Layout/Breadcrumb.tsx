@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
 import {
   Breadcrumb,
@@ -8,13 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
-// Mock data for site names - replace with actual data fetching
-const mockSiteNames: Record<string, string> = {
-  "1": "Milano Nord",
-  "2": "Roma Est",
-  "3": "Torino Sud",
-};
 
 interface BreadcrumbItem {
   label: string;
@@ -27,7 +20,6 @@ interface BreadcrumbProps {
 
 export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
   const location = useLocation();
-  const params = useParams();
   
   const getBreadcrumbItems = () => {
     if (items.length > 0) return items;
@@ -37,19 +29,10 @@ export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
 
     return pathSegments.map((segment, index) => {
       const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
-      let label = segment
+      const label = segment
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
-
-      // Handle special cases
-      if (segment === 'site' && params.siteId) {
-        return { label: 'Site', path };
-      }
-      if (params.siteId && segment === params.siteId) {
-        label = mockSiteNames[params.siteId] || `Site ${params.siteId}`;
-      }
-
       return { label, path };
     });
   };
