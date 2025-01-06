@@ -1,9 +1,8 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import { Consumer } from "@/types/site";
+import { AddConsumerDialog } from "./AddConsumerDialog";
 
 const ConsumerManagement = () => {
   const mockConsumers: Consumer[] = [
@@ -41,9 +40,7 @@ const ConsumerManagement = () => {
         <h2 className="text-2xl font-semibold tracking-tight">
           Consumer Management
         </h2>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> Add Consumer
-        </Button>
+        <AddConsumerDialog />
       </div>
       
       <Card>
