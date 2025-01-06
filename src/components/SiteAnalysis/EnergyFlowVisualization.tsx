@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LeafyGreen, Battery, Home, Power } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { LeafyGreen, Battery, Power, Sun, Wind } from "lucide-react";
 import { Site } from "@/types/site";
 
 interface EnergyFlowVisualizationProps {
@@ -15,25 +16,29 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     navigate(`/storage-unit/${unitId}`);
   };
 
+  const solarSources = site.energySources.filter(source => source.type === "solar");
+  const windSources = site.energySources.filter(source => source.type === "eolic");
+
   return (
     <div className="relative h-[300px] bg-background/50 rounded-lg p-6 border">
-      <div className="absolute inset-0 flex items-center justify-center">
-        {/* Plant Section */}
-        <div className="absolute left-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-          <Dialog>
-            <DialogTrigger asChild>
-              <div className="p-4 bg-green-100 dark:bg-green-900 rounded-full hover:scale-110 transition-transform cursor-pointer">
-                <LeafyGreen className="w-8 h-8 text-green-600 dark:text-green-400" />
-              </div>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Energy Production</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                {site.energySources.map(source => (
-                  <div key={source.id} className="space-y-2">
-                    <h4 className="font-medium capitalize">{source.type} Plant</h4>
+      <div className="absolute inset-0 flex items-center justify-between px-16">
+        {/* Production Plants Section */}
+        <div className="flex flex-col items-center gap-6">
+          <span className="text-sm font-medium">Production</span>
+          <div className="space-y-4">
+            {solarSources.map((source) => (
+              <Dialog key={source.id}>
+                <Button
+                  variant="outline"
+                  className="w-full bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 border-0"
+                >
+                  <Sun className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+                </Button>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Solar Plant Details</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">Capacity</p>
@@ -49,36 +54,64 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </DialogContent>
-          </Dialog>
-          <span className="text-sm font-medium">Production</span>
+                </DialogContent>
+              </Dialog>
+            ))}
+            {windSources.map((source) => (
+              <Dialog key={source.id}>
+                <Button
+                  variant="outline"
+                  className="w-full bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 border-0"
+                >
+                  <Wind className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </Button>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Wind Plant Details</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Capacity</p>
+                        <p>{source.capacity} kW</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Current Output</p>
+                        <p>{source.currentOutput} kW</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Status</p>
+                        <p className="capitalize">{source.status}</p>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            ))}
+          </div>
         </div>
 
         {/* Storage Section */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
-          <Dialog>
-            <DialogTrigger asChild>
-              <div 
-                className="p-4 bg-blue-100 dark:bg-blue-900 rounded-full hover:scale-110 transition-transform cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (site.storageUnits[0]) {
-                    handleStorageClick(site.storageUnits[0].id);
-                  }
-                }}
-              >
-                <Battery className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-              </div>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Storage System</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                {site.storageUnits.map(unit => (
-                  <div key={unit.id} className="space-y-2">
+        <div className="flex flex-col items-center gap-4">
+          <span className="text-sm font-medium">Storage</span>
+          <div className="space-y-4">
+            {site.storageUnits.map((unit) => (
+              <Dialog key={unit.id}>
+                <Button
+                  variant="outline"
+                  className="w-full bg-indigo-100 hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800 border-0"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleStorageClick(unit.id);
+                  }}
+                >
+                  <Battery className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                </Button>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Storage Unit Details</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">Capacity</p>
@@ -98,24 +131,25 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            </DialogContent>
-          </Dialog>
-          <span className="text-sm font-medium">Storage</span>
+                </DialogContent>
+              </Dialog>
+            ))}
+          </div>
         </div>
 
-        {/* Consumer/Grid Section */}
-        <div className="absolute right-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+        {/* Grid Section */}
+        <div className="flex flex-col items-center gap-4">
+          <span className="text-sm font-medium">Grid</span>
           <Dialog>
-            <DialogTrigger asChild>
-              <div className="p-4 bg-red-100 dark:bg-red-900 rounded-full hover:scale-110 transition-transform cursor-pointer">
-                <Power className="w-8 h-8 text-red-600 dark:text-red-400" />
-              </div>
-            </DialogTrigger>
+            <Button
+              variant="outline"
+              className="w-full bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 border-0"
+            >
+              <Power className="w-6 h-6 text-red-600 dark:text-red-400" />
+            </Button>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Grid Connection</DialogTitle>
+                <DialogTitle>Grid Connection Details</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -139,18 +173,17 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
               </div>
             </DialogContent>
           </Dialog>
-          <span className="text-sm font-medium">Grid</span>
         </div>
 
         {/* Connection Lines */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           {/* Plant to Storage Line */}
-          <div className="absolute left-36 top-1/2 w-[calc(50%-144px)] h-0.5 bg-gradient-to-r from-green-500 to-blue-500">
+          <div className="absolute left-[25%] top-1/2 w-[25%] h-0.5 bg-gradient-to-r from-green-500 to-blue-500">
             <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 animate-flow-right" />
           </div>
           
           {/* Storage to Grid Line */}
-          <div className="absolute right-36 top-1/2 w-[calc(50%-144px)] h-0.5 bg-gradient-to-r from-blue-500 to-red-500">
+          <div className="absolute right-[25%] top-1/2 w-[25%] h-0.5 bg-gradient-to-r from-blue-500 to-red-500">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-red-500 animate-flow-right" />
           </div>
         </div>
