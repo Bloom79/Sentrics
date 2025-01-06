@@ -9,6 +9,7 @@ import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
 import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
 import HistoricalPerformance from "@/components/SiteAnalysis/HistoricalPerformance";
 import EfficiencyMetrics from "@/components/SiteAnalysis/EfficiencyMetrics";
+import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
 import { Site } from "@/types/site";
 
 const mockSite: Site = {
@@ -134,6 +135,11 @@ const SiteDetail = () => {
             </p>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Energy Flow Visualization */}
+      <div className="mb-6">
+        <EnergyFlowVisualization site={site} />
       </div>
 
       {/* Main Content Grid */}
