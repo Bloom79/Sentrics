@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import { v4 as uuidv4 } from 'uuid';
 
 const contractSchema = z.object({
   type: z.enum(["fixed_rate", "variable_rate", "peak_off_peak"]),
@@ -66,12 +67,19 @@ export const ContractForm = ({ onSuccess }: ContractFormProps) => {
   });
 
   const onSubmit = async (data: ContractFormValues) => {
+    if (!consumerId) return;
+
     try {
-      const { error } = await supabase.from("contracts").insert({
-        ...data,
+      const newContract = {
+        id: uuidv4(),
         consumer_id: consumerId,
-        status: "pending",
-      });
+        ...data,
+        status: 'pending' as const,
+      };
+
+      const { error } = await supabase
+        .from("contracts")
+        .insert(newContract);
 
       if (error) throw error;
 

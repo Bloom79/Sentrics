@@ -19,11 +19,11 @@ export const AddConsumerDialog = () => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
-      const id = uuidv4();
+      const newId = uuidv4();
       const { error } = await supabase
         .from('profiles')
         .insert({
-          id,
+          id: newId,
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
@@ -45,7 +45,10 @@ export const AddConsumerDialog = () => {
           }
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error details:", error);
+        throw error;
+      }
 
       toast({
         title: "Success",
