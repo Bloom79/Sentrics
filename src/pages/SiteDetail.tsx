@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
+import { Battery, Cloud, Wind, Zap, Share2, Filter } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageOverview from "@/components/SiteAnalysis/StorageOverview";
 import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
@@ -45,16 +54,35 @@ const mockSite: Site = {
 const SiteDetail = () => {
   const { siteId } = useParams();
   const site = mockSite; // In a real app, fetch site data based on siteId
+  const [timeRange, setTimeRange] = useState("24h");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [showFilters, setShowFilters] = useState(false);
 
   return (
-    <div className="container mx-auto p-4">
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
+    <div className="container mx-auto p-4 space-y-6">
+      {/* Header Section with Filters */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <p className="text-muted-foreground">{site.location}</p>
         </div>
-        <div className="flex gap-2">
+        
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2"
+          >
+            <Filter className="h-4 w-4" />
+            Filters
+            {(timeRange !== "24h" || statusFilter !== "all") && (
+              <Badge variant="secondary" className="ml-2">
+                {timeRange !== "24h" && statusFilter !== "all" ? "2" : "1"}
+              </Badge>
+            )}
+          </Button>
+          
           <span className={`px-3 py-1 rounded-full text-sm ${
             site.gridConnection.status === "connected" 
               ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" 
@@ -65,8 +93,47 @@ const SiteDetail = () => {
         </div>
       </div>
 
+      {/* Filters Panel */}
+      {showFilters && (
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex flex-wrap gap-4">
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Time Range</span>
+                <Select value={timeRange} onValueChange={setTimeRange}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select time range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1h">Last Hour</SelectItem>
+                    <SelectItem value="24h">Last 24 Hours</SelectItem>
+                    <SelectItem value="7d">Last 7 Days</SelectItem>
+                    <SelectItem value="30d">Last 30 Days</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Status</span>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="maintenance">Maintenance</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Solar Production</CardTitle>
@@ -137,6 +204,7 @@ const SiteDetail = () => {
             </p>
           </CardContent>
         </Card>
+
       </div>
 
       {/* Energy Flow Visualization */}
@@ -146,14 +214,12 @@ const SiteDetail = () => {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Left Column */}
         <div className="xl:col-span-2 space-y-6">
           <SiteProductionGraph siteId={site.id} />
           <StorageOverview siteId={site.id} />
           <EnergyEfficiencyDisplay siteId={site.id} />
         </div>
 
-        {/* Right Column */}
         <div className="space-y-6">
           <SiteAlerts siteId={site.id} />
           <EfficiencyMetrics siteId={site.id} />
@@ -162,7 +228,7 @@ const SiteDetail = () => {
       </div>
 
       {/* Bottom Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <MaintenanceSchedule siteId={site.id} />
         <EquipmentStatus siteId={site.id} />
       </div>
