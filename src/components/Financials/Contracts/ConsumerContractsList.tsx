@@ -11,11 +11,16 @@ export const ConsumerContractsList = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('contracts')
-        .select('*, profiles:consumer_id(name)')
+        .select(`
+          *,
+          consumer:consumer_id(
+            full_name
+          )
+        `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as (Contract & { profiles: { name: string } })[];
+      return data as (Contract & { consumer: { full_name: string } })[];
     },
   });
 
@@ -37,7 +42,7 @@ export const ConsumerContractsList = () => {
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Consumer</p>
-                      <p className="text-sm font-medium">{contract.profiles.name}</p>
+                      <p className="text-sm font-medium">{contract.consumer.full_name}</p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Contract Period</p>

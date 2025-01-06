@@ -19,7 +19,7 @@ const ConsumerContract = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as Contract;
+      return data as Contract | null;
     },
   });
 
