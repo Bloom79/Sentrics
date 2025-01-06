@@ -2,6 +2,7 @@ import { Node } from '@xyflow/react';
 import { FlowNodeData } from '@/types/flowComponents';
 
 export const CONSUMPTION_X = 900;
+export const GRID_X = 300; // New constant for grid position
 
 export const getConsumptionNodes = (): Node<FlowNodeData>[] => [
   {
@@ -57,7 +58,7 @@ export const getConsumptionNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'grid-1',
     type: 'grid',
-    position: { x: CONSUMPTION_X, y: 400 },
+    position: { x: GRID_X, y: 400 }, // Updated position
     style: {
       width: 180,
       height: 120,
