@@ -15,12 +15,7 @@ export interface Site {
     lng: number;
   };
   plants: Plant[];
-  consumers?: {
-    id: string;
-    name: string;
-    consumption: number;
-    type: string;
-  }[];
+  consumers: Consumer[];
   energySources: {
     type: string;
     output: number;
@@ -39,6 +34,17 @@ export interface Site {
     voltage: number;
     congestion: string;
   };
+}
+
+export interface Consumer {
+  id: string;
+  name: string;
+  type: "industrial" | "commercial" | "residential";
+  consumption: number;
+  status: "online" | "offline" | "maintenance";
+  peakDemand?: number;
+  location?: string;
+  lastUpdate?: string;
 }
 
 export interface Plant {
@@ -70,63 +76,3 @@ export interface StorageUnit {
   efficiency: number;
   alerts?: string[];
 }
-
-export interface SolarPanel extends BaseAsset {
-  type: "panel";
-  ratedPower: number;
-  efficiency: number;
-  orientation?: string;
-  tilt?: number;
-  lastOutput?: number;
-  temperature?: number;
-  performanceRatio?: number;
-}
-
-export interface Inverter extends BaseAsset {
-  type: "inverter";
-  efficiency: number;
-  ratedPower: number;
-  dcInputRange?: {
-    min: number;
-    max: number;
-  };
-  lastOutput?: number;
-}
-
-export interface WindTurbine extends BaseAsset {
-  type: "turbine";
-  ratedCapacity: number;
-  rotorDiameter: number;
-  hubHeight: number;
-  cutInSpeed: number;
-  cutOutSpeed: number;
-  currentOutput?: number;
-  windSpeed?: number;
-  nacelleDirection?: number;
-  bladePitchAngle?: number;
-}
-
-export interface Transformer extends BaseAsset {
-  type: "transformer";
-  capacity: number;
-  voltageIn: number;
-  voltageOut: number;
-  efficiency: number;
-}
-
-export interface Battery extends BaseAsset {
-  type: "battery";
-  technology: "lithium-ion" | "lead-acid" | "flow";
-  ratedPower: number;
-  energyCapacity: number;
-  stateOfCharge?: number;
-  roundTripEfficiency?: number;
-  cycleCount?: number;
-  thermalManagement?: string;
-}
-
-export type AssetType = SolarPanel | Inverter | WindTurbine | Transformer | Battery;
-
-// For backward compatibility with existing components
-export type SolarAsset = SolarPanel | Inverter;
-export type WindAsset = WindTurbine;

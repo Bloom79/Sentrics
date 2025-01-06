@@ -17,8 +17,8 @@ const mockSites: Site[] = [
     name: "Milano Nord",
     location: "Northern Region",
     type: "solar",
-    status: "online",
     capacity: 800,
+    status: "online",
     lastUpdate: new Date().toISOString(),
     dailyProduction: 2500,
     monthlyProduction: 75000,
@@ -52,14 +52,32 @@ const mockSites: Site[] = [
       {
         id: "1",
         name: "Industrial Park A",
+        type: "industrial",
         consumption: 450,
-        type: "industrial"
+        status: "online",
+        peakDemand: 600,
+        location: "North Section",
+        lastUpdate: new Date().toISOString()
       },
       {
         id: "2",
         name: "Commercial Center B",
+        type: "commercial",
         consumption: 200,
-        type: "commercial"
+        status: "online",
+        peakDemand: 300,
+        location: "South Section",
+        lastUpdate: new Date().toISOString()
+      },
+      {
+        id: "3",
+        name: "Residential Complex C",
+        type: "residential",
+        consumption: 150,
+        status: "online",
+        peakDemand: 200,
+        location: "East Section",
+        lastUpdate: new Date().toISOString()
       }
     ],
     energySources: [
@@ -84,22 +102,6 @@ const mockSites: Site[] = [
         nextMaintenance: "2024-04-15",
         efficiency: 95,
         alerts: ["Temperature slightly above normal"]
-      },
-      {
-        id: "2",
-        name: "BESS Unit 2",
-        capacity: 800,
-        currentCharge: 600,
-        powerRating: 400,
-        health: 96,
-        temperature: 23,
-        status: "discharging",
-        stateOfHealth: 96,
-        chargingRate: -30,
-        cycleCount: 256,
-        lastMaintenance: "2024-01-20",
-        nextMaintenance: "2024-04-20",
-        efficiency: 94
       }
     ],
     gridConnection: {
