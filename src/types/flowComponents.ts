@@ -18,7 +18,6 @@ export type FlowNodeData = {
   };
   status?: NodeStatus;
   consumption?: number;
-  output?: number;
   onNodeClick: (id: string, type: string) => void;
 };
 
