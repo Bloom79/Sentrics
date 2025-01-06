@@ -5,11 +5,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const StorageStatus = () => {
   const { t } = useLanguage();
+  const mockTrendData = [45, 48, 52, 50, 54, 55, 53];
   
   return (
     <MetricsCard
-      title={t('dashboard.storageEfficiency')}
+      title="Storage"
       value="92%"
+      trend={mockTrendData}
+      trendColor="#059669"
       description={(
         <div className="flex flex-col">
           <span className="text-sm">850 kWh Available</span>

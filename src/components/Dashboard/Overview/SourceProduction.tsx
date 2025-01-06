@@ -5,11 +5,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 export const SolarProduction = () => {
   const { t } = useLanguage();
+  const mockTrendData = [30, 28, 35, 32, 38, 42, 41];
   
   return (
     <MetricsCard
-      title={t('dashboard.solarProduction')}
+      title="Solar"
       value="630 kW"
+      trend={mockTrendData}
+      trendColor="#eab308"
       description={(
         <div className="flex flex-col">
           <span className="text-sm">12 Active Arrays</span>
@@ -24,11 +27,14 @@ export const SolarProduction = () => {
 
 export const WindProduction = () => {
   const { t } = useLanguage();
+  const mockTrendData = [20, 25, 22, 28, 24, 26, 25];
   
   return (
     <MetricsCard
-      title={t('dashboard.windProduction')}
+      title="Wind"
       value="400 kW"
+      trend={mockTrendData}
+      trendColor="#0ea5e9"
       description={(
         <div className="flex flex-col">
           <span className="text-sm">8 Active Turbines</span>
