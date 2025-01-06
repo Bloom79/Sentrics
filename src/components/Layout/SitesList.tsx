@@ -40,31 +40,33 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
                 handleSiteClick(site.id, e);
                 toggleSite(site.id);
               }}
-              className="group"
+              className="group hover:bg-accent/50 transition-colors duration-200"
             >
-              <span>{site.name}</span>
+              <span className="font-medium">{site.name}</span>
               {expandedSites.includes(site.id) ? (
-                <ChevronDown className="ml-auto h-4 w-4" />
+                <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground transition-transform duration-200" />
               ) : (
-                <ChevronRight className="ml-auto h-4 w-4" />
+                <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground transition-transform duration-200" />
               )}
             </SidebarMenuButton>
           </SidebarMenuItem>
           {expandedSites.includes(site.id) && (
-            <div className="pl-4 space-y-2">
+            <div className="pl-4 space-y-3 animate-in slide-in-from-left-2 duration-200">
               {/* Plants Section */}
               <div>
-                <span className="text-sm font-medium text-muted-foreground px-4">Plants</span>
-                <div className="space-y-1 mt-1">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4">
+                  Plants
+                </span>
+                <div className="space-y-1 mt-2">
                   {site.plants.map((plant) => (
                     <SidebarMenuItem key={plant.id}>
                       <SidebarMenuButton
                         onClick={(e) => handlePlantClick(plant.id, e)}
-                        className="group"
+                        className="group hover:bg-accent/50 transition-colors duration-200"
                       >
-                        <Factory className="h-4 w-4" />
-                        <span>{plant.name}</span>
-                        <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
+                        <Factory className="h-4 w-4 text-muted-foreground" />
+                        <span className="ml-2">{plant.name}</span>
+                        <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 text-muted-foreground transition-all duration-200" />
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
@@ -73,17 +75,19 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
               
               {/* Consumers Section */}
               <div>
-                <span className="text-sm font-medium text-muted-foreground px-4">Consumers</span>
-                <div className="space-y-1 mt-1">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4">
+                  Consumers
+                </span>
+                <div className="space-y-1 mt-2">
                   {site.consumers?.map((consumer) => (
                     <SidebarMenuItem key={consumer.id}>
                       <SidebarMenuButton
                         onClick={(e) => handleConsumerClick(consumer.id, e)}
-                        className="group"
+                        className="group hover:bg-accent/50 transition-colors duration-200"
                       >
-                        <Users className="h-4 w-4" />
-                        <span>{consumer.name}</span>
-                        <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <span className="ml-2">{consumer.name}</span>
+                        <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 text-muted-foreground transition-all duration-200" />
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
