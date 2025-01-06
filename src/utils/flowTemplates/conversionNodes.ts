@@ -1,7 +1,7 @@
 import { Node } from '@xyflow/react';
 import { FlowNodeData } from '@/types/flowComponents';
 
-export const CONVERSION_X = 250;
+export const CONVERSION_X = 300;
 
 export const getConversionNodes = (): Node<FlowNodeData>[] => [
   {
