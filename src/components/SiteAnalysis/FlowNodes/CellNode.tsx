@@ -20,8 +20,8 @@ const CellNode: React.FC<{ data: FlowNodeData }> = ({ data }) => {
         <div className="text-sm font-medium">{data.label}</div>
         {data.specs && (
           <div className="grid grid-cols-2 gap-x-3 text-[10px] text-muted-foreground">
-            <span>{data.specs.voltage}V</span>
-            <span>{data.specs.current}A</span>
+            <span>{data.specs.inputVoltage}V</span>
+            <span>{data.specs.outputPower}W</span>
             <span>{data.specs.power}W</span>
             <span>{Math.round(data.specs.efficiency || 0)}%</span>
           </div>

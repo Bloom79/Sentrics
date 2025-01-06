@@ -1,11 +1,17 @@
 import { Node, Edge, MarkerType } from '@xyflow/react';
 import { FlowNodeData } from '@/types/flowComponents';
 
+const GENERATION_X = 0;
+const CONVERSION_X = 300;
+const STORAGE_X = 600;
+const CONSUMPTION_X = 900;
+
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
+  // Generation Section
   {
     id: 'source-solar',
     type: 'source',
-    position: { x: 0, y: 0 },
+    position: { x: GENERATION_X, y: 0 },
     data: {
       id: 'source-solar',
       type: 'source',
@@ -14,6 +20,9 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         capacity: 500,
         power: 350,
         efficiency: 98,
+        temperature: 45,
+        irradiance: 850,
+        age: 2
       },
       status: 'active',
       onNodeClick: () => {},
@@ -22,7 +31,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'source-wind',
     type: 'source',
-    position: { x: 0, y: 150 },
+    position: { x: GENERATION_X, y: 150 },
     data: {
       id: 'source-wind',
       type: 'source',
@@ -31,22 +40,30 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         capacity: 300,
         power: 250,
         efficiency: 95,
+        windSpeed: 12,
+        turbineStatus: 'operational',
+        rpm: 15
       },
       status: 'active',
       onNodeClick: () => {},
     },
   },
+
+  // Power Conversion Section
   {
     id: 'inverter-1',
     type: 'inverter',
-    position: { x: 250, y: 75 },
+    position: { x: CONVERSION_X, y: 75 },
     data: {
       id: 'inverter-1',
       type: 'inverter',
       label: 'Inverter',
       specs: {
-        power: 735,
-        efficiency: 98,
+        inputPower: 600,
+        outputPower: 580,
+        efficiency: 96.7,
+        temperature: 40,
+        mode: 'MPPT'
       },
       status: 'active',
       onNodeClick: () => {},
@@ -55,45 +72,64 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'transformer-1',
     type: 'transformer',
-    position: { x: 500, y: 75 },
+    position: { x: CONVERSION_X + 150, y: 75 },
     data: {
       id: 'transformer-1',
       type: 'transformer',
       label: 'Transformer',
       specs: {
-        power: 720,
-        efficiency: 95,
+        inputVoltage: 720,
+        outputVoltage: 230,
+        efficiency: 98,
+        temperature: 55,
+        tapPosition: 3
       },
       status: 'active',
       onNodeClick: () => {},
     },
   },
+
+  // Storage Section
   {
     id: 'storage-1',
-    type: 'storage',
-    position: { x: 750, y: 75 },
+    type: 'bess',
+    position: { x: STORAGE_X, y: 75 },
     data: {
       id: 'storage-1',
-      type: 'storage',
+      type: 'bess',
       label: 'Battery Storage',
       specs: {
-        capacity: 1000,
-        charge: 750,
-        efficiency: 95,
+        maxCapacity: 1000,
+        currentCharge: 750,
+        stateOfCharge: 75,
+        stateOfHealth: 98,
+        chargingPower: 250,
+        dischargingPower: 250,
+        temperature: 25,
+        cycleCount: 450,
+        depthOfDischarge: 80,
+        efficiency: 95
       },
       status: 'charging',
       onNodeClick: () => {},
     },
   },
+
+  // Consumption Section
   {
     id: 'consumer-residential',
     type: 'consumer',
-    position: { x: 1000, y: 0 },
+    position: { x: CONSUMPTION_X, y: 0 },
     data: {
       id: 'consumer-residential',
       type: 'residential',
       label: 'Residential Area',
-      consumption: 150,
+      specs: {
+        consumption: 150,
+        connectedLoad: 200,
+        powerFactor: 0.95,
+        peakDemand: 180
+      },
       status: 'active',
       onNodeClick: () => {},
     },
@@ -101,12 +137,17 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'consumer-industrial',
     type: 'consumer',
-    position: { x: 1000, y: 150 },
+    position: { x: CONSUMPTION_X, y: 150 },
     data: {
       id: 'consumer-industrial',
       type: 'industrial',
       label: 'Industrial Zone',
-      consumption: 250,
+      specs: {
+        consumption: 450,
+        connectedLoad: 600,
+        powerFactor: 0.92,
+        peakDemand: 550
+      },
       status: 'active',
       onNodeClick: () => {},
     },
@@ -114,14 +155,17 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'grid-1',
     type: 'grid',
-    position: { x: 1000, y: 300 },
+    position: { x: CONSUMPTION_X, y: 300 },
     data: {
       id: 'grid-1',
       type: 'grid',
       label: 'Power Grid',
       specs: {
-        power: 335,
-        efficiency: 98,
+        importPower: 200,
+        exportPower: 150,
+        voltage: 230,
+        frequency: 50,
+        reliability: 99.9
       },
       status: 'active',
       onNodeClick: () => {},
@@ -130,6 +174,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
 ];
 
 export const getInitialEdges = (): Edge[] => [
+  // Generation to Conversion
   {
     id: 'solar-to-inverter',
     source: 'source-solar',
@@ -146,6 +191,8 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
+
+  // Conversion Chain
   {
     id: 'inverter-to-transformer',
     source: 'inverter-1',
@@ -154,6 +201,8 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
+
+  // To Storage
   {
     id: 'transformer-to-storage',
     source: 'transformer-1',
@@ -162,6 +211,8 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
+
+  // Storage to Consumers
   {
     id: 'storage-to-residential',
     source: 'storage-1',
@@ -178,6 +229,8 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
+
+  // Grid Connection
   {
     id: 'grid-to-storage',
     source: 'grid-1',

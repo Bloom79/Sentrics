@@ -20,9 +20,9 @@ const TransformerNode: React.FC<{ data: FlowNodeData }> = ({ data }) => {
         <div className="text-sm font-medium">{data.label}</div>
         {data.specs && (
           <div className="grid grid-cols-2 gap-x-3 text-[10px] text-muted-foreground">
-            <span>In: {data.specs.voltage}V</span>
-            <span>Out: {data.specs.power}V</span>
-            <span>Load: {data.specs.current}A</span>
+            <span>In: {data.specs.inputVoltage}V</span>
+            <span>Out: {data.specs.outputVoltage}V</span>
+            <span>Power: {data.specs.outputPower}W</span>
             <span>Eff: {data.specs.efficiency}%</span>
           </div>
         )}

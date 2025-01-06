@@ -15,7 +15,7 @@ const StringNode: React.FC<{ data: FlowNodeData }> = ({ data }) => {
         <div className="text-xs font-medium">{data.label}</div>
         {data.specs && (
           <div className="text-[10px] text-muted-foreground">
-            {data.specs.voltage}V / {data.specs.current}A
+            {data.specs.inputVoltage}V / {data.specs.outputPower}W
           </div>
         )}
       </div>

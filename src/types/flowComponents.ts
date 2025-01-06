@@ -1,4 +1,4 @@
-export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'bess';
+export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'bess' | 'cell' | 'string';
 
 export type ConsumerType = 'residential' | 'industrial' | 'commercial';
 
@@ -67,15 +67,3 @@ export type EnergyFlow = {
 };
 
 export type TimeRange = 'realtime' | '15min' | '1hour' | '24hours' | 'custom';
-
-export type EnergyFlowEdge = {
-  id: string;
-  source: string;
-  target: string;
-  data: {
-    energyFlow: EnergyFlow;
-    efficiency: number;
-    status: 'active' | 'inactive' | 'error';
-    type: 'solar' | 'storage' | 'grid' | 'consumption' | 'power';
-  };
-};
