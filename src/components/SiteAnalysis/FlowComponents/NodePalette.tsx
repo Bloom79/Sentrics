@@ -1,5 +1,5 @@
 import React, { DragEvent } from 'react';
-import { Sun, Wind, Battery, Factory, Grid, Zap, Cable, Building2, Users, CircuitBoard } from 'lucide-react';
+import { Sun, Wind, Battery, Factory, Grid, Zap, Cable, Building2, Users } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
@@ -68,24 +68,6 @@ const paletteCategories = [
   },
   {
     title: "Storage",
-    items: [
-      { 
-        type: 'storage', 
-        label: 'Battery Storage', 
-        icon: Battery,
-        specs: {
-          capacity: 1000,
-          stateOfCharge: 85,
-          power: 250,
-          stateOfHealth: 97,
-          temperature: 25,
-          cycleCount: 450
-        }
-      }
-    ]
-  },
-  {
-    title: "Energy Storage",
     items: [
       { 
         type: 'bess', 
