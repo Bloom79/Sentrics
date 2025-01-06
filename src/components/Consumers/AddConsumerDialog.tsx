@@ -11,7 +11,6 @@ import { ConsumerBasicInfo } from "./AddConsumerDialog/ConsumerBasicInfo";
 import { ConsumerContactInfo } from "./AddConsumerDialog/ConsumerContactInfo";
 import { ConsumerAddressInfo } from "./AddConsumerDialog/ConsumerAddressInfo";
 import { ConsumerBusinessInfo } from "./AddConsumerDialog/ConsumerBusinessInfo";
-import { v4 as uuidv4 } from 'uuid';
 
 export const AddConsumerDialog = () => {
   const { toast } = useToast();
@@ -19,32 +18,10 @@ export const AddConsumerDialog = () => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
-      // First create the auth user
-      const tempPassword = uuidv4(); // Generate a random password
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: data.email,
-        password: tempPassword,
-        options: {
-          data: {
-            full_name: data.name,
-          },
-        },
-      });
-
-      if (authError) {
-        console.error("Auth error:", authError);
-        throw authError;
-      }
-
-      if (!authData.user) {
-        throw new Error("No user data returned");
-      }
-
-      // Then create the profile using the new user's ID
+      // Create the profile directly
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
-          id: authData.user.id,
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
