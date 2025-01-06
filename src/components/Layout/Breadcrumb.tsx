@@ -41,7 +41,7 @@ export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
 
   return (
     <Breadcrumb className="mb-6">
-      <BreadcrumbItem>
+      <BreadcrumbItem className="inline-flex items-center">
         <BreadcrumbLink asChild>
           <Link to="/" className="flex items-center gap-2">
             <Home className="h-4 w-4" />
@@ -51,10 +51,10 @@ export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
       </BreadcrumbItem>
       {breadcrumbItems.map((item, index) => (
         <React.Fragment key={item.label}>
-          <BreadcrumbSeparator>
+          <BreadcrumbSeparator className="inline-flex">
             <ChevronRight className="h-4 w-4" />
           </BreadcrumbSeparator>
-          <BreadcrumbItem>
+          <BreadcrumbItem className="inline-flex items-center">
             {index === breadcrumbItems.length - 1 ? (
               <BreadcrumbPage>{item.label}</BreadcrumbPage>
             ) : (
