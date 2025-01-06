@@ -17,10 +17,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { UserPlus, Pencil, Trash2 } from "lucide-react";
+import { UserPlus, Pencil, Trash2, Mail } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { InviteUserForm } from "@/components/UserManagement/InviteUserForm";
+import { CreateUserForm } from "@/components/UserManagement/CreateUserForm";
 import { EditUserForm } from "@/components/UserManagement/EditUserForm";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 type Profile = {
   id: string;
@@ -84,14 +91,25 @@ export default function UserManagement() {
           <DialogTrigger asChild>
             <Button>
               <UserPlus className="mr-2 h-4 w-4" />
-              Invite User
+              Add User
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Invite New User</DialogTitle>
+              <DialogTitle>Add New User</DialogTitle>
             </DialogHeader>
-            <InviteUserForm onSuccess={() => refetch()} />
+            <Tabs defaultValue="create" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="create">Create User</TabsTrigger>
+                <TabsTrigger value="invite">Send Invitation</TabsTrigger>
+              </TabsList>
+              <TabsContent value="create">
+                <CreateUserForm onSuccess={() => refetch()} />
+              </TabsContent>
+              <TabsContent value="invite">
+                <InviteUserForm onSuccess={() => refetch()} />
+              </TabsContent>
+            </Tabs>
           </DialogContent>
         </Dialog>
       </div>
