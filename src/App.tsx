@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Layout/AppSidebar";
+import { AppBreadcrumb } from "@/components/Layout/Breadcrumb";
 import Index from "./pages/Index";
 import GridAnalysis from "./pages/GridAnalysis";
 import SiteDetail from "./pages/SiteDetail";
@@ -25,13 +26,23 @@ const App = () => {
             <SidebarProvider>
               <div className="flex min-h-screen w-full">
                 <AppSidebar />
-                <main className="flex-1 overflow-x-hidden">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/grid-analysis" element={<GridAnalysis />} />
-                    <Route path="/site/:siteId" element={<SiteDetail />} />
-                    <Route path="/storage-unit/:unitId" element={<StorageUnitDetail />} />
-                  </Routes>
+                <main className="flex-1 overflow-x-hidden bg-background">
+                  <div className="container py-6">
+                    <AppBreadcrumb />
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/plants" element={<div>Plants Overview</div>} />
+                      <Route path="/plants/:plantId" element={<div>Plant Detail</div>} />
+                      <Route path="/consumers" element={<div>Consumers Overview</div>} />
+                      <Route path="/consumers/:consumerId" element={<div>Consumer Detail</div>} />
+                      <Route path="/grid-analysis" element={<GridAnalysis />} />
+                      <Route path="/analytics" element={<div>Analytics Dashboard</div>} />
+                      <Route path="/maintenance" element={<div>Maintenance Overview</div>} />
+                      <Route path="/settings" element={<div>Settings</div>} />
+                      <Route path="/site/:siteId" element={<SiteDetail />} />
+                      <Route path="/storage-unit/:unitId" element={<StorageUnitDetail />} />
+                    </Routes>
+                  </div>
                 </main>
               </div>
             </SidebarProvider>

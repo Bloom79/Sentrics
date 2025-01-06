@@ -21,7 +21,6 @@ interface BreadcrumbProps {
 export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
   const location = useLocation();
   
-  // Generate breadcrumb items based on current path if no items provided
   const getBreadcrumbItems = () => {
     if (items.length > 0) return items;
     
