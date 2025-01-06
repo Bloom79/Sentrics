@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Consumer, ConsumerType, ConsumerStatus, ConsumerSpecs } from "@/types/site";
 import ConsumerContract from "./ConsumerContract";
+import ConsumptionFiles from "./ConsumptionFiles";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const ConsumerDetail = () => {
   const { consumerId } = useParams();
@@ -54,7 +55,6 @@ const ConsumerDetail = () => {
         connectionType: 'low-voltage'
       };
 
-      // Transform the data to match our Consumer type
       const consumer: Consumer = {
         id: data.id,
         full_name: data.full_name || '',
@@ -99,6 +99,7 @@ const ConsumerDetail = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="consumption">Consumption</TabsTrigger>
           <TabsTrigger value="contracts">Contracts</TabsTrigger>
+          <TabsTrigger value="files">Files</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
 
@@ -167,6 +168,10 @@ const ConsumerDetail = () => {
 
         <TabsContent value="contracts">
           <ConsumerContract />
+        </TabsContent>
+
+        <TabsContent value="files">
+          <ConsumptionFiles consumerId={consumerId!} />
         </TabsContent>
 
         <TabsContent value="settings">
