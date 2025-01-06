@@ -10,10 +10,13 @@ const ConsumerManagement = () => {
   const { data: consumers, refetch } = useQuery({
     queryKey: ['consumers'],
     queryFn: async () => {
+      // First, let's log what types we're looking for
+      console.log("Fetching consumers from profiles table");
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .in('type', ['residential', 'commercial', 'industrial']);
+        .not('type', 'is', null); // Get all profiles that have a type set
       
       if (error) {
         console.error("Error fetching consumers:", error);
@@ -68,7 +71,7 @@ const ConsumerManagement = () => {
         <h2 className="text-2xl font-semibold tracking-tight">
           Consumer Management
         </h2>
-        <AddConsumerDialog onSuccess={refetch} />
+        <AddConsumerDialog onSuccess={() => refetch()} />
       </div>
       
       <Card>
