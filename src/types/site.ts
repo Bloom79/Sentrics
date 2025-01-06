@@ -6,6 +6,7 @@ export interface StorageUnit {
   capacity: number;
   currentCharge: number;
   status: StorageUnitStatus;
+  health: number;
   stateOfHealth: number;
   chargingRate: number;
   cycleCount: number;
@@ -15,7 +16,7 @@ export interface StorageUnit {
   nextMaintenance: string;
 }
 
-export type PlantType = "solar" | "wind" | "hydro" | "biomass";
+export type PlantType = "solar" | "wind";
 export type PlantStatus = "online" | "offline" | "maintenance" | "fault";
 
 export interface Plant {
@@ -27,6 +28,7 @@ export interface Plant {
   efficiency: number;
   status: PlantStatus;
   lastUpdate: string;
+  location?: string;
 }
 
 export type ConsumerType = "industrial" | "commercial" | "residential";
@@ -38,8 +40,11 @@ export interface Consumer {
   type: ConsumerType;
   capacity: number;
   currentDemand: number;
+  consumption: number;
+  peakDemand: number;
   status: ConsumerStatus;
   location: string;
+  lastUpdate: string;
   contract: {
     startDate: string;
     endDate: string;
@@ -64,14 +69,29 @@ export interface Site {
   monthlyProduction: number;
   efficiency: number;
   co2Saved: number;
+  energySources: Array<{
+    type: string;
+    output: number;
+    capacity: number;
+    currentOutput: number;
+    status: string;
+  }>;
+  storage: {
+    capacity: number;
+    currentCharge: number;
+  };
+  gridConnection: {
+    status: string;
+    frequency: number;
+    voltage: number;
+    congestion: string;
+  };
 }
-
-export type AssetType = "inverter" | "panel" | "turbine" | "transformer" | "battery";
 
 export interface Asset {
   id: string;
   name: string;
-  type: AssetType;
+  type: "inverter" | "panel" | "turbine" | "transformer" | "battery";
   status: "online" | "offline" | "maintenance" | "fault";
   manufacturer: string;
   model: string;
@@ -79,4 +99,13 @@ export interface Asset {
   installationDate: string;
   lastMaintenance: string;
   nextMaintenance: string;
+  location: string;
+  efficiency?: number;
+  ratedPower?: number;
+  technology?: "lithium-ion" | "lead-acid" | "flow";
+  energyCapacity?: number;
+  stateOfCharge?: number;
+  roundTripEfficiency?: number;
 }
+
+export type AssetType = Asset;

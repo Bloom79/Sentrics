@@ -1,5 +1,5 @@
 import React from "react";
-import { Factory, ChevronRight } from "lucide-react";
+import { Factory, ChevronRight, LineChart } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import {
   SidebarMenuItem,
