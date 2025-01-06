@@ -229,19 +229,19 @@ export const getInitialEdges = (): Edge[] => [
     markerEnd: { type: MarkerType.ArrowClosed },
   },
 
-  // Grid to BESS connections
+  // BESS to Grid connections (reversed direction)
   {
-    id: 'grid-to-bess-1',
-    source: 'grid-1',
-    target: 'bess-1',
+    id: 'bess-1-to-grid',
+    source: 'bess-1',
+    target: 'grid-1',
     animated: true,
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
   {
-    id: 'grid-to-bess-2',
-    source: 'grid-1',
-    target: 'bess-2',
+    id: 'bess-2-to-grid',
+    source: 'bess-2',
+    target: 'grid-1',
     animated: true,
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
