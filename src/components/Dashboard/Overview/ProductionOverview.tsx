@@ -5,15 +5,14 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const ProductionOverview = () => {
   const { t } = useLanguage();
-  
   const productionChange = 5.2; // Mock data - replace with actual calculation
 
   return (
     <MetricsCard
       title={t('dashboard.totalProduction')}
       value="1,030 kW"
-      description={
-        <div className="flex items-center gap-1 text-xs">
+      description={(
+        <div className="flex items-center gap-1">
           {productionChange >= 0 ? (
             <>
               <TrendingUp className="w-3 h-3 text-green-500" />
@@ -27,7 +26,7 @@ const ProductionOverview = () => {
           )}
           <span className="text-muted-foreground ml-1">{t('dashboard.productionChange')}</span>
         </div>
-      }
+      )}
       icon={<Activity className="w-4 h-4 text-accent" />}
     />
   );

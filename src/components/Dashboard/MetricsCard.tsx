@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 interface MetricsCardProps {
   title: string;
   value: string;
-  description: string;
+  description: React.ReactNode;
   icon: React.ReactNode;
 }
 
@@ -17,7 +17,7 @@ const MetricsCard = ({ title, value, description, icon }: MetricsCardProps) => {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <div className="text-xs text-muted-foreground">{description}</div>
       </CardContent>
     </Card>
   );
