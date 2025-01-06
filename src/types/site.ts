@@ -1,4 +1,4 @@
-export type Plant = {
+export interface Plant {
   id: string;
   name: string;
   type: "solar" | "wind";
@@ -6,9 +6,27 @@ export type Plant = {
   currentOutput: number;
   efficiency: number;
   status: string;
-};
+}
 
-export type Site = {
+export interface EnergySource {
+  type: string;
+  output: number;
+  capacity: number;
+}
+
+export interface Storage {
+  capacity: number;
+  currentCharge: number;
+}
+
+export interface GridConnection {
+  status: string;
+  frequency: number;
+  voltage: number;
+  congestion: string;
+}
+
+export interface Site {
   id: string;
   name: string;
   status: string;
@@ -18,19 +36,11 @@ export type Site = {
   efficiency: number;
   co2Saved: number;
   plants: Plant[];
-  energySources: {
-    type: string;
-    output: number;
-    capacity: number;
-  }[];
-  storage: {
-    capacity: number;
-    currentCharge: number;
+  energySources: EnergySource[];
+  storage: Storage;
+  gridConnection: GridConnection;
+  location?: {
+    lat: number;
+    lng: number;
   };
-  gridConnection: {
-    status: string;
-    frequency: number;
-    voltage: number;
-    congestion: string;
-  };
-};
+}

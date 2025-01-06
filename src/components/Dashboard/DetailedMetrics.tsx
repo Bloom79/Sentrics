@@ -62,6 +62,26 @@ const mockSiteData: Site[] = [
     monthlyProduction: 63000,
     efficiency: 88,
     co2Saved: 38.5,
+    plants: [
+      {
+        id: "p3",
+        name: "Solar Farm Gamma",
+        type: "solar",
+        capacity: 1800,
+        currentOutput: 1200,
+        efficiency: 88,
+        status: "maintenance"
+      },
+      {
+        id: "p4",
+        name: "Wind Farm Delta",
+        type: "wind",
+        capacity: 1200,
+        currentOutput: 900,
+        efficiency: 89,
+        status: "online"
+      }
+    ],
     energySources: [
       { type: "solar", output: 1200, capacity: 1800 },
       { type: "wind", output: 900, capacity: 1200 }
@@ -78,6 +98,26 @@ const mockSiteData: Site[] = [
     monthlyProduction: 54000,
     efficiency: 90,
     co2Saved: 32.8,
+    plants: [
+      {
+        id: "p5",
+        name: "Solar Farm Epsilon",
+        type: "solar",
+        capacity: 1500,
+        currentOutput: 1000,
+        efficiency: 90,
+        status: "online"
+      },
+      {
+        id: "p6",
+        name: "Wind Farm Zeta",
+        type: "wind",
+        capacity: 1000,
+        currentOutput: 800,
+        efficiency: 91,
+        status: "online"
+      }
+    ],
     energySources: [
       { type: "solar", output: 1000, capacity: 1500 },
       { type: "wind", output: 800, capacity: 1000 }
