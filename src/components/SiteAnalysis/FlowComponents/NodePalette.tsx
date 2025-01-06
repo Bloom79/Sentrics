@@ -94,38 +94,41 @@ const paletteCategories = [
     items: [
       { 
         type: 'consumer', 
-        label: 'Residential Area', 
+        label: 'Residential Area A', 
         icon: Users,
         consumerType: 'residential',
         specs: {
           consumption: 150,
           connectedLoad: 200,
           powerFactor: 0.95,
-          peakDemand: 180
+          peakDemand: 180,
+          description: 'High-density residential complex'
         }
       },
       { 
         type: 'consumer', 
-        label: 'Industrial Zone', 
+        label: 'Factory Complex', 
         icon: Factory,
         consumerType: 'industrial',
         specs: {
           consumption: 450,
           connectedLoad: 600,
           powerFactor: 0.92,
-          peakDemand: 550
+          peakDemand: 550,
+          description: 'Manufacturing facility'
         }
       },
       { 
         type: 'consumer', 
-        label: 'Commercial Center', 
+        label: 'Shopping Center', 
         icon: Building2,
         consumerType: 'commercial',
         specs: {
           consumption: 300,
           connectedLoad: 400,
           powerFactor: 0.93,
-          peakDemand: 350
+          peakDemand: 350,
+          description: 'Retail and entertainment complex'
         }
       }
     ]
@@ -155,9 +158,9 @@ interface NodePaletteProps {
 
 const NodePalette: React.FC<NodePaletteProps> = ({ onDragStart }) => {
   return (
-    <Card className="absolute left-4 top-20 z-10 p-2 w-52 max-h-[calc(100vh-200px)] overflow-y-auto">
+    <Card className="absolute left-4 top-20 z-10 p-2 w-48 max-h-[calc(100vh-200px)] overflow-y-auto">
       <h3 className="text-xs font-medium mb-2">Components</h3>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         {paletteCategories.map((category, index) => (
           <div key={category.title}>
             {index > 0 && <Separator className="my-1" />}
@@ -166,12 +169,12 @@ const NodePalette: React.FC<NodePaletteProps> = ({ onDragStart }) => {
               {category.items.map((item) => (
                 <div
                   key={`${item.type}-${item.label}`}
-                  className="flex items-center gap-2 p-1.5 border rounded cursor-move hover:bg-accent text-xs"
+                  className="flex items-center gap-1.5 p-1 border rounded cursor-move hover:bg-accent text-xs"
                   draggable
                   onDragStart={(event) => onDragStart(event, item.type, item.sourceType, item.specs)}
                 >
                   <item.icon className="w-3.5 h-3.5" />
-                  <span>{item.label}</span>
+                  <span className="truncate">{item.label}</span>
                 </div>
               ))}
             </div>
