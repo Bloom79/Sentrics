@@ -9,6 +9,7 @@ import { getInitialLayout, generateEdges } from "@/utils/flowLayout";
 import { getEdgeStyle } from "@/utils/edgeUtils";
 import { useToast } from "@/components/ui/use-toast";
 import NodeDialog from "./NodeDialog";
+import EdgeDialog from "./EdgeDialog";
 
 // Import your node components
 import SourceNode from "./FlowNodes/SourceNode";
@@ -42,11 +43,43 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
   const [flowData, setFlowData] = useState<Record<string, EnergyFlow[]>>({});
   const [isPaused, setIsPaused] = useState(false);
+  const [faults, setFaults] = useState<Record<string, { type: 'warning' | 'error'; message: string }[]>>({});
 
-  // Mock function to generate flow data
+  // Mock function to generate flow data and faults
   const generateFlowData = useCallback((edgeId: string): EnergyFlow => {
     const now = new Date();
     const currentValue = Math.random() * 1000;
+    
+    // Randomly generate faults for demonstration
+    if (Math.random() < 0.1) {
+      const newFaults = [...(faults[edgeId] || [])];
+      if (currentValue > 800) {
+        newFaults.push({
+          type: 'warning',
+          message: 'High energy flow detected'
+        });
+      }
+      if (currentValue < 200) {
+        newFaults.push({
+          type: 'error',
+          message: 'Critical: Low energy flow'
+        });
+      }
+      setFaults(prev => ({
+        ...prev,
+        [edgeId]: newFaults
+      }));
+
+      // Show toast for critical faults
+      if (newFaults.some(f => f.type === 'error')) {
+        toast({
+          variant: "destructive",
+          title: "Critical Fault Detected",
+          description: `Edge ${edgeId} has reported critical faults`,
+        });
+      }
+    }
+
     return {
       currentValue,
       maxValue: currentValue * 1.2,
@@ -54,7 +87,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
       avgValue: currentValue,
       timestamp: now,
     };
-  }, []);
+  }, [faults, toast]);
 
   const { nodes, edges } = React.useMemo(() => {
     const layout = getInitialLayout(site.energySources.length);
@@ -81,9 +114,15 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   }, [timeRange, isPaused, generateFlowData, edges]);
 
   const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
-    setSelectedEdge(edge);
+    setSelectedEdge({
+      ...edge,
+      data: {
+        ...edge.data,
+        faults: faults[edge.id] || []
+      }
+    });
     setSelectedNode(null);
-  }, []);
+  }, [faults]);
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
     setSelectedNode({ id: node.id, type: node.type });
@@ -98,7 +137,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     });
   };
 
-  // Custom edge styles with animations
+  // Custom edge styles with animations and fault indicators
   const edgeOptions = {
     style: { strokeWidth: 2 },
     markerEnd: {
@@ -122,6 +161,9 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
           style: {
             ...edgeOptions.style,
             ...getEdgeStyle(flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue || 0),
+            stroke: faults[edge.id]?.some(f => f.type === 'error') ? '#ef4444' : 
+                   faults[edge.id]?.some(f => f.type === 'warning') ? '#f59e0b' : 
+                   undefined,
           },
           label: flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1) + ' kW',
           labelStyle: { fill: 'black', fontWeight: 500 },
@@ -140,13 +182,18 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
       </ReactFlow>
 
       {selectedEdge && (
-        <FlowChartDialog
+        <EdgeDialog
           open={true}
           onClose={() => setSelectedEdge(null)}
-          data={flowData[selectedEdge.id] || []}
-          sourceLabel={nodes.find(n => n.id === selectedEdge.source)?.data.label || ''}
-          targetLabel={nodes.find(n => n.id === selectedEdge.target)?.data.label || ''}
-          flowType="power"
+          edgeData={{
+            id: selectedEdge.id,
+            source: selectedEdge.source,
+            target: selectedEdge.target,
+            energyFlow: flowData[selectedEdge.id]?.[flowData[selectedEdge.id].length - 1]?.currentValue || 0,
+            efficiency: 95,
+            status: faults[selectedEdge.id]?.some(f => f.type === 'error') ? 'error' : 'active',
+            faults: faults[selectedEdge.id] || [],
+          }}
         />
       )}
 

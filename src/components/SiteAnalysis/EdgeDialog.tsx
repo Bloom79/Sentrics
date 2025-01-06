@@ -6,7 +6,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Battery, Zap } from "lucide-react";
+import { AlertTriangle, Zap, AlertOctagon } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface EdgeDialogProps {
   open: boolean;
@@ -17,7 +18,11 @@ interface EdgeDialogProps {
     target: string;
     energyFlow: number;
     efficiency: number;
-    status: 'active' | 'inactive';
+    status: 'active' | 'inactive' | 'error';
+    faults?: {
+      type: 'warning' | 'error';
+      message: string;
+    }[];
   };
 }
 
@@ -27,7 +32,11 @@ const EdgeDialog: React.FC<EdgeDialogProps> = ({ open, onClose, edgeData }) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Zap className="w-5 h-5" />
+            {edgeData.status === 'error' ? (
+              <AlertOctagon className="w-5 h-5 text-red-500" />
+            ) : (
+              <Zap className="w-5 h-5" />
+            )}
             Energy Transfer Details
           </DialogTitle>
           <DialogDescription>
@@ -47,10 +56,22 @@ const EdgeDialog: React.FC<EdgeDialogProps> = ({ open, onClose, edgeData }) => {
           </div>
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${
-              edgeData.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+              edgeData.status === 'active' ? 'bg-green-500' : 
+              edgeData.status === 'error' ? 'bg-red-500' : 'bg-gray-400'
             }`} />
             <span className="text-sm capitalize">{edgeData.status}</span>
           </div>
+
+          {edgeData.faults && edgeData.faults.length > 0 && (
+            <div className="space-y-2">
+              {edgeData.faults.map((fault, index) => (
+                <Alert key={index} variant={fault.type === 'error' ? 'destructive' : 'warning'}>
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>{fault.message}</AlertDescription>
+                </Alert>
+              ))}
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
