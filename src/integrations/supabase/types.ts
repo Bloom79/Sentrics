@@ -88,43 +88,67 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
+          city: string | null
+          contact_person: string | null
+          country: string | null
           created_at: string
           full_name: string | null
           id: string
           invitation_sent_at: string | null
           invitation_token: string | null
           invited_by: string | null
+          notes: string | null
+          phone: string | null
+          postal_code: string | null
           role: string | null
           status: string | null
           updated_at: string
           username: string | null
+          vat_number: string | null
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
+          city?: string | null
+          contact_person?: string | null
+          country?: string | null
           created_at?: string
           full_name?: string | null
           id: string
           invitation_sent_at?: string | null
           invitation_token?: string | null
           invited_by?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
           role?: string | null
           status?: string | null
           updated_at?: string
           username?: string | null
+          vat_number?: string | null
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
+          city?: string | null
+          contact_person?: string | null
+          country?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
           invitation_sent_at?: string | null
           invitation_token?: string | null
           invited_by?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
           role?: string | null
           status?: string | null
           updated_at?: string
           username?: string | null
+          vat_number?: string | null
         }
         Relationships: []
       }
