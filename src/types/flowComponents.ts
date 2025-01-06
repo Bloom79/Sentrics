@@ -2,9 +2,11 @@ import { Site } from "./site";
 
 export type FlowNodeType = 'cell' | 'string' | 'array' | 'inverter' | 'transformer' | 'storage' | 'grid' | 'consumer';
 
+export type ConsumerType = 'residential' | 'industrial' | 'commercial';
+
 export type FlowNodeData = {
   id: string;
-  type: FlowNodeType;
+  type: FlowNodeType | ConsumerType;
   label: string;
   specs?: {
     capacity?: number;
@@ -12,8 +14,10 @@ export type FlowNodeData = {
     efficiency?: number;
     current?: number;
     power?: number;
+    charge?: number;
   };
-  status: 'active' | 'inactive' | 'maintenance';
+  consumption?: number;
+  status?: 'active' | 'inactive' | 'maintenance';
   onNodeClick: (id: string, type: string) => void;
 };
 
@@ -25,7 +29,7 @@ export type EnergyFlowEdge = {
     energyFlow: number;
     efficiency: number;
     status: 'active' | 'inactive' | 'error';
-    type: 'grid' | 'storage' | 'consumption';
+    type: 'solar' | 'storage' | 'grid' | 'consumption' | 'power';
   };
 };
 

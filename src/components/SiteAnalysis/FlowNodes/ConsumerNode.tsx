@@ -1,36 +1,19 @@
 import React from "react";
 import { Users, Factory, Building2 } from "lucide-react";
 import StyledFlowNode from "./StyledFlowNode";
+import { FlowNodeData } from "@/types/flowComponents";
 
-interface ConsumerNodeProps {
-  data: {
-    type: "residential" | "industrial" | "commercial";
-    consumption: number;
-    onNodeClick: (id: string, type: string) => void;
-  };
-  id: string;
-}
-
-const ConsumerNode: React.FC<ConsumerNodeProps> = ({ data, id }) => {
+const ConsumerNode: React.FC<{ data: FlowNodeData }> = ({ data }) => {
   const getIcon = () => {
     switch (data.type) {
       case "residential":
-        return <Users className="w-8 h-8 text-green-500" />;
+        return <Users className="w-6 h-6 text-green-500" />;
       case "industrial":
-        return <Factory className="w-8 h-8 text-green-500" />;
+        return <Factory className="w-6 h-6 text-green-500" />;
       case "commercial":
-        return <Building2 className="w-8 h-8 text-green-500" />;
-    }
-  };
-
-  const getLabel = () => {
-    switch (data.type) {
-      case "residential":
-        return "Residential";
-      case "industrial":
-        return "Industrial";
-      case "commercial":
-        return "Commercial";
+        return <Building2 className="w-6 h-6 text-green-500" />;
+      default:
+        return <Factory className="w-6 h-6 text-green-500" />;
     }
   };
 
@@ -38,14 +21,16 @@ const ConsumerNode: React.FC<ConsumerNodeProps> = ({ data, id }) => {
     <StyledFlowNode 
       type="target" 
       className="bg-green-50 min-w-[120px]"
-      onClick={() => data.onNodeClick(id, 'consumer')}
+      onClick={() => data.onNodeClick(data.id, 'consumer')}
     >
       <div className="flex flex-col items-center gap-2">
         {getIcon()}
-        <div className="text-sm font-medium">{getLabel()}</div>
-        <div className="text-xs text-muted-foreground">
-          {data.consumption} kW
-        </div>
+        <div className="text-xs font-medium">{data.label}</div>
+        {data.consumption && (
+          <div className="text-[10px] text-muted-foreground">
+            {data.consumption} kW
+          </div>
+        )}
       </div>
     </StyledFlowNode>
   );
