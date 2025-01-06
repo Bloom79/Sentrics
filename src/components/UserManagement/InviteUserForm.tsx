@@ -39,7 +39,14 @@ export function InviteUserForm({ onSuccess }: { onSuccess: () => void }) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user) return;
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You must be logged in to invite users.",
+      });
+      return;
+    }
 
     const token = Math.random().toString(36).substring(2);
     const { error } = await supabase.from("invitations").insert({
@@ -47,13 +54,15 @@ export function InviteUserForm({ onSuccess }: { onSuccess: () => void }) {
       role: values.role,
       invited_by: user.id,
       token: token,
+      status: 'pending'
     });
 
     if (error) {
+      console.error("Invitation error:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send invitation. Please try again.",
+        description: error.message || "Failed to send invitation. Please try again.",
       });
     } else {
       toast({
