@@ -15,12 +15,19 @@ interface SitesListProps {
 export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite }) => {
   const navigate = useNavigate();
 
-  const handlePlantClick = (plantId: string) => {
+  const handlePlantClick = (plantId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     navigate(`/plants/${plantId}`);
   };
 
-  const handleConsumerClick = (consumerId: string) => {
+  const handleConsumerClick = (consumerId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     navigate(`/consumers/${consumerId}`);
+  };
+
+  const handleSiteClick = (siteId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/site/${siteId}`);
   };
 
   return (
@@ -29,7 +36,10 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
         <React.Fragment key={site.id}>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={() => toggleSite(site.id)}
+              onClick={(e) => {
+                handleSiteClick(site.id, e);
+                toggleSite(site.id);
+              }}
               className="group"
             >
               <span>{site.name}</span>
@@ -49,7 +59,7 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
                   {site.plants.map((plant) => (
                     <SidebarMenuItem key={plant.id}>
                       <SidebarMenuButton
-                        onClick={() => handlePlantClick(plant.id)}
+                        onClick={(e) => handlePlantClick(plant.id, e)}
                         className="group"
                       >
                         <Factory className="h-4 w-4" />
@@ -68,7 +78,7 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
                   {site.consumers?.map((consumer) => (
                     <SidebarMenuItem key={consumer.id}>
                       <SidebarMenuButton
-                        onClick={() => handleConsumerClick(consumer.id)}
+                        onClick={(e) => handleConsumerClick(consumer.id, e)}
                         className="group"
                       >
                         <Users className="h-4 w-4" />
