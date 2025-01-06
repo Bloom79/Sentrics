@@ -1,11 +1,12 @@
-import { Node, Edge, MarkerType } from '@xyflow/react';
+import { Node } from '@xyflow/react';
 import { FlowNodeData } from '@/types/flowComponents';
+import { getInitialEdges } from './flowEdgeConfig';
 
 const GENERATION_X = 0;
-const CONVERSION_X = 400;  // Increased spacing
-const STORAGE_X = 800;     // Increased spacing
-const CONSUMPTION_X = 1200; // Increased spacing
-const GRID_X = 400;        // Aligned with conversion components
+const CONVERSION_X = 400;
+const STORAGE_X = 800;
+const CONSUMPTION_X = 1200;
+const GRID_X = 400;
 
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
   // Generation Section
@@ -200,86 +201,4 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   },
 ];
 
-export const getInitialEdges = (): Edge[] => [
-  // Generation to Conversion
-  {
-    id: 'solar-to-inverter',
-    source: 'source-solar',
-    target: 'inverter-1',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: 'wind-to-inverter',
-    source: 'source-wind',
-    target: 'inverter-1',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-
-  // Conversion Chain
-  {
-    id: 'inverter-to-transformer',
-    source: 'inverter-1',
-    target: 'transformer-1',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-
-  // BESS to Grid connections (reversed direction)
-  {
-    id: 'bess-1-to-grid',
-    source: 'bess-1',
-    target: 'grid-1',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: 'bess-2-to-grid',
-    source: 'bess-2',
-    target: 'grid-1',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-
-  // Transformer to BESS connections
-  {
-    id: 'transformer-to-bess-1',
-    source: 'transformer-1',
-    target: 'bess-1',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: 'transformer-to-bess-2',
-    source: 'transformer-1',
-    target: 'bess-2',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-
-  // BESS to Consumers
-  {
-    id: 'bess-1-to-residential',
-    source: 'bess-1',
-    target: 'consumer-residential',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: 'bess-2-to-industrial',
-    source: 'bess-2',
-    target: 'consumer-industrial',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-];
+export { getInitialNodes, getInitialEdges };
