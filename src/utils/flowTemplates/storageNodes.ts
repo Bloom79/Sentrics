@@ -8,6 +8,11 @@ export const getStorageNodes = (): Node<FlowNodeData>[] => [
     id: 'bess-1',
     type: 'bess',
     position: { x: STORAGE_X, y: 0 },
+    style: {
+      width: 200,
+      height: 120,
+      padding: '16px'
+    },
     data: {
       id: 'bess-1',
       type: 'bess',
@@ -34,7 +39,12 @@ export const getStorageNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'bess-2',
     type: 'bess',
-    position: { x: STORAGE_X, y: 150 },
+    position: { x: STORAGE_X, y: 200 },
+    style: {
+      width: 200,
+      height: 120,
+      padding: '16px'
+    },
     data: {
       id: 'bess-2',
       type: 'bess',

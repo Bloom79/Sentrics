@@ -8,6 +8,11 @@ export const getGenerationNodes = (): Node<FlowNodeData>[] => [
     id: 'source-solar',
     type: 'source',
     position: { x: GENERATION_X, y: 0 },
+    style: {
+      width: 180,
+      height: 120,
+      padding: '20px'
+    },
     data: {
       id: 'source-solar',
       type: 'source',
@@ -27,7 +32,12 @@ export const getGenerationNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'source-wind',
     type: 'source',
-    position: { x: GENERATION_X, y: 150 },
+    position: { x: GENERATION_X, y: 200 },
+    style: {
+      width: 180,
+      height: 120,
+      padding: '20px'
+    },
     data: {
       id: 'source-wind',
       type: 'source',
