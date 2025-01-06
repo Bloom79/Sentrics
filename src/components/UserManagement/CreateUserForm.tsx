@@ -40,21 +40,12 @@ export function CreateUserForm({ onSuccess }: { onSuccess: () => void }) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-user`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-          },
-          body: JSON.stringify(values)
-        }
-      );
+      const { error } = await supabase.functions.invoke('create-user', {
+        body: values
+      });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to create user');
+      if (error) {
+        throw error;
       }
 
       toast({
