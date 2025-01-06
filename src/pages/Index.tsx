@@ -6,6 +6,7 @@ import ProductionOverview from "@/components/Dashboard/Overview/ProductionOvervi
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import SitesList from "@/components/Dashboard/SitesList";
+import ForecastOverview from "@/components/Dashboard/Overview/ForecastOverview";
 
 const sites = [
   {
@@ -72,6 +73,10 @@ const Index = () => {
             <SolarProduction />
             <WindProduction />
             <StorageStatus />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            <ForecastOverview />
           </div>
 
           <div className="grid grid-cols-1 gap-4">
