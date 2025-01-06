@@ -25,3 +25,45 @@ export interface Consumer {
   vat_number?: string;
   notes?: string;
 }
+
+export type Plant = {
+  id: string;
+  name: string;
+  type: 'solar' | 'wind';
+  capacity: number;
+  currentOutput: number;
+  efficiency: number;
+  status: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+};
+
+export type Site = {
+  id: string;
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  plants: Plant[];
+  consumers: Consumer[];
+  storageUnits: StorageUnit[];
+};
+
+export type AssetType = 'panel' | 'inverter' | 'turbine' | 'transformer' | 'battery';
+export type AssetStatus = 'operational' | 'maintenance' | 'faulty';
+
+export type StorageUnit = {
+  id: string;
+  name: string;
+  type: 'battery' | 'hydrogen' | 'thermal';
+  capacity: number;
+  currentCharge: number;
+  status: string;
+  powerRating: number;
+  temperature: number;
+  health: number;
+  efficiency: number;
+};

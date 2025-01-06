@@ -3,28 +3,14 @@ import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Consumer } from "@/types/site";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-
-type ConsumerFormData = {
-  name: string;
-  type: "residential" | "commercial" | "industrial";
-  consumption: number;
-  address: string;
-  city: string;
-  postal_code: string;
-  country: string;
-  contact_person: string;
-  email: string;
-  phone: string;
-  vat_number: string;
-  notes: string;
-};
+import { ConsumerFormData } from "./AddConsumerDialog/types";
+import { ConsumerBasicInfo } from "./AddConsumerDialog/ConsumerBasicInfo";
+import { ConsumerContactInfo } from "./AddConsumerDialog/ConsumerContactInfo";
+import { ConsumerAddressInfo } from "./AddConsumerDialog/ConsumerAddressInfo";
+import { ConsumerBusinessInfo } from "./AddConsumerDialog/ConsumerBusinessInfo";
 
 export const AddConsumerDialog = () => {
   const { toast } = useToast();
@@ -47,7 +33,13 @@ export const AddConsumerDialog = () => {
           phone: data.phone,
           vat_number: data.vat_number,
           notes: data.notes,
-          status: 'active'
+          status: 'active',
+          specs: {
+            peakDemand: 0,
+            dailyUsage: 0,
+            powerFactor: 0,
+            connectionType: 'low-voltage'
+          }
         });
 
       if (error) throw error;
@@ -80,185 +72,10 @@ export const AddConsumerDialog = () => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company/Consumer Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select consumer type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="residential">Residential</SelectItem>
-                        <SelectItem value="commercial">Commercial</SelectItem>
-                        <SelectItem value="industrial">Industrial</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="consumption"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Consumption (kW)</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="vat_number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>VAT Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter VAT number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter city" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="postal_code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Postal Code</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter postal code" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter country" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="contact_person"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Person</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter contact name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Enter email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter phone number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Additional notes..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            <ConsumerBasicInfo form={form} />
+            <ConsumerBusinessInfo form={form} />
+            <ConsumerAddressInfo form={form} />
+            <ConsumerContactInfo form={form} />
             <Button type="submit" className="w-full">Add Consumer</Button>
           </form>
         </Form>

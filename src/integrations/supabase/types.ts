@@ -125,6 +125,7 @@ export type Database = {
           contact_person: string | null
           country: string | null
           created_at: string
+          email: string | null
           full_name: string | null
           id: string
           invitation_sent_at: string | null
@@ -149,6 +150,7 @@ export type Database = {
           contact_person?: string | null
           country?: string | null
           created_at?: string
+          email?: string | null
           full_name?: string | null
           id: string
           invitation_sent_at?: string | null
@@ -173,6 +175,7 @@ export type Database = {
           contact_person?: string | null
           country?: string | null
           created_at?: string
+          email?: string | null
           full_name?: string | null
           id?: string
           invitation_sent_at?: string | null
