@@ -1,21 +1,53 @@
-export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'cell' | 'string' | 'bess';
+export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer';
 
 export type ConsumerType = 'residential' | 'industrial' | 'commercial';
 
-export type NodeStatus = 'active' | 'inactive' | 'maintenance' | 'charging' | 'discharging';
+export type NodeStatus = 'active' | 'inactive' | 'maintenance' | 'charging' | 'discharging' | 'operational' | 'standby' | 'fault';
+
+export interface NodeSpecs {
+  // Generation specs
+  power?: number;
+  capacity?: number;
+  temperature?: number;
+  efficiency?: number;
+  age?: number;
+  irradiance?: number;
+  windSpeed?: number;
+  turbineStatus?: string;
+  rpm?: number;
+
+  // Power conversion specs
+  inputPower?: number;
+  outputPower?: number;
+  inputVoltage?: number;
+  outputVoltage?: number;
+  mode?: string;
+  tapPosition?: number;
+
+  // Storage specs
+  stateOfCharge?: number;
+  stateOfHealth?: number;
+  cycleCount?: number;
+
+  // Consumer specs
+  consumption?: number;
+  connectedLoad?: number;
+  powerFactor?: number;
+  peakDemand?: number;
+
+  // Grid specs
+  importPower?: number;
+  exportPower?: number;
+  voltage?: number;
+  frequency?: number;
+  reliability?: number;
+}
 
 export type FlowNodeData = {
   id: string;
   type: FlowNodeType | ConsumerType;
   label: string;
-  specs?: {
-    capacity?: number;
-    voltage?: number;
-    efficiency?: number;
-    current?: number;
-    power?: number;
-    charge?: number;
-  };
+  specs?: NodeSpecs;
   status?: NodeStatus;
   consumption?: number;
   onNodeClick: (id: string, type: string) => void;

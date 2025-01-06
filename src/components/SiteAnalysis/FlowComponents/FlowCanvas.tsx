@@ -12,6 +12,7 @@ import {
 import { getEdgeOptions } from "../FlowEdgeOptions";
 import { nodeTypes } from "./FlowNodeTypes";
 import { useReactFlow } from "@xyflow/react";
+import { FlowNodeData } from "@/types/flowComponents";
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -53,6 +54,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
       const type = event.dataTransfer.getData('application/reactflow');
       const sourceType = event.dataTransfer.getData('sourceType');
+      const specs = JSON.parse(event.dataTransfer.getData('specs') || '{}');
+      
       const { clientX, clientY } = event;
       const position = reactFlowInstance.screenToFlowPosition({
         x: clientX,
@@ -60,19 +63,18 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       });
 
       const newNode = {
-        id: `node_${nodes.length + 1}`,
+        id: `${type}_${nodes.length + 1}`,
         type,
         position,
         data: { 
+          id: `${type}_${nodes.length + 1}`,
+          type,
           label: sourceType === 'solar' 
             ? 'Solar Array' 
+            : sourceType === 'wind'
+            ? 'Wind Farm'
             : `${type.charAt(0).toUpperCase() + type.slice(1)} ${nodes.length + 1}`,
-          type,
-          specs: {
-            capacity: 500,
-            power: 350,
-            efficiency: 95,
-          },
+          specs,
           status: 'active',
           onNodeClick: (id: string, type: string) => onNodeClick(event, { id, type } as any),
         },
