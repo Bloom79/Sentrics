@@ -5,6 +5,7 @@ const GENERATION_X = 0;
 const CONVERSION_X = 300;
 const STORAGE_X = 600;
 const CONSUMPTION_X = 900;
+const GRID_X = 600;
 
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
   // Generation Section
@@ -87,15 +88,15 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
     },
   },
 
-  // Storage Section
+  // Storage Section (Multiple BESS units)
   {
-    id: 'storage-1',
+    id: 'bess-1',
     type: 'bess',
-    position: { x: STORAGE_X, y: 75 },
+    position: { x: STORAGE_X, y: 0 },
     data: {
-      id: 'storage-1',
+      id: 'bess-1',
       type: 'bess',
-      label: 'Battery Storage (BESS)',
+      label: 'Battery Storage 1',
       specs: {
         maxCapacity: 1000,
         currentCharge: 750,
@@ -112,6 +113,53 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         cycles: 450
       },
       status: 'charging',
+      onNodeClick: () => {},
+    },
+  },
+  {
+    id: 'bess-2',
+    type: 'bess',
+    position: { x: STORAGE_X, y: 150 },
+    data: {
+      id: 'bess-2',
+      type: 'bess',
+      label: 'Battery Storage 2',
+      specs: {
+        maxCapacity: 1000,
+        currentCharge: 850,
+        stateOfCharge: 85,
+        stateOfHealth: 97,
+        chargingPower: 250,
+        dischargingPower: 250,
+        temperature: 26,
+        cycleCount: 380,
+        depthOfDischarge: 80,
+        efficiency: 95,
+        powerRating: 500,
+        health: 97,
+        cycles: 380
+      },
+      status: 'standby',
+      onNodeClick: () => {},
+    },
+  },
+
+  // Grid Connection
+  {
+    id: 'grid-1',
+    type: 'grid',
+    position: { x: GRID_X - 300, y: 75 },
+    data: {
+      id: 'grid-1',
+      type: 'grid',
+      label: 'Power Grid',
+      specs: {
+        inputPower: 200,
+        outputPower: 150,
+        efficiency: 99.9,
+        temperature: 35
+      },
+      status: 'active',
       onNodeClick: () => {},
     },
   },
@@ -157,24 +205,6 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       onNodeClick: () => {},
     },
   },
-  {
-    id: 'grid-1',
-    type: 'grid',
-    position: { x: CONSUMPTION_X, y: 300 },
-    data: {
-      id: 'grid-1',
-      type: 'grid',
-      label: 'Power Grid',
-      specs: {
-        inputPower: 200,
-        outputPower: 150,
-        efficiency: 99.9,
-        temperature: 35
-      },
-      status: 'active',
-      onNodeClick: () => {},
-    },
-  },
 ];
 
 export const getInitialEdges = (): Edge[] => [
@@ -206,39 +236,55 @@ export const getInitialEdges = (): Edge[] => [
     markerEnd: { type: MarkerType.ArrowClosed },
   },
 
-  // To Storage
+  // Grid to BESS connections
   {
-    id: 'transformer-to-storage',
-    source: 'transformer-1',
-    target: 'storage-1',
+    id: 'grid-to-bess-1',
+    source: 'grid-1',
+    target: 'bess-1',
+    animated: true,
+    style: { stroke: '#22c55e' },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  },
+  {
+    id: 'grid-to-bess-2',
+    source: 'grid-1',
+    target: 'bess-2',
     animated: true,
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
 
-  // Storage to Consumers
+  // Transformer to BESS connections
   {
-    id: 'storage-to-residential',
-    source: 'storage-1',
+    id: 'transformer-to-bess-1',
+    source: 'transformer-1',
+    target: 'bess-1',
+    animated: true,
+    style: { stroke: '#22c55e' },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  },
+  {
+    id: 'transformer-to-bess-2',
+    source: 'transformer-1',
+    target: 'bess-2',
+    animated: true,
+    style: { stroke: '#22c55e' },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  },
+
+  // BESS to Consumers
+  {
+    id: 'bess-1-to-residential',
+    source: 'bess-1',
     target: 'consumer-residential',
     animated: true,
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
   {
-    id: 'storage-to-industrial',
-    source: 'storage-1',
+    id: 'bess-2-to-industrial',
+    source: 'bess-2',
     target: 'consumer-industrial',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-
-  // Grid Connection
-  {
-    id: 'grid-to-storage',
-    source: 'grid-1',
-    target: 'storage-1',
     animated: true,
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
