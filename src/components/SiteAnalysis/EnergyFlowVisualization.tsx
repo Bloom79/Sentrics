@@ -1,14 +1,16 @@
 import React, { useState, useCallback, DragEvent } from "react";
 import { 
-  ReactFlow, 
-  Controls, 
-  Edge, 
-  Panel, 
-  Background, 
-  Connection, 
+  ReactFlow,
+  ReactFlowProvider,
+  Controls,
+  Background,
+  Connection,
+  Edge,
   useReactFlow,
+  Node,
   applyNodeChanges,
-  applyEdgeChanges
+  applyEdgeChanges,
+  XYPosition
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
@@ -19,9 +21,8 @@ import NodeDialog from "./NodeDialog";
 import EdgeDialog from "./EdgeDialog";
 import { useFlowData } from "@/hooks/useFlowData";
 import { getEdgeOptions } from "./FlowEdgeOptions";
-import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize2, Battery, Sun, Wind, Factory, Grid } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import NodePalette from "./FlowComponents/NodePalette";
+import FlowControls from "./FlowComponents/FlowControls";
 
 // Import node components
 import SourceNode from "./FlowNodes/SourceNode";
@@ -44,14 +45,6 @@ const nodeTypes = {
   transformer: TransformerNode,
 };
 
-const paletteItems = [
-  { type: 'source', label: 'Solar Array', icon: Sun },
-  { type: 'source', label: 'Wind Farm', icon: Wind },
-  { type: 'storage', label: 'Storage', icon: Battery },
-  { type: 'consumer', label: 'Consumer', icon: Factory },
-  { type: 'grid', label: 'Grid', icon: Grid },
-];
-
 interface EnergyFlowVisualizationProps {
   site: Site;
 }
@@ -59,16 +52,15 @@ interface EnergyFlowVisualizationProps {
 let id = 0;
 const getId = () => `node_${id++}`;
 
-const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
+const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
   const [timeRange, setTimeRange] = useState<TimeRange>("realtime");
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const { project } = useReactFlow();
+  const reactFlowInstance = useReactFlow();
 
   const { flowData, faults, efficiencyMetrics } = useFlowData(timeRange, isPaused, edges);
 
@@ -86,12 +78,11 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     (event: DragEvent) => {
       event.preventDefault();
 
-      if (!reactFlowInstance) return;
-
       const type = event.dataTransfer.getData('application/reactflow');
-      const position = project({
-        x: event.clientX,
-        y: event.clientY,
+      const { clientX, clientY } = event;
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: clientX,
+        y: clientY,
       });
 
       const newNode = {
@@ -106,7 +97,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, project, nodes]
+    [reactFlowInstance, nodes]
   );
 
   const onConnect = useCallback(
@@ -137,7 +128,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     setSelectedNode(null);
   }, [faults, flowData, efficiencyMetrics]);
 
-  const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
+  const handleNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     setSelectedNode({ id: node.id, type: node.type });
     setSelectedEdge(null);
   }, []);
@@ -147,24 +138,18 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   };
 
   const handleZoomIn = () => {
-    if (reactFlowInstance) {
-      reactFlowInstance.zoomIn();
-      setZoomLevel(prev => Math.min(prev + 0.2, 2));
-    }
+    reactFlowInstance.zoomIn();
+    setZoomLevel(prev => Math.min(prev + 0.2, 2));
   };
 
   const handleZoomOut = () => {
-    if (reactFlowInstance) {
-      reactFlowInstance.zoomOut();
-      setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
-    }
+    reactFlowInstance.zoomOut();
+    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
   };
 
   const handleFitView = () => {
-    if (reactFlowInstance) {
-      reactFlowInstance.fitView({ padding: 0.2 });
-      setZoomLevel(1);
-    }
+    reactFlowInstance.fitView({ padding: 0.2 });
+    setZoomLevel(1);
   };
 
   const enhancedEdges = getEdgeOptions({ flowData, faults, efficiencyMetrics, edges });
@@ -175,23 +160,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         <TimeRangeSelector value={timeRange} onChange={handleTimeRangeChange} />
       </div>
 
-      {/* Node Palette */}
-      <Card className="absolute left-4 top-20 z-10 p-4">
-        <h3 className="text-sm font-medium mb-2">Components</h3>
-        <div className="flex flex-col gap-2">
-          {paletteItems.map((item) => (
-            <div
-              key={`${item.type}-${item.label}`}
-              className="flex items-center gap-2 p-2 border rounded cursor-move hover:bg-accent"
-              draggable
-              onDragStart={(event) => onDragStart(event, item.type)}
-            >
-              <item.icon className="w-4 h-4" />
-              <span className="text-sm">{item.label}</span>
-            </div>
-          ))}
-        </div>
-      </Card>
+      <NodePalette onDragStart={onDragStart} />
       
       <ReactFlow
         nodes={nodes}
@@ -200,7 +169,6 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         onNodesChange={(changes) => setNodes((nds) => applyNodeChanges(changes, nds))}
         onEdgesChange={(changes) => setEdges((eds) => applyEdgeChanges(changes, eds))}
         onConnect={onConnect}
-        onInit={setReactFlowInstance}
         onDrop={onDrop}
         onDragOver={onDragOver}
         fitView
@@ -217,32 +185,11 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
       >
         <Background />
         <Controls showInteractive={false} />
-        <Panel position="top-right" className="bg-background/95 p-2 rounded-lg shadow-sm border flex gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleZoomIn}
-            className="h-8 w-8"
-          >
-            <ZoomIn className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleZoomOut}
-            className="h-8 w-8"
-          >
-            <ZoomOut className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleFitView}
-            className="h-8 w-8"
-          >
-            <Maximize2 className="h-4 w-4" />
-          </Button>
-        </Panel>
+        <FlowControls
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onFitView={handleFitView}
+        />
       </ReactFlow>
 
       {selectedEdge && (
@@ -271,6 +218,15 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         />
       )}
     </div>
+  );
+};
+
+// Wrap the Flow component with ReactFlowProvider
+const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = (props) => {
+  return (
+    <ReactFlowProvider>
+      <Flow {...props} />
+    </ReactFlowProvider>
   );
 };
 
