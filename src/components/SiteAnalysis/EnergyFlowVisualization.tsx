@@ -36,22 +36,26 @@ interface EnergyFlowVisualizationProps {
   site: Site;
 }
 
+type FaultType = {
+  type: 'warning' | 'error';
+  message: string;
+};
+
+type EfficiencyMetric = {
+  efficiency: number;
+  losses: { type: string; value: number; }[];
+};
+
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
   const { toast } = useToast();
   const [timeRange, setTimeRange] = useState<TimeRange>("realtime");
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
-  const [flowData, setFlowData] = useState<Record<string, EnergyFlow[]>>({});
+  const [flowData, setFlowData] = useState<{ [key: string]: EnergyFlow[] }>({});
   const [isPaused, setIsPaused] = useState(false);
-  const [faults, setFaults] = useState<Record<string, { type: 'warning' | 'error'; message: string }[]>>({});
-  
-  // Add new state for efficiency metrics
-  const [efficiencyMetrics, setEfficiencyMetrics] = useState<Record<string, {
-    efficiency: number;
-    losses: { type: string; value: number; }[];
-  }>({});
+  const [faults, setFaults] = useState<{ [key: string]: FaultType[] }>({});
+  const [efficiencyMetrics, setEfficiencyMetrics] = useState<{ [key: string]: EfficiencyMetric }>({});
 
-  // Mock function to generate flow data and faults
   const generateFlowData = useCallback((edgeId: string): EnergyFlow => {
     const now = new Date();
     const currentValue = Math.random() * 1000;
@@ -118,7 +122,6 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     return { nodes: layout.nodes, edges };
   }, [site.energySources.length]);
 
-  // Update flow data periodically with efficiency metrics
   useEffect(() => {
     if (timeRange === 'realtime' && !isPaused) {
       const interval = setInterval(() => {
@@ -175,7 +178,6 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     });
   };
 
-  // Custom edge styles with animations and fault indicators
   const edgeOptions = {
     style: { strokeWidth: 2 },
     markerEnd: {
@@ -206,8 +208,8 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
               ? (efficiencyMetrics[edge.id].efficiency / 100) 
               : 1,
           },
-          label: `${flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1)} kW (${
-            efficiencyMetrics[edge.id]?.efficiency.toFixed(1) || 95
+          label: `${flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1) || '0'} kW (${
+            efficiencyMetrics[edge.id]?.efficiency.toFixed(1) || '95'
           }%)`,
           labelStyle: { fill: 'black', fontWeight: 500 },
           labelBgStyle: { fill: 'white', opacity: 0.8 },
