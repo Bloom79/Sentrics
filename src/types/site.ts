@@ -80,4 +80,60 @@ export interface StorageUnit {
   current?: number;
 }
 
-export type AssetType = "inverter" | "panel" | "battery" | "transformer" | "turbine";
+export interface BaseAsset {
+  id: string;
+  type: "panel" | "inverter" | "battery" | "transformer" | "turbine";
+  serialNumber: string;
+  model: string;
+  manufacturer: string;
+  installationDate: string;
+  status: "operational" | "maintenance" | "fault";
+  location: string;
+}
+
+export interface SolarPanel extends BaseAsset {
+  type: "panel";
+  ratedPower: number;
+  efficiency: number;
+  lastOutput?: number;
+  orientation?: string;
+  tilt?: number;
+}
+
+export interface Inverter extends BaseAsset {
+  type: "inverter";
+  efficiency: number;
+  ratedPower: number;
+  lastOutput?: number;
+  dcInputMin?: number;
+  dcInputMax?: number;
+}
+
+export interface WindTurbine extends BaseAsset {
+  type: "turbine";
+  ratedCapacity: number;
+  rotorDiameter: number;
+  hubHeight: number;
+  cutInSpeed: number;
+  cutOutSpeed: number;
+}
+
+export interface Transformer extends BaseAsset {
+  type: "transformer";
+  capacity: number;
+  voltageIn: number;
+  voltageOut: number;
+  efficiency: number;
+}
+
+export interface Battery extends BaseAsset {
+  type: "battery";
+  technology: "lithium-ion" | "lead-acid" | "flow";
+  ratedPower: number;
+  energyCapacity: number;
+  stateOfCharge?: number;
+  roundTripEfficiency?: number;
+  cycleCount?: number;
+}
+
+export type AssetType = SolarPanel | Inverter | WindTurbine | Transformer | Battery;
