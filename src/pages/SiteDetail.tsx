@@ -3,64 +3,8 @@ import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Wind, Activity, Battery, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { mockSites } from "@/data/mockData";
 import { Site } from "@/types/site";
-
-// Mock data for a site - in a real app, this would come from an API or store
-const mockSites: Site[] = [
-  {
-    id: "1",
-    name: "Milano Nord",
-    location: "Northern Region",
-    type: "hybrid",
-    capacity: 800,
-    status: "online",
-    lastUpdate: new Date().toISOString(),
-    dailyProduction: 2500,
-    monthlyProduction: 75000,
-    efficiency: 92,
-    co2Saved: 45.2,
-    plants: [
-      {
-        id: "1",
-        name: "Solar Array A",
-        type: "solar",
-        capacity: 500,
-        currentOutput: 350,
-        efficiency: 95,
-        status: "online"
-      },
-      {
-        id: "2",
-        name: "Wind Farm B",
-        type: "wind",
-        capacity: 300,
-        currentOutput: 250,
-        efficiency: 89,
-        status: "online"
-      }
-    ],
-    energySources: [
-      { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
-      { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
-    ],
-    storage: { capacity: 1000, currentCharge: 750 },
-    storageUnits: [
-      {
-        id: "1",
-        name: "BESS Unit 1",
-        capacity: 1000,
-        currentCharge: 750,
-        status: "charging"
-      }
-    ],
-    gridConnection: {
-      status: "connected",
-      frequency: 50.02,
-      voltage: 230.5,
-      congestion: "Low"
-    }
-  }
-];
 
 const SiteDetail = () => {
   const { id } = useParams();
