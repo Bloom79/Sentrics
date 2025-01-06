@@ -4,6 +4,7 @@ import ConsumerNode from "../FlowNodes/ConsumerNode";
 import GridNode from "../FlowNodes/GridNode";
 import InverterNode from "../FlowNodes/InverterNode";
 import TransformerNode from "../FlowNodes/TransformerNode";
+import BESSNode from "../FlowNodes/BESSNode";
 
 export const nodeTypes = {
   source: SourceNode,
@@ -12,4 +13,5 @@ export const nodeTypes = {
   grid: GridNode,
   inverter: InverterNode,
   transformer: TransformerNode,
+  bess: BESSNode,
 };

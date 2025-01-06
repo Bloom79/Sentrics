@@ -8,8 +8,8 @@ interface StorageNodeProps {
 }
 
 const StorageNode: React.FC<StorageNodeProps> = ({ data }) => {
-  const chargePercentage = data.specs?.charge && data.specs?.capacity 
-    ? (data.specs.charge / data.specs.capacity) * 100 
+  const chargePercentage = data.specs?.currentCharge && data.specs?.maxCapacity 
+    ? (data.specs.currentCharge / data.specs.maxCapacity) * 100 
     : 0;
 
   return (

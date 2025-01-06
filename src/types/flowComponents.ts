@@ -1,4 +1,4 @@
-export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer';
+export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'bess';
 
 export type ConsumerType = 'residential' | 'industrial' | 'commercial';
 
@@ -24,10 +24,15 @@ export interface NodeSpecs {
   mode?: string;
   tapPosition?: number;
 
-  // Storage specs
+  // Storage and BESS specs
   stateOfCharge?: number;
   stateOfHealth?: number;
   cycleCount?: number;
+  chargingPower?: number;
+  dischargingPower?: number;
+  currentCharge?: number;
+  maxCapacity?: number;
+  depthOfDischarge?: number;
 
   // Consumer specs
   consumption?: number;

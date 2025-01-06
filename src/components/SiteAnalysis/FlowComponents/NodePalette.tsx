@@ -85,6 +85,29 @@ const paletteCategories = [
     ]
   },
   {
+    title: "Energy Storage",
+    items: [
+      { 
+        type: 'bess', 
+        label: 'Battery Storage (BESS)', 
+        icon: Battery,
+        specs: {
+          capacity: 1000,
+          maxCapacity: 1000,
+          stateOfCharge: 85,
+          stateOfHealth: 97,
+          chargingPower: 250,
+          dischargingPower: 250,
+          temperature: 25,
+          cycleCount: 450,
+          depthOfDischarge: 80,
+          currentCharge: 850,
+          efficiency: 95
+        }
+      }
+    ]
+  },
+  {
     title: "Consumption",
     items: [
       { 
