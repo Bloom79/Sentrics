@@ -1,7 +1,15 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { ReactFlow, Controls, Edge, MarkerType } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
+import { TimeRange, EnergyFlow } from "@/types/flowComponents";
+import TimeRangeSelector from "./TimeRangeSelector";
+import FlowChartDialog from "./FlowChartDialog";
+import FlowEdgeTooltip from "./FlowEdgeTooltip";
+import { getInitialLayout, getEdgeStyle } from "@/utils/flowLayout";
+import { useToast } from "@/components/ui/use-toast";
+
+// Import your node components
 import SourceNode from "./FlowNodes/SourceNode";
 import StorageNode from "./FlowNodes/StorageNode";
 import ConsumerNode from "./FlowNodes/ConsumerNode";
@@ -10,13 +18,6 @@ import CellNode from "./FlowNodes/CellNode";
 import StringNode from "./FlowNodes/StringNode";
 import InverterNode from "./FlowNodes/InverterNode";
 import TransformerNode from "./FlowNodes/TransformerNode";
-import NodeDialog from "./NodeDialog";
-import EdgeDialog from "./EdgeDialog";
-import { getInitialLayout } from "@/utils/flowLayout";
-
-interface EnergyFlowVisualizationProps {
-  site: Site;
-}
 
 const nodeTypes = {
   source: SourceNode,
@@ -29,40 +30,99 @@ const nodeTypes = {
   transformer: TransformerNode,
 };
 
+interface EnergyFlowVisualizationProps {
+  site: Site;
+}
+
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
-  const [selectedNodes, setSelectedNodes] = useState<Array<{ id: string; type: string }>>([]);
+  const { toast } = useToast();
+  const [timeRange, setTimeRange] = useState<TimeRange>("realtime");
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
+  const [flowData, setFlowData] = useState<Record<string, EnergyFlow[]>>({});
+  const [isPaused, setIsPaused] = useState(false);
 
-  const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
-    const nodeId = node.id;
-    const nodeType = node.type;
-    
-    const existingNodeIndex = selectedNodes.findIndex(n => n.id === nodeId);
-    if (existingNodeIndex >= 0) {
-      setSelectedNodes(prev => prev.filter((_, index) => index !== existingNodeIndex));
-    } else {
-      setSelectedNodes(prev => [...prev, { id: nodeId, type: nodeType }]);
-    }
-  }, [selectedNodes]);
-
-  const handleEdgeClick = useCallback((_: React.MouseEvent, edge: Edge) => {
-    setSelectedEdge(edge);
+  // Mock function to generate flow data
+  const generateFlowData = useCallback((edgeId: string): EnergyFlow => {
+    const now = new Date();
+    const currentValue = Math.random() * 1000;
+    return {
+      currentValue,
+      maxValue: currentValue * 1.2,
+      minValue: currentValue * 0.8,
+      avgValue: currentValue,
+      timestamp: now,
+    };
   }, []);
+
+  // Update flow data periodically
+  useEffect(() => {
+    if (timeRange === 'realtime' && !isPaused) {
+      const interval = setInterval(() => {
+        setFlowData(prev => {
+          const newData = { ...prev };
+          Object.keys(newData).forEach(edgeId => {
+            const newFlow = generateFlowData(edgeId);
+            newData[edgeId] = [...(newData[edgeId] || []), newFlow].slice(-50);
+          });
+          return newData;
+        });
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [timeRange, isPaused, generateFlowData]);
 
   const { nodes, edges } = React.useMemo(() => {
     const layout = getInitialLayout(site.energySources.length);
     
-    // Add animated edges between components
-    const edgesWithAnimation = generateEdges(layout.nodes);
+    const edges = layout.nodes.flatMap((node, index) => {
+      const edgeConnections = [];
+      
+      // Add your edge generation logic here based on node types
+      // Example:
+      if (node.type === 'cell') {
+        edgeConnections.push({
+          id: `${node.id}-to-string`,
+          source: node.id,
+          target: `string-${Math.floor(index / 3)}`,
+          animated: true,
+          style: getEdgeStyle(250),
+          data: {
+            energyFlow: generateFlowData(`${node.id}-to-string`),
+            efficiency: 98,
+            status: 'active' as const,
+            type: 'solar' as const,
+          },
+        });
+      }
+      
+      return edgeConnections;
+    });
 
     return {
       nodes: layout.nodes,
-      edges: edgesWithAnimation,
+      edges,
     };
-  }, [site.energySources.length]);
+  }, [site.energySources.length, generateFlowData]);
+
+  const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    setSelectedEdge(edge);
+  }, []);
+
+  const handleTimeRangeChange = (newRange: TimeRange) => {
+    setTimeRange(newRange);
+    toast({
+      title: "Time Range Updated",
+      description: `Showing data for: ${newRange}`,
+    });
+  };
 
   return (
     <div className="relative h-[600px] bg-background/50 rounded-lg p-6 border">
+      <div className="absolute top-4 left-4 z-10">
+        <TimeRangeSelector value={timeRange} onChange={handleTimeRangeChange} />
+      </div>
+      
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -71,176 +131,23 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={true}
-        onNodeClick={handleNodeClick}
         onEdgeClick={handleEdgeClick}
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
       </ReactFlow>
-      
-      {selectedNodes.map((node, index) => (
-        <NodeDialog
-          key={node.id}
-          open={true}
-          onClose={() => {
-            setSelectedNodes(prev => prev.filter((_, i) => i !== index));
-          }}
-          nodeType={node.type}
-          nodeId={node.id}
-        />
-      ))}
 
       {selectedEdge && (
-        <EdgeDialog
+        <FlowChartDialog
           open={true}
           onClose={() => setSelectedEdge(null)}
-          edgeData={{
-            id: selectedEdge.id,
-            source: selectedEdge.source,
-            target: selectedEdge.target,
-            ...((selectedEdge.data as any) || {
-              energyFlow: 0,
-              efficiency: 0,
-              status: 'inactive',
-            }),
-          }}
+          data={flowData[selectedEdge.id] || []}
+          sourceLabel={nodes.find(n => n.id === selectedEdge.source)?.data.label || ''}
+          targetLabel={nodes.find(n => n.id === selectedEdge.target)?.data.label || ''}
         />
       )}
     </div>
   );
-};
-
-const generateEdges = (nodes: any[]): Edge[] => {
-  const edges: Edge[] = [];
-  
-  // Helper to find node by type
-  const findNodesByType = (type: string) => nodes.filter(n => n.data.type === type);
-  
-  // Connect cells to strings
-  const cells = findNodesByType('cell');
-  const strings = findNodesByType('string');
-  
-  cells.forEach(cell => {
-    const cellIndex = parseInt(cell.id.split('-')[2]);
-    const stringId = `string-${cell.id.split('-')[1]}`;
-    
-    edges.push({
-      id: `${cell.id}-to-${stringId}`,
-      source: cell.id,
-      target: stringId,
-      animated: true,
-      style: { stroke: '#f59e0b' },
-      data: {
-        energyFlow: 250,
-        efficiency: 98,
-        status: 'active' as const,
-        type: 'solar',
-      },
-    });
-  });
-
-  // Connect strings to inverter
-  strings.forEach(string => {
-    edges.push({
-      id: `${string.id}-to-inverter`,
-      source: string.id,
-      target: 'inverter-1',
-      animated: true,
-      style: { stroke: '#f59e0b' },
-      data: {
-        energyFlow: 750,
-        efficiency: 98,
-        status: 'active' as const,
-        type: 'solar',
-      },
-    });
-  });
-
-  // Connect inverter to transformer
-  edges.push({
-    id: 'inverter-to-transformer',
-    source: 'inverter-1',
-    target: 'transformer-1',
-    animated: true,
-    style: { stroke: '#8b5cf6' },
-    data: {
-      energyFlow: 735,
-      efficiency: 98,
-      status: 'active' as const,
-      type: 'power',
-    },
-  });
-
-  // Connect transformer to storage units and grid
-  const storageUnits = findNodesByType('storage');
-  storageUnits.forEach(storage => {
-    edges.push({
-      id: `transformer-to-${storage.id}`,
-      source: 'transformer-1',
-      target: storage.id,
-      animated: true,
-      style: { stroke: '#3b82f6' },
-      data: {
-        energyFlow: 400,
-        efficiency: 95,
-        status: 'active' as const,
-        type: 'storage',
-      },
-    });
-  });
-
-  // Connect transformer to grid
-  edges.push({
-    id: 'transformer-to-grid',
-    source: 'transformer-1',
-    target: 'grid',
-    animated: true,
-    style: { stroke: '#10b981' },
-    data: {
-      energyFlow: 335,
-      efficiency: 95,
-      status: 'active' as const,
-      type: 'grid',
-    },
-  });
-
-  // Connect storage units to consumers and grid
-  const consumers = findNodesByType('consumer');
-  storageUnits.forEach(storage => {
-    // Connect to grid
-    edges.push({
-      id: `${storage.id}-to-grid`,
-      source: storage.id,
-      target: 'grid',
-      animated: true,
-      style: { stroke: '#3b82f6' },
-      data: {
-        energyFlow: 200,
-        efficiency: 95,
-        status: 'active' as const,
-        type: 'grid',
-      },
-    });
-
-    // Connect to consumers
-    consumers.forEach(consumer => {
-      edges.push({
-        id: `${storage.id}-to-${consumer.id}`,
-        source: storage.id,
-        target: consumer.id,
-        animated: true,
-        style: { stroke: '#10b981' },
-        data: {
-          energyFlow: 150,
-          efficiency: 95,
-          status: 'active' as const,
-          type: 'consumption',
-        },
-      });
-    });
-  });
-
-  return edges;
 };
 
 export default EnergyFlowVisualization;

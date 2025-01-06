@@ -25,7 +25,10 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
         data: {
           type: 'cell',
           label: `Solar Cell ${i + 1}`,
-          output: 250,
+          specs: {
+            power: 250,
+          },
+          onNodeClick: () => {},
         },
       });
     }
@@ -38,7 +41,10 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
       data: {
         type: 'string',
         label: `String ${sourceIndex + 1}`,
-        output: 750,
+        specs: {
+          power: 750,
+        },
+        onNodeClick: () => {},
       },
     });
   });
@@ -51,7 +57,10 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     data: {
       type: 'inverter',
       label: 'Inverter',
-      output: 735,
+      specs: {
+        power: 735,
+      },
+      onNodeClick: () => {},
     },
   });
 
@@ -63,7 +72,10 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     data: {
       type: 'transformer',
       label: 'Transformer',
-      output: 720,
+      specs: {
+        power: 720,
+      },
+      onNodeClick: () => {},
     },
   });
 
@@ -76,8 +88,11 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
       data: {
         type: 'storage',
         label: `${storageType.charAt(0).toUpperCase() + storageType.slice(1)} Storage`,
-        capacity: 1000,
-        charge: 750,
+        specs: {
+          capacity: 1000,
+          charge: 750,
+        },
+        onNodeClick: () => {},
       },
     });
   });
@@ -90,23 +105,33 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     data: {
       type: 'grid',
       label: 'Power Grid',
-      delivery: 335,
+      specs: {
+        power: 335,
+      },
+      onNodeClick: () => {},
     },
   });
 
   // Add consumers
-  ['residential', 'commercial', 'industrial'].forEach((type, index) => {
+  ['residential', 'industrial', 'commercial'].forEach((type, index) => {
     nodes.push({
       id: `consumer-${type}`,
-      type: 'consumer',
+      type: type as ConsumerType,
       position: calculateNodePosition(6, index * 2 + 1),
       data: {
-        type,
+        type: type as ConsumerType,
         label: `${type.charAt(0).toUpperCase() + type.slice(1)} Consumer`,
         consumption: 150 + (index * 100),
+        onNodeClick: () => {},
       },
     });
   });
 
   return { nodes };
+};
+
+export const getEdgeStyle = (flow: number) => {
+  if (flow > 500) return { stroke: '#22c55e', strokeWidth: 3 }; // Green for high flow
+  if (flow > 200) return { stroke: '#eab308', strokeWidth: 2 }; // Yellow for medium flow
+  return { stroke: '#ef4444', strokeWidth: 1 }; // Red for low flow
 };

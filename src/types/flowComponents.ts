@@ -21,44 +21,24 @@ export type FlowNodeData = {
   onNodeClick: (id: string, type: string) => void;
 };
 
+export type EnergyFlow = {
+  currentValue: number;
+  maxValue: number;
+  minValue: number;
+  avgValue: number;
+  timestamp: Date;
+};
+
+export type TimeRange = 'realtime' | '15min' | '1hour' | '24hours' | 'custom';
+
 export type EnergyFlowEdge = {
   id: string;
   source: string;
   target: string;
   data: {
-    energyFlow: number;
+    energyFlow: EnergyFlow;
     efficiency: number;
     status: 'active' | 'inactive' | 'error';
     type: 'solar' | 'storage' | 'grid' | 'consumption' | 'power';
   };
-};
-
-export type SolarComponentData = {
-  cells: Array<{
-    id: string;
-    voltage: number;
-    current: number;
-    status: 'active' | 'inactive' | 'maintenance';
-  }>;
-  strings: Array<{
-    id: string;
-    cells: string[];
-    voltage: number;
-    current: number;
-    status: 'active' | 'inactive' | 'maintenance';
-  }>;
-  inverters: Array<{
-    id: string;
-    efficiency: number;
-    inputVoltage: number;
-    outputVoltage: number;
-    status: 'active' | 'inactive' | 'maintenance';
-  }>;
-  transformers: Array<{
-    id: string;
-    primaryVoltage: number;
-    secondaryVoltage: number;
-    efficiency: number;
-    status: 'active' | 'inactive' | 'maintenance';
-  }>;
 };
