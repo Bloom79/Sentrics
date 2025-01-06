@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Consumer, ConsumerSpecs } from "@/types/site";
+import { Consumer, ConsumerType, ConsumerStatus, ConsumerSpecs } from "@/types/site";
 import ConsumerContract from "./ConsumerContract";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -51,15 +51,15 @@ const ConsumerDetail = () => {
       const consumer: Consumer = {
         id: data.id,
         full_name: data.full_name || '',
-        type: data.type || 'residential',
+        type: (data.type || 'residential') as ConsumerType,
         consumption: data.consumption || 0,
-        status: data.status || 'active',
-        specs: data.specs || {
+        status: (data.status || 'active') as ConsumerStatus,
+        specs: (data.specs || {
           peakDemand: 0,
           dailyUsage: 0,
           powerFactor: 0,
           connectionType: 'low-voltage'
-        },
+        }) as ConsumerSpecs,
         address: data.address,
         city: data.city,
         postal_code: data.postal_code,

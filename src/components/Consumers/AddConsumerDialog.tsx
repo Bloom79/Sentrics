@@ -11,6 +11,7 @@ import { ConsumerBasicInfo } from "./AddConsumerDialog/ConsumerBasicInfo";
 import { ConsumerContactInfo } from "./AddConsumerDialog/ConsumerContactInfo";
 import { ConsumerAddressInfo } from "./AddConsumerDialog/ConsumerAddressInfo";
 import { ConsumerBusinessInfo } from "./AddConsumerDialog/ConsumerBusinessInfo";
+import { v4 as uuidv4 } from 'uuid';
 
 export const AddConsumerDialog = () => {
   const { toast } = useToast();
@@ -18,9 +19,11 @@ export const AddConsumerDialog = () => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
+      const id = uuidv4();
       const { error } = await supabase
         .from('profiles')
         .insert({
+          id,
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
