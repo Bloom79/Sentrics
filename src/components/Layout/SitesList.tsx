@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Factory, ChevronRight, ChevronDown } from "lucide-react";
+import { Factory, ChevronRight, ChevronDown, Users } from "lucide-react";
 import {
   SidebarMenuItem,
   SidebarMenuButton,
@@ -17,6 +17,10 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
 
   const handlePlantClick = (plantId: string) => {
     navigate(`/plants/${plantId}`);
+  };
+
+  const handleConsumerClick = (consumerId: string) => {
+    navigate(`/consumers/${consumerId}`);
   };
 
   return (
@@ -37,19 +41,44 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
             </SidebarMenuButton>
           </SidebarMenuItem>
           {expandedSites.includes(site.id) && (
-            <div className="pl-4 space-y-1">
-              {site.plants.map((plant) => (
-                <SidebarMenuItem key={plant.id}>
-                  <SidebarMenuButton
-                    onClick={() => handlePlantClick(plant.id)}
-                    className="group"
-                  >
-                    <Factory className="h-4 w-4" />
-                    <span>{plant.name}</span>
-                    <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <div className="pl-4 space-y-2">
+              {/* Plants Section */}
+              <div>
+                <span className="text-sm font-medium text-muted-foreground px-4">Plants</span>
+                <div className="space-y-1 mt-1">
+                  {site.plants.map((plant) => (
+                    <SidebarMenuItem key={plant.id}>
+                      <SidebarMenuButton
+                        onClick={() => handlePlantClick(plant.id)}
+                        className="group"
+                      >
+                        <Factory className="h-4 w-4" />
+                        <span>{plant.name}</span>
+                        <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Consumers Section */}
+              <div>
+                <span className="text-sm font-medium text-muted-foreground px-4">Consumers</span>
+                <div className="space-y-1 mt-1">
+                  {site.consumers?.map((consumer) => (
+                    <SidebarMenuItem key={consumer.id}>
+                      <SidebarMenuButton
+                        onClick={() => handleConsumerClick(consumer.id)}
+                        className="group"
+                      >
+                        <Users className="h-4 w-4" />
+                        <span>{consumer.name}</span>
+                        <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </React.Fragment>
