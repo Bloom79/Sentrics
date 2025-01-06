@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Consumer, ConsumerType, ConsumerStatus, ConsumerSpecs } from "@/types/site";
 import ConsumerContract from "./ConsumerContract";
 import ConsumptionFiles from "./ConsumptionFiles";
+import ConsumerAnalytics from "./ConsumerAnalytics";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -156,14 +157,7 @@ const ConsumerDetail = () => {
         </TabsContent>
 
         <TabsContent value="consumption">
-          <Card>
-            <CardHeader>
-              <CardTitle>Consumption History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Consumption history visualization will be implemented here</p>
-            </CardContent>
-          </Card>
+          <ConsumerAnalytics />
         </TabsContent>
 
         <TabsContent value="contracts">
