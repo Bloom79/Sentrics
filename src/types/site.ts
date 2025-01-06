@@ -55,7 +55,6 @@ export interface GridConnection {
   frequency: number;
   voltage: number;
   congestion: string;
-  congestionLevel?: string;
 }
 
 export interface StorageUnit {
