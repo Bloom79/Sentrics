@@ -23,6 +23,7 @@ export interface NodeSpecs {
   outputVoltage?: number;
   mode?: string;
   tapPosition?: number;
+  voltage?: number;
 
   // Storage and BESS specs
   stateOfCharge?: number;

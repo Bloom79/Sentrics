@@ -20,9 +20,9 @@ const InverterNode: React.FC<{ data: FlowNodeData }> = ({ data }) => {
         <div className="text-sm font-medium">{data.label}</div>
         {data.specs && (
           <div className="grid grid-cols-2 gap-x-3 text-[10px] text-muted-foreground">
-            <span>In: {data.specs.voltage}V DC</span>
-            <span>Out: 230V AC</span>
-            <span>Power: {data.specs.power}W</span>
+            <span>In: {data.specs.inputVoltage}V DC</span>
+            <span>Out: {data.specs.outputVoltage}V AC</span>
+            <span>Power: {data.specs.outputPower}W</span>
             <span>Eff: {data.specs.efficiency}%</span>
           </div>
         )}

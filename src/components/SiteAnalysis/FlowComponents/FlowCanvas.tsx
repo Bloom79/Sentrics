@@ -91,11 +91,19 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   isEditMode,
 }) => {
   const reactFlowInstance = useReactFlow();
-  const [selectedNode, setSelectedNode] = useState<FlowNodeData | undefined>();
+  const [selectedNode, setSelectedNode] = useState<FlowNodeData | null>(null);
 
   const handleNodeClick = (event: React.MouseEvent, node: Node) => {
     event.stopPropagation();
-    setSelectedNode(node.data);
+    const nodeData: FlowNodeData = {
+      id: node.id,
+      type: node.type as FlowNodeData['type'],
+      label: node.data.label,
+      specs: node.data.specs,
+      status: node.data.status,
+      onNodeClick: node.data.onNodeClick,
+    };
+    setSelectedNode(nodeData);
     if (onNodeClick) {
       onNodeClick(event, node);
     }
@@ -184,7 +192,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       </ReactFlow>
       <SidePanel 
         open={!!selectedNode} 
-        onClose={() => setSelectedNode(undefined)}
+        onClose={() => setSelectedNode(null)}
         nodeData={selectedNode}
       />
     </>

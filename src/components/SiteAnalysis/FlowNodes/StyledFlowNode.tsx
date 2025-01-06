@@ -14,9 +14,9 @@ const StyledFlowNode: React.FC<StyledFlowNodeProps> = ({
   className = "", 
   onClick 
 }) => {
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (onClick) {
-      e.stopPropagation();
       onClick();
     }
   };
