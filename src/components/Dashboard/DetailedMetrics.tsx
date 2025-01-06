@@ -1,50 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, ChevronDown, ChevronRight } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Activity } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { StatusIcon } from "./DetailedMetrics/StatusIcon";
-import { EnergySourceInfo } from "./DetailedMetrics/EnergySourceInfo";
-import { StorageInfo } from "./DetailedMetrics/StorageInfo";
-import { GridConnectionInfo } from "./DetailedMetrics/GridConnectionInfo";
-
-interface Plant {
-  id: string;
-  name: string;
-  type: "solar" | "wind";
-  capacity: number;
-  currentOutput: number;
-  efficiency: number;
-  status: string;
-}
-
-interface Site {
-  id: string;
-  name: string;
-  status: string;
-  lastUpdate: string;
-  dailyProduction: number;
-  monthlyProduction: number;
-  efficiency: number;
-  co2Saved: number;
-  plants: Plant[];
-  energySources: {
-    type: string;
-    output: number;
-    capacity: number;
-  }[];
-  storage: {
-    capacity: number;
-    currentCharge: number;
-  };
-  gridConnection: {
-    status: string;
-    frequency: number;
-    voltage: number;
-    congestion: string;
-  };
-}
+import { SiteRow } from "./DetailedMetrics/SiteRow";
+import { PlantRow } from "./DetailedMetrics/PlantRow";
+import { Site } from "@/types/site";
 
 interface DetailedMetricsProps {
   selectedSiteId: string | null;
@@ -133,7 +94,6 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
   selectedStatus, 
   selectedTimeRange 
 }) => {
-  const { t } = useLanguage();
   const [expandedSites, setExpandedSites] = React.useState<string[]>([]);
 
   const toggleSiteExpansion = (siteId: string) => {
@@ -150,7 +110,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
     return matchesSearch && matchesStatus;
   });
 
-  const calculateTotals = (sites: typeof mockSiteData) => ({
+  const calculateTotals = (sites: Site[]) => ({
     dailyProduction: sites.reduce((sum, site) => sum + site.dailyProduction, 0),
     monthlyProduction: sites.reduce((sum, site) => sum + site.monthlyProduction, 0),
     efficiency: sites.reduce((sum, site) => sum + site.efficiency, 0) / sites.length,
@@ -193,64 +153,13 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
             <TableBody>
               {filteredSites.map((site) => (
                 <React.Fragment key={site.id}>
-                  <TableRow
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => toggleSiteExpansion(site.id)}
-                  >
-                    <TableCell>
-                      {expandedSites.includes(site.id) ? (
-                        <ChevronDown className="h-4 w-4" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4" />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <StatusIcon status={site.status} />
-                        <span className="text-sm font-medium">
-                          {site.status.charAt(0).toUpperCase() + site.status.slice(1)}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{site.name}</TableCell>
-                    <TableCell>
-                      <EnergySourceInfo sources={site.energySources} />
-                    </TableCell>
-                    <TableCell>
-                      <StorageInfo storage={site.storage} />
-                    </TableCell>
-                    <TableCell>
-                      <GridConnectionInfo connection={site.gridConnection} />
-                    </TableCell>
-                    <TableCell className="text-right">{site.dailyProduction.toLocaleString()}</TableCell>
-                    <TableCell className="text-right">{site.monthlyProduction.toLocaleString()}</TableCell>
-                    <TableCell className="text-right">{site.efficiency}%</TableCell>
-                    <TableCell className="text-right">{site.co2Saved.toFixed(1)}</TableCell>
-                  </TableRow>
+                  <SiteRow 
+                    site={site}
+                    isExpanded={expandedSites.includes(site.id)}
+                    onToggle={() => toggleSiteExpansion(site.id)}
+                  />
                   {expandedSites.includes(site.id) && site.plants.map(plant => (
-                    <TableRow key={plant.id} className="bg-muted/30">
-                      <TableCell></TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <StatusIcon status={plant.status} />
-                          <span className="text-sm font-medium">
-                            {plant.status.charAt(0).toUpperCase() + plant.status.slice(1)}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="pl-8 font-medium text-sm text-muted-foreground">
-                        {plant.name}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{plant.type}</Badge>
-                      </TableCell>
-                      <TableCell>-</TableCell>
-                      <TableCell>-</TableCell>
-                      <TableCell className="text-right">{plant.currentOutput.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">-</TableCell>
-                      <TableCell className="text-right">{plant.efficiency}%</TableCell>
-                      <TableCell className="text-right">-</TableCell>
-                    </TableRow>
+                    <PlantRow key={plant.id} plant={plant} />
                   ))}
                 </React.Fragment>
               ))}

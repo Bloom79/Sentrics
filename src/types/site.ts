@@ -1,31 +1,36 @@
-export type StorageUnit = {
+export type Plant = {
   id: string;
+  name: string;
+  type: "solar" | "wind";
   capacity: number;
-  currentCharge: number;
-  status: "charging" | "discharging" | "idle";
-  health: number;
-  temperature: number;
-  powerRating: number;
+  currentOutput: number;
+  efficiency: number;
+  status: string;
 };
 
 export type Site = {
   id: string;
   name: string;
-  location: string;
+  status: string;
+  lastUpdate: string;
+  dailyProduction: number;
+  monthlyProduction: number;
+  efficiency: number;
+  co2Saved: number;
+  plants: Plant[];
   energySources: {
-    id: string;
-    type: "solar" | "eolic";
+    type: string;
+    output: number;
     capacity: number;
-    currentOutput: number;
-    status: "active" | "inactive" | "maintenance";
   }[];
-  storageUnits: StorageUnit[];
-  totalCapacity: number;
-  currentOutput: number;
+  storage: {
+    capacity: number;
+    currentCharge: number;
+  };
   gridConnection: {
-    status: "connected" | "disconnected";
+    status: string;
     frequency: number;
     voltage: number;
-    congestionLevel: "Low" | "Medium" | "High";
+    congestion: string;
   };
 };
