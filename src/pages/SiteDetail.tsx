@@ -74,9 +74,10 @@ const mockSites: Site[] = [
         capacity: 1000,
         currentCharge: 750,
         powerRating: 500,
-        stateOfHealth: 98,
+        health: 98,
         temperature: 25,
         status: "charging",
+        stateOfHealth: 98,
         chargingRate: 45,
         cycleCount: 342,
         lastMaintenance: "2024-01-15",
@@ -90,9 +91,10 @@ const mockSites: Site[] = [
         capacity: 800,
         currentCharge: 600,
         powerRating: 400,
-        stateOfHealth: 96,
+        health: 96,
         temperature: 23,
         status: "discharging",
+        stateOfHealth: 96,
         chargingRate: -30,
         cycleCount: 256,
         lastMaintenance: "2024-01-20",
@@ -106,8 +108,7 @@ const mockSites: Site[] = [
       voltage: 230.5,
       congestion: "Low"
     }
-  },
-  // ... keep existing code (other mock sites)
+  }
 ];
 
 const SiteDetail = () => {

@@ -58,20 +58,17 @@ export interface StorageUnit {
   name: string;
   capacity: number;
   currentCharge: number;
+  powerRating: number;
   status: "charging" | "discharging" | "idle" | "offline";
-  powerRating?: number;
-  temperature?: number;
-  health?: number;
-}
-
-interface BaseAsset {
-  id: string;
-  serialNumber: string;
-  model: string;
-  manufacturer: string;
-  installationDate: string;
-  status: "operational" | "faulty" | "maintenance";
-  location: string;
+  health: number;
+  temperature: number;
+  stateOfHealth: number;
+  chargingRate: number;
+  cycleCount: number;
+  lastMaintenance: string;
+  nextMaintenance: string;
+  efficiency: number;
+  alerts?: string[];
 }
 
 export interface SolarPanel extends BaseAsset {
@@ -133,4 +130,3 @@ export type AssetType = SolarPanel | Inverter | WindTurbine | Transformer | Batt
 // For backward compatibility with existing components
 export type SolarAsset = SolarPanel | Inverter;
 export type WindAsset = WindTurbine;
-
