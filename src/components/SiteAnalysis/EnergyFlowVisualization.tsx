@@ -90,6 +90,16 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     });
   };
 
+  // Custom edge styles with animations
+  const edgeOptions = {
+    style: { strokeWidth: 2 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      color: '#888',
+    },
+    animated: true,
+  };
+
   return (
     <div className="relative h-[600px] bg-background/50 rounded-lg p-6 border">
       <div className="absolute top-4 left-4 z-10">
@@ -98,7 +108,17 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
       
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={edges.map(edge => ({
+          ...edge,
+          ...edgeOptions,
+          style: {
+            ...edgeOptions.style,
+            ...getEdgeStyle(flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue || 0),
+          },
+          label: flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1) + ' kW',
+          labelStyle: { fill: 'black', fontWeight: 500 },
+          labelBgStyle: { fill: 'white', opacity: 0.8 },
+        }))}
         nodeTypes={nodeTypes}
         fitView
         nodesDraggable={false}

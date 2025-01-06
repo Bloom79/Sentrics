@@ -139,9 +139,25 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
 };
 
 export const getEdgeStyle = (flow: number) => {
-  if (flow > 500) return { stroke: '#22c55e', strokeWidth: 3 }; // Green for high flow
-  if (flow > 200) return { stroke: '#eab308', strokeWidth: 2 }; // Yellow for medium flow
-  return { stroke: '#ef4444', strokeWidth: 1 }; // Red for low flow
+  if (flow > 500) {
+    return { 
+      stroke: '#22c55e',  // Green for high flow
+      strokeWidth: 3,
+      opacity: 0.8
+    };
+  }
+  if (flow > 200) {
+    return { 
+      stroke: '#eab308',  // Yellow for medium flow
+      strokeWidth: 2,
+      opacity: 0.8
+    };
+  }
+  return { 
+    stroke: '#ef4444',  // Red for low flow
+    strokeWidth: 1,
+    opacity: 0.8
+  };
 };
 
 export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
