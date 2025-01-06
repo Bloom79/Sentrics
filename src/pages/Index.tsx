@@ -5,7 +5,6 @@ import ProductionOverview from "@/components/Dashboard/Overview/ProductionOvervi
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
-import GridStatus from "@/components/Dashboard/GridStatus";
 
 const Index = () => {
   const { language, setLanguage } = useLanguage();
@@ -46,11 +45,6 @@ const Index = () => {
               selectedStatus={selectedStatus}
               selectedTimeRange={selectedTimeRange}
             />
-          </div>
-
-          {/* Bottom Row - Grid Status */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <GridStatus />
           </div>
         </div>
       </div>
