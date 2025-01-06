@@ -15,7 +15,7 @@ const StorageNode: React.FC<StorageNodeProps> = ({ data }) => {
   return (
     <StyledFlowNode 
       type="both" 
-      className="bg-purple-50 cursor-pointer min-w-[120px]" 
+      className="bg-purple-50 min-w-[120px]" 
       onClick={() => data.onNodeClick(data.id, 'storage')}
     >
       <div className="flex flex-col items-center gap-2">

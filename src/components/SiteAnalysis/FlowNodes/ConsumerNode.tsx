@@ -8,9 +8,10 @@ interface ConsumerNodeProps {
     consumption: number;
     onNodeClick: (id: string, type: string) => void;
   };
+  id: string;
 }
 
-const ConsumerNode: React.FC<ConsumerNodeProps> = ({ data }) => {
+const ConsumerNode: React.FC<ConsumerNodeProps> = ({ data, id }) => {
   const getIcon = () => {
     switch (data.type) {
       case "residential":
@@ -37,7 +38,7 @@ const ConsumerNode: React.FC<ConsumerNodeProps> = ({ data }) => {
     <StyledFlowNode 
       type="target" 
       className="bg-green-50 min-w-[120px]"
-      onClick={() => data.onNodeClick(data.type, 'consumer')}
+      onClick={() => data.onNodeClick(id, 'consumer')}
     >
       <div className="flex flex-col items-center gap-2">
         {getIcon()}
