@@ -26,7 +26,7 @@ const solarAssetSchema = z.object({
   serialNumber: z.string().min(1, "Serial number is required"),
   model: z.string().min(1, "Model is required"),
   location: z.string().min(1, "Location is required"),
-  efficiency: z.string().transform((val) => Number(val)),
+  efficiency: z.coerce.number().min(0).max(100),
   status: z.enum(["operational", "faulty", "maintenance"]),
 });
 
@@ -36,7 +36,7 @@ const windAssetSchema = z.object({
   model: z.string().min(1, "Model is required"),
   manufacturer: z.string().min(1, "Manufacturer is required"),
   location: z.string().min(1, "Location is required"),
-  ratedCapacity: z.string().transform((val) => Number(val)),
+  ratedCapacity: z.coerce.number().min(0),
   status: z.enum(["operational", "faulty", "maintenance"]),
 });
 
@@ -53,16 +53,17 @@ export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
     resolver: zodResolver(schema),
     defaultValues: {
       ...asset,
-      efficiency: isSolarAsset ? asset.efficiency?.toString() : undefined,
-      ratedCapacity: !isSolarAsset ? asset.ratedCapacity?.toString() : undefined,
+      efficiency: isSolarAsset ? asset.efficiency : undefined,
+      ratedCapacity: !isSolarAsset ? asset.ratedCapacity : undefined,
     },
   });
 
   const handleSubmit = (values: z.infer<typeof schema>) => {
-    onSubmit({
+    const updatedAsset = {
       ...asset,
       ...values,
-    });
+    };
+    onSubmit(updatedAsset);
   };
 
   return (
@@ -134,7 +135,12 @@ export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
               <FormItem>
                 <FormLabel>Efficiency (%)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Enter efficiency" {...field} />
+                  <Input 
+                    type="number" 
+                    placeholder="Enter efficiency" 
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -148,7 +154,12 @@ export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
               <FormItem>
                 <FormLabel>Rated Capacity (kW)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Enter rated capacity" {...field} />
+                  <Input 
+                    type="number" 
+                    placeholder="Enter rated capacity" 
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
