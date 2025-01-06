@@ -6,6 +6,7 @@ interface ConsumerNodeProps {
   data: {
     type: "residential" | "industrial" | "commercial";
     consumption: number;
+    onNodeClick: (id: string, type: string) => void;
   };
 }
 
@@ -33,7 +34,11 @@ const ConsumerNode: React.FC<ConsumerNodeProps> = ({ data }) => {
   };
 
   return (
-    <StyledFlowNode type="target" className="bg-green-50 min-w-[120px]">
+    <StyledFlowNode 
+      type="target" 
+      className="bg-green-50 min-w-[120px]"
+      onClick={() => data.onNodeClick(data.type, 'consumer')}
+    >
       <div className="flex flex-col items-center gap-2">
         {getIcon()}
         <div className="text-sm font-medium">{getLabel()}</div>

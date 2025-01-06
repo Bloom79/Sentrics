@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReactFlow, Controls, Node, Edge } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
@@ -6,6 +6,7 @@ import SourceNode from "./FlowNodes/SourceNode";
 import StorageNode from "./FlowNodes/StorageNode";
 import ConsumerNode from "./FlowNodes/ConsumerNode";
 import GridNode from "./FlowNodes/GridNode";
+import NodeDialog from "./NodeDialog";
 
 interface EnergyFlowVisualizationProps {
   site: Site;
@@ -19,6 +20,12 @@ const nodeTypes = {
 };
 
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
+  const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
+
+  const handleNodeClick = (nodeId: string, nodeType: string) => {
+    setSelectedNode({ id: nodeId, type: nodeType });
+  };
+
   const nodes: Node[] = [
     // Solar and Wind nodes
     ...site.energySources.map((source, index) => ({
@@ -29,100 +36,87 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         type: source.type,
         output: source.currentOutput,
         capacity: source.capacity,
+        onNodeClick: handleNodeClick,
       },
     })),
 
-    // Storage nodes
-    ...site.storageUnits.map((unit, index) => ({
-      id: `storage-${unit.id}`,
+    // Multiple Storage nodes
+    ...[1, 2, 3].map((_, index) => ({
+      id: `storage-${index + 1}`,
       type: "storage",
-      position: { x: 300, y: 100 + (index * 120) },
+      position: { x: 300, y: 50 + (index * 120) },
       data: {
-        id: unit.id,
-        charge: unit.currentCharge,
-        capacity: unit.capacity,
+        id: `${index + 1}`,
+        charge: 750,
+        capacity: 1000,
+        onNodeClick: handleNodeClick,
       },
     })),
 
-    // Grid node
+    // Grid and Consumer nodes at the same level
     {
       id: "grid",
       type: "grid",
       position: { x: 550, y: 200 },
       data: {
-        delivery: 300, // Mock data
+        delivery: 300,
+        onNodeClick: handleNodeClick,
       },
     },
-
-    // Consumer nodes
     {
       id: "residential",
       type: "consumer",
       position: { x: 550, y: 50 },
       data: {
         type: "residential",
-        consumption: 200, // Mock data
+        consumption: 200,
+        onNodeClick: handleNodeClick,
       },
     },
     {
       id: "industrial",
       type: "consumer",
-      position: { x: 550, y: 200 },
-      data: {
-        type: "industrial",
-        consumption: 450, // Mock data
-      },
-    },
-    {
-      id: "commercial",
-      type: "consumer",
       position: { x: 550, y: 350 },
       data: {
-        type: "commercial",
-        consumption: 350, // Mock data
+        type: "industrial",
+        consumption: 450,
+        onNodeClick: handleNodeClick,
       },
     },
   ];
 
   const edges: Edge[] = [
-    // Connect sources to storage
+    // Connect sources to all storage units
     ...site.energySources.flatMap(source =>
-      site.storageUnits.map(unit => ({
-        id: `${source.id}-to-${unit.id}`,
+      [1, 2, 3].map((storageIndex) => ({
+        id: `${source.id}-to-storage-${storageIndex}`,
         source: `source-${source.id}`,
-        target: `storage-${unit.id}`,
+        target: `storage-${storageIndex}`,
         animated: true,
         style: { stroke: source.type === "solar" ? "#f59e0b" : "#3b82f6" },
       }))
     ),
 
-    // Connect storage to grid and consumers
-    ...site.storageUnits.flatMap(unit => [
+    // Connect storage units to grid and consumers
+    ...[1, 2, 3].flatMap(storageIndex => [
       {
-        id: `${unit.id}-to-grid`,
-        source: `storage-${unit.id}`,
+        id: `storage-${storageIndex}-to-grid`,
+        source: `storage-${storageIndex}`,
         target: "grid",
         animated: true,
         style: { stroke: "#8b5cf6" },
       },
       {
-        id: `${unit.id}-to-residential`,
-        source: `storage-${unit.id}`,
+        id: `storage-${storageIndex}-to-residential`,
+        source: `storage-${storageIndex}`,
         target: "residential",
         animated: true,
         style: { stroke: "#8b5cf6" },
       },
       {
-        id: `${unit.id}-to-industrial`,
-        source: `storage-${unit.id}`,
+        id: `storage-${storageIndex}-to-industrial`,
+        source: `storage-${storageIndex}`,
         target: "industrial",
-        animated: true,
-        style: { stroke: "#8b5cf6" },
-      },
-      {
-        id: `${unit.id}-to-commercial`,
-        source: `storage-${unit.id}`,
-        target: "commercial",
         animated: true,
         style: { stroke: "#8b5cf6" },
       },
@@ -143,6 +137,13 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
       >
         <Controls />
       </ReactFlow>
+      
+      <NodeDialog
+        open={!!selectedNode}
+        onClose={() => setSelectedNode(null)}
+        nodeType={selectedNode?.type || ''}
+        nodeId={selectedNode?.id || ''}
+      />
     </div>
   );
 };

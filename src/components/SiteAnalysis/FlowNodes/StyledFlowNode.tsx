@@ -5,11 +5,17 @@ interface StyledFlowNodeProps {
   children: React.ReactNode;
   type?: "source" | "target" | "both";
   className?: string;
+  onClick?: () => void;
 }
 
-const StyledFlowNode: React.FC<StyledFlowNodeProps> = ({ children, type = "both", className = "" }) => {
+const StyledFlowNode: React.FC<StyledFlowNodeProps> = ({ children, type = "both", className = "", onClick }) => {
   return (
-    <div className={`p-4 rounded-lg border bg-white shadow-lg transition-shadow ${className}`}>
+    <div 
+      className={`p-4 rounded-lg border bg-white shadow-lg transition-shadow ${className}`}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       {(type === "target" || type === "both") && (
         <Handle type="target" position={Position.Left} className="w-3 h-3 rounded-full border-2" />
       )}
