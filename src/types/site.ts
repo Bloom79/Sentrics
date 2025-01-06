@@ -1,87 +1,18 @@
+export type AssetStatus = "online" | "offline" | "maintenance";
+
 export type Plant = {
   id: string;
   name: string;
   type: "solar" | "wind";
+  status: AssetStatus;
   capacity: number;
   currentOutput: number;
   efficiency: number;
-  status: "online" | "offline" | "maintenance";
-  lastUpdate?: string;
-  location?: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
 };
-
-export type AssetStatus = "operational" | "maintenance" | "faulty";
-
-export type AssetType =
-  | {
-      type: "panel";
-      id?: string;
-      serialNumber: string;
-      model: string;
-      manufacturer: string;
-      location: string;
-      status: AssetStatus;
-      ratedPower: number;
-      efficiency: number;
-      orientation?: string;
-      tilt?: number;
-      installationDate?: string;
-    }
-  | {
-      type: "inverter";
-      id?: string;
-      serialNumber: string;
-      model: string;
-      manufacturer: string;
-      location: string;
-      status: AssetStatus;
-      efficiency: number;
-      ratedPower: number;
-      installationDate?: string;
-    }
-  | {
-      type: "turbine";
-      id?: string;
-      serialNumber: string;
-      model: string;
-      manufacturer: string;
-      location: string;
-      status: AssetStatus;
-      ratedCapacity: number;
-      rotorDiameter: number;
-      hubHeight: number;
-      cutInSpeed: number;
-      cutOutSpeed: number;
-      installationDate?: string;
-    }
-  | {
-      type: "transformer";
-      id?: string;
-      serialNumber: string;
-      model: string;
-      manufacturer: string;
-      location: string;
-      status: AssetStatus;
-      capacity: number;
-      voltageIn: number;
-      voltageOut: number;
-      efficiency: number;
-      installationDate?: string;
-    }
-  | {
-      type: "battery";
-      id?: string;
-      serialNumber: string;
-      model: string;
-      manufacturer: string;
-      location: string;
-      status: AssetStatus;
-      technology: "lithium-ion" | "lead-acid" | "flow";
-      ratedPower: number;
-      energyCapacity: number;
-      roundTripEfficiency?: number;
-      installationDate?: string;
-    };
 
 export type Consumer = {
   id: string;
@@ -89,18 +20,18 @@ export type Consumer = {
   type: "residential" | "industrial" | "commercial";
   consumption: number;
   status: string;
-  specs?: {
+  specs: {
     peakDemand: number;
     dailyUsage: number;
     powerFactor: number;
-    connectionType?: string;
+    connectionType: string;
   };
 };
 
 export type StorageUnit = {
   id: string;
   name: string;
-  type: string;
+  type: "battery" | "thermal" | "mechanical";
   capacity: number;
   currentCharge: number;
   status: string;
@@ -108,6 +39,8 @@ export type StorageUnit = {
   temperature: number;
   powerRating: number;
   efficiency: number;
+  lastOutput?: number;
+  stateOfCharge?: number;
 };
 
 export type GridConnection = {
@@ -150,4 +83,24 @@ export type Site = {
     lat: number;
     lng: number;
   };
+};
+
+export type Asset = {
+  type: "panel" | "inverter" | "battery";
+  id?: string;
+  serialNumber: string;
+  model: string;
+  manufacturer: string;
+  location: string;
+  status: AssetStatus;
+  ratedPower: number;
+  efficiency: number;
+  lastOutput?: number;
+  stateOfCharge?: number;
+  orientation?: string;
+  tilt?: number;
+  installationDate?: string;
+  technology?: "lithium-ion" | "lead-acid" | "flow";
+  energyCapacity?: number;
+  roundTripEfficiency?: number;
 };

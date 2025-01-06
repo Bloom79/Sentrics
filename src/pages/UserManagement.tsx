@@ -17,25 +17,51 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { UserPlus, Pencil, Trash2, Mail } from "lucide-react";
+import { UserPlus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { InviteUserForm } from "@/components/UserManagement/InviteUserForm";
 import { EditUserForm } from "@/components/UserManagement/EditUserForm";
 
+type Profile = {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  role: string | null;
+  status: string | null;
+  created_at: string;
+  updated_at: string;
+  username: string | null;
+  invitation_token: string | null;
+  invitation_sent_at: string | null;
+  invited_by: string | null;
+};
+
 export default function UserManagement() {
   const { toast } = useToast();
-  const [selectedUser, setSelectedUser] = React.useState<any>(null);
+  const [selectedUser, setSelectedUser] = React.useState<Profile | null>(null);
 
   const { data: profiles, refetch } = useQuery({
     queryKey: ["profiles"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      return data;
+      if (profilesError) throw profilesError;
+
+      // Fetch emails from auth.users table for each profile
+      const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers();
+      
+      if (usersError) throw usersError;
+
+      const userEmailMap = new Map(usersData.users.map(user => [user.id, user.email]));
+
+      return profilesData.map(profile => ({
+        ...profile,
+        email: userEmailMap.get(profile.id) || null
+      })) as Profile[];
     },
   });
 
@@ -95,7 +121,7 @@ export default function UserManagement() {
             {profiles?.map((profile) => (
               <TableRow key={profile.id}>
                 <TableCell>{profile.full_name || "N/A"}</TableCell>
-                <TableCell>{profile.email}</TableCell>
+                <TableCell>{profile.email || "N/A"}</TableCell>
                 <TableCell className="capitalize">{profile.role}</TableCell>
                 <TableCell className="capitalize">{profile.status}</TableCell>
                 <TableCell className="text-right">
