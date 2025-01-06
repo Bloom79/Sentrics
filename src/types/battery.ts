@@ -10,6 +10,18 @@ export interface BatteryDetail {
   temperature: number;
   voltage: number;
   current: number;
+  stateOfHealth: number;
+  cycleCount: number;
+  depthOfDischarge: number;
+  cellBalance: "balanced" | "imbalanced";
+  powerRating: number;
+  alerts?: string[];
+  historicalData?: {
+    timestamp: string;
+    soc: number;
+    temperature: number;
+    power: number;
+  }[];
 }
 
 export interface AggregatedData {
