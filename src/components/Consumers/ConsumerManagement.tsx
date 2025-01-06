@@ -7,8 +7,8 @@ import { AddConsumerDialog } from "./AddConsumerDialog";
 const ConsumerManagement = () => {
   const mockConsumers: Consumer[] = [
     {
-      id: "1",
-      name: "Industrial Park A",
+      id: "123e4567-e89b-12d3-a456-426614174000",
+      full_name: "Industrial Park A",
       type: "industrial",
       consumption: 750,
       status: "active",
@@ -20,8 +20,8 @@ const ConsumerManagement = () => {
       }
     },
     {
-      id: "2",
-      name: "Shopping Mall B",
+      id: "223e4567-e89b-12d3-a456-426614174001",
+      full_name: "Shopping Mall B",
       type: "commercial",
       consumption: 450,
       status: "active",
