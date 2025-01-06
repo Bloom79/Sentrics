@@ -3,36 +3,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import { Consumer } from "@/types/site";
 import { AddConsumerDialog } from "./AddConsumerDialog";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const ConsumerManagement = () => {
-  const mockConsumers: Consumer[] = [
-    {
-      id: "123e4567-e89b-12d3-a456-426614174000",
-      full_name: "Industrial Park A",
-      type: "industrial",
-      consumption: 750,
-      status: "active",
-      specs: {
-        peakDemand: 1000,
-        dailyUsage: 18000,
-        powerFactor: 0.95,
-        connectionType: "high-voltage"
-      }
-    },
-    {
-      id: "223e4567-e89b-12d3-a456-426614174001",
-      full_name: "Shopping Mall B",
-      type: "commercial",
-      consumption: 450,
-      status: "active",
-      specs: {
-        peakDemand: 600,
-        dailyUsage: 10800,
-        powerFactor: 0.92,
-        connectionType: "medium-voltage"
-      }
+  const { data: consumers, refetch } = useQuery({
+    queryKey: ['consumers'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('type', ['residential', 'commercial', 'industrial']);
+      
+      if (error) throw error;
+      
+      return data.map(consumer => ({
+        id: consumer.id,
+        full_name: consumer.full_name,
+        type: consumer.type,
+        consumption: consumer.consumption || 0,
+        status: consumer.status || 'active',
+        specs: consumer.specs || {
+          peakDemand: 0,
+          dailyUsage: 0,
+          powerFactor: 0,
+          connectionType: 'low-voltage'
+        }
+      })) as Consumer[];
     }
-  ];
+  });
 
   return (
     <div className="space-y-4">
@@ -40,7 +39,7 @@ const ConsumerManagement = () => {
         <h2 className="text-2xl font-semibold tracking-tight">
           Consumer Management
         </h2>
-        <AddConsumerDialog />
+        <AddConsumerDialog onSuccess={() => refetch()} />
       </div>
       
       <Card>
@@ -48,7 +47,7 @@ const ConsumerManagement = () => {
           <CardTitle>Active Consumers</CardTitle>
         </CardHeader>
         <CardContent>
-          <ConsumersList consumers={mockConsumers} />
+          <ConsumersList consumers={consumers || []} />
         </CardContent>
       </Card>
     </div>

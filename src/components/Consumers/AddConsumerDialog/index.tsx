@@ -12,15 +12,21 @@ import { ConsumerContactInfo } from "./ConsumerContactInfo";
 import { ConsumerAddressInfo } from "./ConsumerAddressInfo";
 import { ConsumerBusinessInfo } from "./ConsumerBusinessInfo";
 
-export const AddConsumerDialog = () => {
+interface AddConsumerDialogProps {
+  onSuccess?: () => void;
+}
+
+export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
   const { toast } = useToast();
   const form = useForm<ConsumerFormData>();
+  const [open, setOpen] = React.useState(false);
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
       const { error } = await supabase
         .from('profiles')
         .insert({
+          id: crypto.randomUUID(),
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
@@ -42,7 +48,10 @@ export const AddConsumerDialog = () => {
         title: "Success",
         description: "Consumer has been created successfully.",
       });
+      
       form.reset();
+      setOpen(false);
+      onSuccess?.();
     } catch (error) {
       console.error("Error creating consumer:", error);
       toast({
@@ -54,7 +63,7 @@ export const AddConsumerDialog = () => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" /> Add Consumer
