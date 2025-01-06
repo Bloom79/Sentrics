@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Tool } from "lucide-react";
+import { Calendar, Wrench } from "lucide-react";
 
 interface MaintenanceScheduleProps {
   siteId: string;
@@ -47,7 +47,7 @@ const MaintenanceSchedule = ({ siteId }: MaintenanceScheduleProps) => {
               key={task.id}
               className="flex items-start gap-3 p-3 rounded-lg bg-muted/50"
             >
-              <Tool className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <Wrench className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <p className="font-medium">{task.type}</p>
