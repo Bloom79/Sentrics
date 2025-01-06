@@ -1,4 +1,4 @@
-export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'bess';
+export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'cell' | 'string' | 'bess';
 
 export type ConsumerType = 'residential' | 'industrial' | 'commercial';
 
