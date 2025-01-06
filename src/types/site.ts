@@ -5,7 +5,40 @@ export interface Site {
   type: "solar" | "wind" | "hybrid";
   capacity: number;
   status: "online" | "offline" | "maintenance";
+  lastUpdate: string;
+  dailyProduction: number;
+  monthlyProduction: number;
+  efficiency: number;
+  co2Saved: number;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
   plants: Plant[];
+  consumers?: {
+    id: string;
+    name: string;
+    consumption: number;
+    type: string;
+  }[];
+  energySources: {
+    type: string;
+    output: number;
+    capacity: number;
+    currentOutput: number;
+    status: string;
+  }[];
+  storage: {
+    capacity: number;
+    currentCharge: number;
+  };
+  storageUnits: StorageUnit[];
+  gridConnection: {
+    status: string;
+    frequency: number;
+    voltage: number;
+    congestion: string;
+  };
 }
 
 export interface Plant {
