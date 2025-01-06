@@ -8,7 +8,7 @@ import {
   Settings,
   ChevronRight,
   Search,
-  Tool,
+  Wrench,
   LineChart,
 } from "lucide-react";
 import {
@@ -73,7 +73,7 @@ const navigationItems = [
       {
         title: "Maintenance",
         path: "/maintenance",
-        icon: Tool,
+        icon: Wrench,
       },
       {
         title: "Settings",

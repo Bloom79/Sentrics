@@ -5,7 +5,7 @@ export type StorageUnit = {
   status: "charging" | "discharging" | "idle";
   health: number;
   temperature: number;
-  powerRating: number; // Added this required field
+  powerRating: number;
 };
 
 export type Site = {
@@ -17,7 +17,7 @@ export type Site = {
     type: "solar" | "eolic";
     capacity: number;
     currentOutput: number;
-    status: "active" | "inactive";
+    status: "active" | "inactive" | "maintenance";
   }[];
   storageUnits: StorageUnit[];
   totalCapacity: number;
