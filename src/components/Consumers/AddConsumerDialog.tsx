@@ -18,10 +18,10 @@ export const AddConsumerDialog = () => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
-      // Create the profile directly
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
+          id: crypto.randomUUID(), // Generate a UUID for the profile
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
