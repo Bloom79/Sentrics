@@ -63,7 +63,7 @@ const FlowLegend = () => (
       </div>
       <div className="flex items-center gap-2">
         <div className="w-4 h-0.5 bg-green-500" />
-        <span>High Flow (>500kW)</span>
+        <span>High Flow (&gt;500kW)</span>
       </div>
       <div className="flex items-center gap-2">
         <div className="w-4 h-0.5 bg-yellow-500" />
@@ -71,7 +71,7 @@ const FlowLegend = () => (
       </div>
       <div className="flex items-center gap-2">
         <div className="w-4 h-0.5 bg-red-500" />
-        <span>Low Flow (<200kW)</span>
+        <span>Low Flow (&lt;200kW)</span>
       </div>
     </div>
   </Card>
