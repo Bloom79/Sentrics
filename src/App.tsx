@@ -61,8 +61,7 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/auth" element={<Auth />} />
-                
-                <Route element={
+                <Route path="/*" element={
                   <ProtectedRoute>
                     <SidebarProvider>
                       <div className="flex min-h-screen w-full">
