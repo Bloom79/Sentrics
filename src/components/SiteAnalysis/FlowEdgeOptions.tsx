@@ -14,9 +14,12 @@ export const getEdgeOptions = ({
   faults,
   efficiencyMetrics,
   edges,
-}: FlowEdgeOptionsProps) => {
+}: FlowEdgeOptionsProps): Edge[] => {
   const baseOptions = {
-    style: { strokeWidth: 2 },
+    style: { 
+      strokeWidth: 2,
+      stroke: '#888',
+    },
     markerEnd: {
       type: MarkerType.ArrowClosed,
       color: '#888',
@@ -31,10 +34,11 @@ export const getEdgeOptions = ({
       ...baseOptions.style,
       stroke: faults[edge.id]?.some(f => f.type === 'error') ? '#ef4444' : 
               faults[edge.id]?.some(f => f.type === 'warning') ? '#f59e0b' : 
-              undefined,
+              '#888',
       opacity: efficiencyMetrics[edge.id]?.efficiency 
         ? (efficiencyMetrics[edge.id].efficiency / 100) 
         : 1,
+      strokeWidth: 2,
     },
     label: `${flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1) || '0'} kW (${
       efficiencyMetrics[edge.id]?.efficiency.toFixed(1) || '95'

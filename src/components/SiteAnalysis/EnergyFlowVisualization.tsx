@@ -10,7 +10,6 @@ import {
   Node,
   applyNodeChanges,
   applyEdgeChanges,
-  XYPosition
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
@@ -23,6 +22,7 @@ import { useFlowData } from "@/hooks/useFlowData";
 import { getEdgeOptions } from "./FlowEdgeOptions";
 import NodePalette from "./FlowComponents/NodePalette";
 import FlowControls from "./FlowComponents/FlowControls";
+import { getInitialNodes, getInitialEdges } from "@/utils/initialFlowTemplate";
 
 // Import node components
 import SourceNode from "./FlowNodes/SourceNode";
@@ -53,8 +53,8 @@ let id = 0;
 const getId = () => `node_${id++}`;
 
 const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+  const [nodes, setNodes] = useState<Node[]>(getInitialNodes());
+  const [edges, setEdges] = useState<Edge[]>(getInitialEdges());
   const [timeRange, setTimeRange] = useState<TimeRange>("realtime");
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
@@ -221,7 +221,6 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
   );
 };
 
-// Wrap the Flow component with ReactFlowProvider
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = (props) => {
   return (
     <ReactFlowProvider>
