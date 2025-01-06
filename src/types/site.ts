@@ -8,39 +8,38 @@ export interface Plant {
   status: string;
 }
 
-export interface EnergySource {
-  type: string;
-  output: number;
-  capacity: number;
-}
-
-export interface Storage {
+export interface StorageUnit {
+  id: string;
   capacity: number;
   currentCharge: number;
+  status: string;
+  health: number;
+  temperature: number;
+  powerRating: number;
+}
+
+export interface EnergySource {
+  id: string;
+  type: string;
+  capacity: number;
+  currentOutput: number;
+  status: string;
 }
 
 export interface GridConnection {
   status: string;
   frequency: number;
   voltage: number;
-  congestion: string;
+  congestionLevel: string;
 }
 
 export interface Site {
   id: string;
   name: string;
-  status: string;
-  lastUpdate: string;
-  dailyProduction: number;
-  monthlyProduction: number;
-  efficiency: number;
-  co2Saved: number;
-  plants: Plant[];
+  location: string;
   energySources: EnergySource[];
-  storage: Storage;
+  storageUnits: StorageUnit[];
+  totalCapacity: number;
+  currentOutput: number;
   gridConnection: GridConnection;
-  location?: {
-    lat: number;
-    lng: number;
-  };
 }

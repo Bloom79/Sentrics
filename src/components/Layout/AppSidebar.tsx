@@ -26,9 +26,30 @@ import {
 
 // Mock sites data - in a real app, this would come from an API
 const sitesList = [
-  { id: "1", name: "Milano Nord" },
-  { id: "2", name: "Roma Sud" },
-  { id: "3", name: "Torino Est" },
+  { 
+    id: "1", 
+    name: "Milano Nord",
+    plants: [
+      { id: "1", name: "Solar Farm A", type: "solar" },
+      { id: "2", name: "Wind Farm B", type: "wind" }
+    ]
+  },
+  { 
+    id: "2", 
+    name: "Roma Sud",
+    plants: [
+      { id: "3", name: "Solar Farm C", type: "solar" },
+      { id: "4", name: "Wind Farm D", type: "wind" }
+    ]
+  },
+  { 
+    id: "3", 
+    name: "Torino Est",
+    plants: [
+      { id: "5", name: "Solar Farm E", type: "solar" },
+      { id: "6", name: "Wind Farm F", type: "wind" }
+    ]
+  },
 ];
 
 const navigationGroups = [
@@ -88,12 +109,21 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedSites, setExpandedSites] = useState<string[]>([]);
 
   const toggleExpand = (title: string) => {
     setExpandedItems(current =>
       current.includes(title)
         ? current.filter(item => item !== title)
         : [...current, title]
+    );
+  };
+
+  const toggleSite = (siteId: string) => {
+    setExpandedSites(current =>
+      current.includes(siteId)
+        ? current.filter(id => id !== siteId)
+        : [...current, siteId]
     );
   };
 
@@ -139,16 +169,39 @@ export function AppSidebar() {
                     {item.isExpandable && expandedItems.includes(item.title) && (
                       <div className="pl-6 space-y-1">
                         {sitesList.map((site) => (
-                          <SidebarMenuItem key={site.id}>
-                            <SidebarMenuButton
-                              onClick={() => navigate(`/site/${site.id}`)}
-                              data-active={location.pathname === `/site/${site.id}`}
-                              className="group"
-                            >
-                              <span>{site.name}</span>
-                              <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
+                          <React.Fragment key={site.id}>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                onClick={() => toggleSite(site.id)}
+                                data-active={location.pathname === `/site/${site.id}`}
+                                className="group"
+                              >
+                                <span>{site.name}</span>
+                                {expandedSites.includes(site.id) ? (
+                                  <ChevronDown className="ml-auto h-4 w-4" />
+                                ) : (
+                                  <ChevronRight className="ml-auto h-4 w-4" />
+                                )}
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            {expandedSites.includes(site.id) && (
+                              <div className="pl-4 space-y-1">
+                                {site.plants.map((plant) => (
+                                  <SidebarMenuItem key={plant.id}>
+                                    <SidebarMenuButton
+                                      onClick={() => navigate(`/plant/${plant.id}`)}
+                                      data-active={location.pathname === `/plant/${plant.id}`}
+                                      className="group"
+                                    >
+                                      <Factory className="h-4 w-4" />
+                                      <span>{plant.name}</span>
+                                      <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
+                                    </SidebarMenuButton>
+                                  </SidebarMenuItem>
+                                ))}
+                              </div>
+                            )}
+                          </React.Fragment>
                         ))}
                       </div>
                     )}
