@@ -26,9 +26,15 @@ const mockSite: Site = {
   id: "1",
   name: "Milano Nord",
   location: "Northern Region",
+  status: "online",
+  lastUpdate: new Date().toISOString(),
+  dailyProduction: 2500,
+  monthlyProduction: 75000,
+  efficiency: 92,
+  co2Saved: 45.2,
   energySources: [
-    { id: "1", type: "solar", capacity: 500, currentOutput: 350, status: "active" },
-    { id: "2", type: "eolic", capacity: 300, currentOutput: 250, status: "active" },
+    { type: "solar", capacity: 500, currentOutput: 350, output: 350, status: "active" },
+    { type: "eolic", capacity: 300, currentOutput: 250, output: 250, status: "active" }
   ],
   storageUnits: [
     {
@@ -38,17 +44,12 @@ const mockSite: Site = {
       status: "charging",
       health: 98,
       temperature: 25,
-      powerRating: 250, // Added power rating in kW
-    },
+      powerRating: 250
+    }
   ],
-  totalCapacity: 800,
-  currentOutput: 600,
-  gridConnection: {
-    status: "connected",
-    frequency: 50.02,
-    voltage: 230.5,
-    congestionLevel: "Low",
-  },
+  plants: [],
+  storage: { capacity: 1000, currentCharge: 750 },
+  gridConnection: { status: "connected", frequency: 50.02, voltage: 230.5, congestion: "Low" }
 };
 
 const SiteDetail = () => {

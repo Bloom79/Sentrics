@@ -47,8 +47,8 @@ const mockSiteData: Site[] = [
       }
     ],
     energySources: [
-      { type: "solar", output: 1500, capacity: 2000 },
-      { type: "wind", output: 1000, capacity: 1500 }
+      { type: "solar", output: 1500, capacity: 2000, currentOutput: 1500, status: "online" },
+      { type: "wind", output: 1000, capacity: 1500, currentOutput: 1000, status: "online" }
     ],
     storage: { capacity: 5000, currentCharge: 4200 },
     gridConnection: { status: "connected", frequency: 50.02, voltage: 230.5, congestion: "Low" }
@@ -83,8 +83,8 @@ const mockSiteData: Site[] = [
       }
     ],
     energySources: [
-      { type: "solar", output: 1200, capacity: 1800 },
-      { type: "wind", output: 900, capacity: 1200 }
+      { type: "solar", output: 1200, capacity: 1800, currentOutput: 1200, status: "online" },
+      { type: "wind", output: 900, capacity: 1200, currentOutput: 900, status: "online" }
     ],
     storage: { capacity: 4000, currentCharge: 2800 },
     gridConnection: { status: "connected", frequency: 49.98, voltage: 229.8, congestion: "Medium" }
@@ -119,8 +119,8 @@ const mockSiteData: Site[] = [
       }
     ],
     energySources: [
-      { type: "solar", output: 1000, capacity: 1500 },
-      { type: "wind", output: 800, capacity: 1000 }
+      { type: "solar", output: 1000, capacity: 1500, currentOutput: 1000, status: "online" },
+      { type: "wind", output: 800, capacity: 1000, currentOutput: 800, status: "online" }
     ],
     storage: { capacity: 3000, currentCharge: 2700 },
     gridConnection: { status: "connected", frequency: 50.00, voltage: 230.0, congestion: "Low" }

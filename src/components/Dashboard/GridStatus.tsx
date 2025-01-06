@@ -17,8 +17,8 @@ const mockSites: Site[] = [
     co2Saved: 45.2,
     plants: [],
     energySources: [
-      { type: "solar", output: 350, capacity: 500 },
-      { type: "wind", output: 250, capacity: 300 }
+      { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
+      { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
     ],
     storage: { capacity: 5000, currentCharge: 4200 },
     gridConnection: { status: "connected", frequency: 50.02, voltage: 230.5, congestion: "Low" }
@@ -34,8 +34,8 @@ const mockSites: Site[] = [
     co2Saved: 38.5,
     plants: [],
     energySources: [
-      { type: "solar", output: 300, capacity: 450 },
-      { type: "wind", output: 200, capacity: 250 }
+      { type: "solar", output: 300, capacity: 450, currentOutput: 300, status: "online" },
+      { type: "wind", output: 200, capacity: 250, currentOutput: 200, status: "online" }
     ],
     storage: { capacity: 4000, currentCharge: 2800 },
     gridConnection: { status: "connected", frequency: 49.98, voltage: 229.8, congestion: "Medium" }

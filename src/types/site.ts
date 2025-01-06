@@ -43,11 +43,10 @@ export interface WindAsset {
 }
 
 export interface EnergySource {
-  id?: string;
   type: string;
   capacity: number;
-  output: number;
   currentOutput: number;
+  output: number;
   status: string;
 }
 
