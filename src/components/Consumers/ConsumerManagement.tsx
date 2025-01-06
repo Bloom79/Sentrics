@@ -20,26 +20,45 @@ const ConsumerManagement = () => {
         throw error;
       }
       
-      console.log("Fetched consumers:", data); // Debug log
+      console.log("Raw profiles data:", data); // Debug log
       
-      return data?.map(consumer => ({
-        id: consumer.id,
-        full_name: consumer.full_name,
-        type: consumer.type as "residential" | "commercial" | "industrial",
-        consumption: consumer.consumption || 0,
-        status: consumer.status || 'active',
-        specs: consumer.specs ? {
-          peakDemand: consumer.specs.peakDemand || 0,
-          dailyUsage: consumer.specs.dailyUsage || 0,
-          powerFactor: consumer.specs.powerFactor || 0,
-          connectionType: consumer.specs.connectionType || 'low-voltage'
-        } : {
-          peakDemand: 0,
-          dailyUsage: 0,
-          powerFactor: 0,
-          connectionType: 'low-voltage'
+      return data?.map(profile => {
+        // Ensure specs is properly parsed if it's a string
+        let specs;
+        if (typeof profile.specs === 'string') {
+          try {
+            specs = JSON.parse(profile.specs);
+          } catch (e) {
+            specs = {
+              peakDemand: 0,
+              dailyUsage: 0,
+              powerFactor: 0,
+              connectionType: 'low-voltage'
+            };
+          }
+        } else {
+          specs = profile.specs || {
+            peakDemand: 0,
+            dailyUsage: 0,
+            powerFactor: 0,
+            connectionType: 'low-voltage'
+          };
         }
-      })) as Consumer[] || [];
+
+        return {
+          id: profile.id,
+          full_name: profile.full_name || '',
+          type: (profile.type as "residential" | "commercial" | "industrial") || 'residential',
+          consumption: Number(profile.consumption) || 0,
+          status: (profile.status as "active" | "inactive" | "pending") || 'active',
+          specs: {
+            peakDemand: Number(specs.peakDemand) || 0,
+            dailyUsage: Number(specs.dailyUsage) || 0,
+            powerFactor: Number(specs.powerFactor) || 0,
+            connectionType: specs.connectionType || 'low-voltage'
+          }
+        };
+      }) as Consumer[] || [];
     }
   });
 
