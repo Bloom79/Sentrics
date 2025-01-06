@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wind, Sun } from "lucide-react";
 import { Plant } from "@/types/site";
 import PlantOverview from "@/components/PlantDetail/PlantOverview";
+import PlantAssets from "@/components/PlantDetail/PlantAssets";
 
 // Mock data - in a real app, this would come from an API
 const mockPlant: Plant = {
@@ -57,8 +58,7 @@ const PlantDetail = () => {
           <PlantOverview plant={plant} />
         </TabsContent>
         <TabsContent value="assets" className="space-y-4">
-          <h3 className="text-lg font-medium">Assets Content</h3>
-          {/* Assets content will be implemented in the next phase */}
+          <PlantAssets plant={plant} />
         </TabsContent>
         <TabsContent value="monitoring" className="space-y-4">
           <h3 className="text-lg font-medium">Monitoring Content</h3>

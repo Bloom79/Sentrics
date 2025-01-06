@@ -8,6 +8,38 @@ export interface Plant {
   status: "online" | "offline" | "maintenance";
   lastUpdate?: string;
   location?: string;
+  assets?: SolarAsset[] | WindAsset[];
+}
+
+export interface SolarAsset {
+  id: string;
+  type: "panel" | "inverter";
+  serialNumber: string;
+  model: string;
+  installationDate: string;
+  status: "operational" | "faulty" | "maintenance";
+  lastOutput?: number;
+  efficiency?: number;
+  location?: string;
+}
+
+export interface WindAsset {
+  id: string;
+  type: "turbine" | "transformer";
+  serialNumber: string;
+  model: string;
+  manufacturer: string;
+  ratedCapacity: number;
+  status: "operational" | "faulty" | "maintenance";
+  currentOutput?: number;
+  windSpeed?: number;
+  nacelleDirection?: number;
+  ratedWindSpeed?: number;
+  cutInSpeed?: number;
+  cutOutSpeed?: number;
+  lastMaintenanceDate?: string;
+  pitchControl?: string;
+  location?: string;
 }
 
 export interface EnergySource {
@@ -26,6 +58,14 @@ export interface GridConnection {
   congestionLevel?: string;
 }
 
+export interface StorageUnit {
+  id: string;
+  type: string;
+  capacity: number;
+  currentCharge: number;
+  status: string;
+}
+
 export interface Site {
   id: string;
   name: string;
@@ -42,5 +82,6 @@ export interface Site {
     capacity: number;
     currentCharge: number;
   };
+  storageUnits: StorageUnit[];
   gridConnection: GridConnection;
 }
