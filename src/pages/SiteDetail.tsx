@@ -4,7 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Wind, Activity, Battery, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockSites } from "@/data/mockData";
-import { Site } from "@/types/site";
+import SiteHeader from "@/components/SiteDetail/SiteHeader";
+import PlantsList from "@/components/SiteDetail/PlantsList";
+import ConsumersList from "@/components/SiteDetail/ConsumersList";
 
 const SiteDetail = () => {
   const { id } = useParams();
@@ -15,11 +17,8 @@ const SiteDetail = () => {
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">{site.name}</h1>
-        <p className="text-muted-foreground">{site.location}</p>
-      </div>
+    <div className="container mx-auto py-6 space-y-6">
+      <SiteHeader site={site} />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="p-4">
@@ -33,17 +32,17 @@ const SiteDetail = () => {
         <Card className="p-4">
           <div className="flex items-center gap-2">
             <Activity className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Status</span>
+            <span className="text-sm font-medium">Daily Production</span>
           </div>
-          <p className="mt-2 text-2xl font-bold capitalize">{site.status}</p>
+          <p className="mt-2 text-2xl font-bold">{site.dailyProduction} kWh</p>
         </Card>
 
         <Card className="p-4">
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Daily Production</span>
+            <span className="text-sm font-medium">Monthly Production</span>
           </div>
-          <p className="mt-2 text-2xl font-bold">{site.dailyProduction} kWh</p>
+          <p className="mt-2 text-2xl font-bold">{site.monthlyProduction} kWh</p>
         </Card>
 
         <Card className="p-4">
@@ -55,46 +54,18 @@ const SiteDetail = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="overview" className="mt-6">
+      <Tabs defaultValue="plants" className="mt-6">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="plants">Plants</TabsTrigger>
+          <TabsTrigger value="consumers">Consumers</TabsTrigger>
           <TabsTrigger value="storage">Storage</TabsTrigger>
           <TabsTrigger value="grid">Grid Connection</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview">
-          <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">Site Overview</h3>
-            <div className="grid gap-4">
-              <div>
-                <p className="text-sm font-medium">Monthly Production</p>
-                <p className="text-2xl">{site.monthlyProduction} kWh</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium">CO2 Saved</p>
-                <p className="text-2xl">{site.co2Saved} tons</p>
-              </div>
-            </div>
-          </Card>
-        </TabsContent>
         <TabsContent value="plants">
-          <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">Plants</h3>
-            <div className="space-y-4">
-              {site.plants.map((plant) => (
-                <div key={plant.id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                  <div>
-                    <p className="font-medium">{plant.name}</p>
-                    <p className="text-sm text-muted-foreground capitalize">{plant.type}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">{plant.currentOutput} kW</p>
-                    <p className="text-sm text-muted-foreground">{plant.efficiency}% efficiency</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          <PlantsList plants={site.plants} />
+        </TabsContent>
+        <TabsContent value="consumers">
+          <ConsumersList consumers={site.consumers} />
         </TabsContent>
         <TabsContent value="storage">
           <Card className="p-6">
@@ -108,7 +79,9 @@ const SiteDetail = () => {
                   </div>
                   <div className="text-right">
                     <p className="font-medium">{unit.currentCharge} kWh</p>
-                    <p className="text-sm text-muted-foreground">{(unit.currentCharge / unit.capacity * 100).toFixed(1)}% charged</p>
+                    <p className="text-sm text-muted-foreground">
+                      {((unit.currentCharge / unit.capacity) * 100).toFixed(1)}% charged
+                    </p>
                   </div>
                 </div>
               ))}
