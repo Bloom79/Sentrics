@@ -155,23 +155,23 @@ interface NodePaletteProps {
 
 const NodePalette: React.FC<NodePaletteProps> = ({ onDragStart }) => {
   return (
-    <Card className="absolute left-4 top-20 z-10 p-4 w-64 max-h-[80vh] overflow-y-auto">
-      <h3 className="text-sm font-medium mb-4">Components</h3>
-      <div className="flex flex-col gap-4">
+    <Card className="absolute left-4 top-20 z-10 p-2 w-52 max-h-[calc(100vh-200px)] overflow-y-auto">
+      <h3 className="text-xs font-medium mb-2">Components</h3>
+      <div className="flex flex-col gap-2">
         {paletteCategories.map((category, index) => (
           <div key={category.title}>
-            {index > 0 && <Separator className="my-2" />}
-            <h4 className="text-xs font-medium text-muted-foreground mb-2">{category.title}</h4>
-            <div className="flex flex-col gap-2">
+            {index > 0 && <Separator className="my-1" />}
+            <h4 className="text-xs font-medium text-muted-foreground mb-1">{category.title}</h4>
+            <div className="flex flex-col gap-1">
               {category.items.map((item) => (
                 <div
                   key={`${item.type}-${item.label}`}
-                  className="flex items-center gap-2 p-2 border rounded cursor-move hover:bg-accent"
+                  className="flex items-center gap-2 p-1.5 border rounded cursor-move hover:bg-accent text-xs"
                   draggable
                   onDragStart={(event) => onDragStart(event, item.type, item.sourceType, item.specs)}
                 >
-                  <item.icon className="w-4 h-4" />
-                  <span className="text-sm">{item.label}</span>
+                  <item.icon className="w-3.5 h-3.5" />
+                  <span>{item.label}</span>
                 </div>
               ))}
             </div>
