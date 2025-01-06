@@ -1,10 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
 import { MapPin, Factory, Users, Battery, Plug } from "lucide-react";
 import SiteHeader from "@/components/SiteDetail/SiteHeader";
-import PlantsList from "@/components/SiteDetail/PlantsList";
+import { PlantsTab } from "@/components/SiteDetail/PlantsTab/PlantsTab";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
 import StorageTab from "@/components/SiteDetail/StorageTab";
@@ -75,11 +74,7 @@ const mockSite: Site = {
       powerRating: 250,
       temperature: 25,
       health: 98,
-      efficiency: 95,
-      cycleCount: 150,
-      stateOfHealth: 98,
-      voltage: 800,
-      current: 300
+      efficiency: 95
     },
     {
       id: "2",
@@ -90,11 +85,7 @@ const mockSite: Site = {
       powerRating: 250,
       temperature: 26,
       health: 97,
-      efficiency: 94,
-      cycleCount: 120,
-      stateOfHealth: 97,
-      voltage: 800,
-      current: -280
+      efficiency: 94
     }
   ],
   energySources: [
@@ -195,7 +186,7 @@ const SiteDetail = () => {
         </TabsContent>
 
         <TabsContent value="plants">
-          <PlantsList plants={site.plants} />
+          <PlantsTab plants={site.plants} />
         </TabsContent>
 
         <TabsContent value="consumers">
