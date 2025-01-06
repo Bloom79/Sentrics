@@ -55,6 +55,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   const { flowData, faults, efficiencyMetrics } = useFlowData(timeRange, isPaused, edges);
 
   const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    event.stopPropagation();
     const currentFlow = flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue || 0;
     const metrics = efficiencyMetrics[edge.id] || {
       efficiency: 95,
@@ -75,8 +76,11 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   }, [faults, flowData, efficiencyMetrics]);
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
-    setSelectedNode({ id: node.id, type: node.type });
-    setSelectedEdge(null);
+    // Only show node dialog if it's a direct click, not a drag event
+    if (event.target === event.currentTarget) {
+      setSelectedNode({ id: node.id, type: node.type });
+      setSelectedEdge(null);
+    }
   }, []);
 
   const handleTimeRangeChange = (newRange: TimeRange) => {
