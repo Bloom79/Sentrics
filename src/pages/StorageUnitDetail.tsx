@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Battery, ArrowUp, ArrowDown, Thermometer, Activity, Zap } from "lucide-react";
+import { Battery, Thermometer, Activity, Zap } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import ChargingDirection from "@/components/SiteAnalysis/ChargingDirection";
@@ -15,7 +15,7 @@ const StorageUnitDetail = () => {
     name: "Storage Unit 1",
     capacity: 1000,
     currentCharge: 750,
-    status: "charging",
+    status: "charging" as "charging" | "discharging",
     chargingRate: 45,
     temperature: 25,
     health: 98,

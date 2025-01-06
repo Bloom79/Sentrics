@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import GridAnalysis from "./pages/GridAnalysis";
 import SiteDetail from "./pages/SiteDetail";
+import StorageUnitDetail from "./pages/StorageUnitDetail";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/grid-analysis" element={<GridAnalysis />} />
               <Route path="/site/:siteId" element={<SiteDetail />} />
+              <Route path="/storage-unit/:unitId" element={<StorageUnitDetail />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

@@ -1,10 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Battery, ArrowUp, ArrowDown } from "lucide-react";
+import { Battery } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import ChargingDirection from "./ChargingDirection";
 
 interface StorageOverviewProps {
   siteId: string;
@@ -84,11 +85,7 @@ const StorageOverview = ({ siteId }: StorageOverviewProps) => {
                     <div className="space-y-1">
                       <p className="text-sm font-medium">Status</p>
                       <div className="flex items-center gap-1">
-                        {unit.status === "charging" ? (
-                          <ArrowUp className="h-4 w-4 text-green-500" />
-                        ) : (
-                          <ArrowDown className="h-4 w-4 text-amber-500" />
-                        )}
+                        <ChargingDirection direction={unit.status as "charging" | "discharging"} />
                         <p className="text-sm text-muted-foreground capitalize">
                           {unit.status}
                         </p>
