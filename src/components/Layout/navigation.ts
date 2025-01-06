@@ -6,7 +6,8 @@ import {
   LineChart, 
   Settings, 
   Wrench,
-  DollarSign
+  DollarSign,
+  FileText
 } from "lucide-react";
 
 export const sitesList = [
@@ -78,6 +79,22 @@ export const navigationGroups = [
           consumer: "/consumers/:consumerId/financials"
         },
         icon: DollarSign,
+      },
+      {
+        title: "Consumer Contracts",
+        paths: {
+          site: "/sites/:siteId/contracts/consumers",
+          plant: "/plants/:plantId/contracts/consumers",
+        },
+        icon: FileText,
+      },
+      {
+        title: "Grid Contracts",
+        paths: {
+          site: "/sites/:siteId/contracts/grid",
+          plant: "/plants/:plantId/contracts/grid",
+        },
+        icon: FileText,
       },
     ],
   },
