@@ -3,17 +3,34 @@ import { FlowNodeData } from '@/types/flowComponents';
 
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
-    id: 'source-1',
+    id: 'source-solar',
     type: 'source',
     position: { x: 0, y: 0 },
     data: {
-      id: 'source-1',
+      id: 'source-solar',
       type: 'source',
-      label: 'Solar Array 1',
-      output: 350,
+      label: 'Solar Array',
       specs: {
         capacity: 500,
+        output: 350,
         efficiency: 98,
+      },
+      status: 'active',
+      onNodeClick: () => {},
+    },
+  },
+  {
+    id: 'source-wind',
+    type: 'source',
+    position: { x: 0, y: 150 },
+    data: {
+      id: 'source-wind',
+      type: 'source',
+      label: 'Wind Farm',
+      specs: {
+        capacity: 300,
+        output: 250,
+        efficiency: 95,
       },
       status: 'active',
       onNodeClick: () => {},
@@ -22,7 +39,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'inverter-1',
     type: 'inverter',
-    position: { x: 250, y: 0 },
+    position: { x: 250, y: 75 },
     data: {
       id: 'inverter-1',
       type: 'inverter',
@@ -38,7 +55,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'transformer-1',
     type: 'transformer',
-    position: { x: 500, y: 0 },
+    position: { x: 500, y: 75 },
     data: {
       id: 'transformer-1',
       type: 'transformer',
@@ -54,7 +71,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   {
     id: 'storage-1',
     type: 'storage',
-    position: { x: 750, y: 0 },
+    position: { x: 750, y: 75 },
     data: {
       id: 'storage-1',
       type: 'storage',
@@ -114,8 +131,16 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
 
 export const getInitialEdges = (): Edge[] => [
   {
-    id: 'source-to-inverter',
-    source: 'source-1',
+    id: 'solar-to-inverter',
+    source: 'source-solar',
+    target: 'inverter-1',
+    animated: true,
+    style: { stroke: '#22c55e' },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  },
+  {
+    id: 'wind-to-inverter',
+    source: 'source-wind',
     target: 'inverter-1',
     animated: true,
     style: { stroke: '#22c55e' },

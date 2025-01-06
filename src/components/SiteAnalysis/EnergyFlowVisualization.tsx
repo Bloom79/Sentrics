@@ -64,8 +64,9 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
 
   const { flowData, faults, efficiencyMetrics } = useFlowData(timeRange, isPaused, edges);
 
-  const onDragStart = (event: DragEvent, nodeType: string) => {
+  const onDragStart = (event: DragEvent, nodeType: string, sourceType?: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
+    event.dataTransfer.setData('sourceType', sourceType || '');
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -79,6 +80,7 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
       event.preventDefault();
 
       const type = event.dataTransfer.getData('application/reactflow');
+      const sourceType = event.dataTransfer.getData('sourceType');
       const { clientX, clientY } = event;
       const position = reactFlowInstance.screenToFlowPosition({
         x: clientX,
@@ -90,7 +92,16 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
         type,
         position,
         data: { 
-          label: `${type.charAt(0).toUpperCase() + type.slice(1)} ${nodes.length + 1}`,
+          label: sourceType === 'solar' 
+            ? 'Solar Array' 
+            : `${type.charAt(0).toUpperCase() + type.slice(1)} ${nodes.length + 1}`,
+          type,
+          specs: {
+            capacity: 500,
+            output: 350,
+            efficiency: 95,
+          },
+          status: 'active',
           onNodeClick: (id: string, type: string) => setSelectedNode({ id, type }),
         },
       };

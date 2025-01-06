@@ -3,9 +3,9 @@ import { Sun, Wind, Battery, Factory, Grid, Zap, Cable } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const paletteItems = [
-  { type: 'source', label: 'Solar Array', icon: Sun },
-  { type: 'source', label: 'Wind Farm', icon: Wind },
-  { type: 'bess', label: 'Battery Storage', icon: Battery },
+  { type: 'source', label: 'Solar Array', icon: Sun, sourceType: 'solar' },
+  { type: 'source', label: 'Wind Farm', icon: Wind, sourceType: 'wind' },
+  { type: 'storage', label: 'Battery Storage', icon: Battery },
   { type: 'consumer', label: 'Consumer', icon: Factory },
   { type: 'grid', label: 'Grid', icon: Grid },
   { type: 'inverter', label: 'Inverter', icon: Zap },
@@ -13,7 +13,7 @@ const paletteItems = [
 ];
 
 interface NodePaletteProps {
-  onDragStart: (event: DragEvent, nodeType: string) => void;
+  onDragStart: (event: DragEvent, nodeType: string, sourceType?: string) => void;
 }
 
 const NodePalette: React.FC<NodePaletteProps> = ({ onDragStart }) => {
@@ -26,7 +26,7 @@ const NodePalette: React.FC<NodePaletteProps> = ({ onDragStart }) => {
             key={`${item.type}-${item.label}`}
             className="flex items-center gap-2 p-2 border rounded cursor-move hover:bg-accent"
             draggable
-            onDragStart={(event) => onDragStart(event, item.type)}
+            onDragStart={(event) => onDragStart(event, item.type, item.sourceType)}
           >
             <item.icon className="w-4 h-4" />
             <span className="text-sm">{item.label}</span>
