@@ -2,10 +2,10 @@ import { Node, Edge, MarkerType } from '@xyflow/react';
 import { FlowNodeData } from '@/types/flowComponents';
 
 const GENERATION_X = 0;
-const CONVERSION_X = 300;
-const STORAGE_X = 600;
-const CONSUMPTION_X = 900;
-const GRID_X = 300;
+const CONVERSION_X = 400;  // Increased spacing
+const STORAGE_X = 800;     // Increased spacing
+const CONSUMPTION_X = 1200; // Increased spacing
+const GRID_X = 400;        // Aligned with conversion components
 
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
   // Generation Section
@@ -28,6 +28,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 180, height: 100 }, // Increased size
   },
   {
     id: 'source-wind',
@@ -48,6 +49,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 180, height: 100 }, // Increased size
   },
 
   // Power Conversion Section
@@ -68,11 +70,12 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 160, height: 90 }, // Increased size
   },
   {
     id: 'transformer-1',
     type: 'transformer',
-    position: { x: CONVERSION_X + 150, y: 75 },
+    position: { x: CONVERSION_X + 200, y: 75 },
     data: {
       id: 'transformer-1',
       type: 'transformer',
@@ -86,9 +89,10 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 160, height: 90 }, // Increased size
   },
 
-  // Grid Connection (positioned before BESS)
+  // Grid Connection
   {
     id: 'grid-1',
     type: 'grid',
@@ -106,6 +110,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 160, height: 90 }, // Increased size
   },
 
   // BESS Units
@@ -121,20 +126,13 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         maxCapacity: 1000,
         currentCharge: 750,
         stateOfCharge: 75,
-        stateOfHealth: 98,
         chargingPower: 250,
-        dischargingPower: 250,
         temperature: 25,
-        cycleCount: 450,
-        depthOfDischarge: 80,
-        efficiency: 95,
-        powerRating: 500,
-        health: 98,
-        cycles: 450
       },
       status: 'charging',
       onNodeClick: () => {},
     },
+    style: { width: 200, height: 100 }, // Increased size
   },
   {
     id: 'bess-2',
@@ -148,20 +146,13 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         maxCapacity: 1000,
         currentCharge: 850,
         stateOfCharge: 85,
-        stateOfHealth: 97,
         chargingPower: 250,
-        dischargingPower: 250,
         temperature: 26,
-        cycleCount: 380,
-        depthOfDischarge: 80,
-        efficiency: 95,
-        powerRating: 500,
-        health: 97,
-        cycles: 380
       },
       status: 'standby',
       onNodeClick: () => {},
     },
+    style: { width: 200, height: 100 }, // Increased size
   },
 
   // Consumption Section
@@ -184,6 +175,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 180, height: 100 }, // Increased size
   },
   {
     id: 'consumer-industrial',
@@ -204,6 +196,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       status: 'active',
       onNodeClick: () => {},
     },
+    style: { width: 180, height: 100 }, // Increased size
   },
 ];
 
