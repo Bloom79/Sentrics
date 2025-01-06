@@ -4,7 +4,7 @@ import { BatteryDetail } from "@/types/battery";
 import ChargingDirection from "./ChargingDirection";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Battery } from "lucide-react";
 
 interface BatteryDetailsProps {
   battery: BatteryDetail;
@@ -25,7 +25,10 @@ const BatteryDetails: React.FC<BatteryDetailsProps> = ({ battery }) => {
     <ScrollArea className="h-[calc(100vh-8rem)]">
       <div className="space-y-6 pr-4">
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Battery Storage (BESS)</h3>
+          <div className="flex items-center gap-2">
+            <Battery className="h-5 w-5" />
+            <h3 className="text-lg font-semibold">Battery Storage (BESS)</h3>
+          </div>
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium">{battery.name}</span>
@@ -98,6 +101,15 @@ const BatteryDetails: React.FC<BatteryDetailsProps> = ({ battery }) => {
             )}
           </div>
         </Card>
+
+        {battery.historicalData && (
+          <Card className="p-4">
+            <h4 className="text-sm font-semibold mb-4">Historical Performance</h4>
+            <div className="space-y-4">
+              {/* Add historical data visualization here if needed */}
+            </div>
+          </Card>
+        )}
 
         {battery.alerts && battery.alerts.length > 0 && (
           <Card className="p-4 border-yellow-500/50">
