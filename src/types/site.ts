@@ -5,14 +5,16 @@ export interface Plant {
   capacity: number;
   currentOutput: number;
   efficiency: number;
-  status: string;
+  status: "online" | "offline" | "maintenance";
+  lastUpdate?: string;
+  location?: string;
 }
 
 export interface EnergySource {
   type: string;
   capacity: number;
   currentOutput: number;
-  output: number; // Added for compatibility
+  output: number;
   status: string;
 }
 
@@ -20,7 +22,7 @@ export interface GridConnection {
   status: string;
   frequency: number;
   voltage: number;
-  congestion: string; // Added for compatibility
+  congestion: string;
   congestionLevel?: string;
 }
 
@@ -28,6 +30,7 @@ export interface Site {
   id: string;
   name: string;
   status: string;
+  location?: string;
   lastUpdate: string;
   dailyProduction: number;
   monthlyProduction: number;

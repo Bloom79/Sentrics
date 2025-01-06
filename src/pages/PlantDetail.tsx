@@ -1,19 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wind, Sun } from "lucide-react";
-
-interface Plant {
-  id: string;
-  name: string;
-  type: "solar" | "wind";
-  capacity: number;
-  currentOutput: number;
-  efficiency: number;
-  status: "online" | "offline" | "maintenance";
-}
+import { Plant } from "@/types/site";
+import PlantOverview from "@/components/PlantDetail/PlantOverview";
 
 // Mock data - in a real app, this would come from an API
 const mockPlant: Plant = {
@@ -23,7 +14,8 @@ const mockPlant: Plant = {
   capacity: 1000,
   currentOutput: 750,
   efficiency: 75,
-  status: "online"
+  status: "online",
+  lastUpdate: new Date().toISOString()
 };
 
 const PlantDetail = () => {
@@ -53,39 +45,6 @@ const PlantDetail = () => {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Capacity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{plant.capacity} kW</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Current Output
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{plant.currentOutput} kW</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Efficiency
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{plant.efficiency}%</div>
-          </CardContent>
-        </Card>
-      </div>
-
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -94,9 +53,8 @@ const PlantDetail = () => {
           <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <h3 className="text-lg font-medium">Overview Content</h3>
-          {/* Overview content will be implemented in the next phase */}
+        <TabsContent value="overview">
+          <PlantOverview plant={plant} />
         </TabsContent>
         <TabsContent value="assets" className="space-y-4">
           <h3 className="text-lg font-medium">Assets Content</h3>
