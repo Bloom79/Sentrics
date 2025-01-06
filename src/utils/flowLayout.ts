@@ -104,11 +104,27 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
     });
   });
 
-  // Add grid connection
+  // Add consumers and grid at the same level
+  ['residential', 'industrial', 'commercial'].forEach((type, index) => {
+    nodes.push({
+      id: `consumer-${type}`,
+      type: 'consumer',
+      position: calculateNodePosition(6, index * 2),
+      data: {
+        id: `consumer-${type}`,
+        type: type as ConsumerType,
+        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Consumer`,
+        consumption: 150 + (index * 100),
+        onNodeClick: () => {},
+      },
+    });
+  });
+
+  // Add grid connection at the same level as consumers
   nodes.push({
     id: 'grid',
     type: 'grid',
-    position: calculateNodePosition(4, 4),
+    position: calculateNodePosition(6, 6),
     data: {
       id: 'grid',
       type: 'grid',
@@ -118,22 +134,6 @@ export const getInitialLayout = (sourceCount: number): { nodes: Node<FlowNodeDat
       },
       onNodeClick: () => {},
     },
-  });
-
-  // Add consumers
-  ['residential', 'industrial', 'commercial'].forEach((type, index) => {
-    nodes.push({
-      id: `consumer-${type}`,
-      type: 'consumer',
-      position: calculateNodePosition(6, index * 2 + 1),
-      data: {
-        id: `consumer-${type}`,
-        type: type as ConsumerType,
-        label: `${type.charAt(0).toUpperCase() + type.slice(1)} Consumer`,
-        consumption: 150 + (index * 100),
-        onNodeClick: () => {},
-      },
-    });
   });
 
   return { nodes };

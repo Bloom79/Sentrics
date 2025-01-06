@@ -89,7 +89,7 @@ export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
     },
   });
 
-  // Connect transformer to storage and grid (split flow)
+  // Connect transformer to storage and consumers (split flow)
   ['main', 'backup'].forEach(storageType => {
     edges.push({
       id: `transformer-to-storage-${storageType}`,
@@ -106,7 +106,7 @@ export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
     });
   });
 
-  // Connect storage and grid to consumers with realistic values
+  // Connect storage to consumers with realistic values
   ['residential', 'industrial', 'commercial'].forEach((consumerType, index) => {
     const storageType = index === 0 ? 'main' : 'backup';
     const consumerLoad = [150, 250, 350][index]; // Increasing loads for different consumer types
@@ -122,21 +122,6 @@ export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
         efficiency: 98,
         status: 'active' as const,
         type: 'consumption' as const,
-      },
-    });
-
-    // Grid backup connection
-    edges.push({
-      id: `grid-to-consumer-${consumerType}`,
-      source: 'grid',
-      target: `consumer-${consumerType}`,
-      animated: true,
-      style: getEdgeStyle(consumerLoad * 0.3), // Grid provides 30% backup
-      data: {
-        energyFlow: generateFlowData(consumerLoad * 0.3),
-        efficiency: 98,
-        status: 'active' as const,
-        type: 'grid' as const,
       },
     });
   });
