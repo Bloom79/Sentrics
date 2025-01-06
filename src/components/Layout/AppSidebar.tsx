@@ -1,17 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Factory,
-  Users,
-  Power,
-  LineChart,
-  Settings,
-  Wrench,
-  ChevronRight,
-  Building2,
-  ChevronDown,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -23,87 +12,8 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-
-// Mock sites data - in a real app, this would come from an API
-const sitesList = [
-  { 
-    id: "1", 
-    name: "Milano Nord",
-    plants: [
-      { id: "p1", name: "Solar Farm A", type: "solar" },
-      { id: "p2", name: "Wind Farm B", type: "wind" }
-    ]
-  },
-  { 
-    id: "2", 
-    name: "Roma Sud",
-    plants: [
-      { id: "p3", name: "Solar Farm C", type: "solar" },
-      { id: "p4", name: "Wind Farm D", type: "wind" }
-    ]
-  },
-  { 
-    id: "3", 
-    name: "Torino Est",
-    plants: [
-      { id: "p5", name: "Solar Farm E", type: "solar" },
-      { id: "p6", name: "Wind Farm F", type: "wind" }
-    ]
-  },
-];
-
-const navigationGroups = [
-  {
-    label: "Overview",
-    items: [
-      {
-        title: "Dashboard",
-        path: "/",
-        icon: LayoutDashboard,
-      },
-    ],
-  },
-  {
-    label: "Asset Management",
-    items: [
-      {
-        title: "Sites",
-        icon: Building2,
-        isExpandable: true,
-      },
-      {
-        title: "Consumers",
-        path: "/consumers",
-        icon: Users,
-      },
-      {
-        title: "Energy Grid",
-        path: "/grid-analysis",
-        icon: Power,
-      },
-    ],
-  },
-  {
-    label: "Analysis & Admin",
-    items: [
-      {
-        title: "Analytics",
-        path: "/analytics",
-        icon: LineChart,
-      },
-      {
-        title: "Maintenance",
-        path: "/maintenance",
-        icon: Wrench,
-      },
-      {
-        title: "Settings",
-        path: "/settings",
-        icon: Settings,
-      },
-    ],
-  },
-];
+import { navigationGroups } from "./navigation";
+import { SitesList } from "./SitesList";
 
 export function AppSidebar() {
   const navigate = useNavigate();
@@ -127,8 +37,11 @@ export function AppSidebar() {
     );
   };
 
-  const handlePlantClick = (plantId: string) => {
-    navigate(`/plants/${plantId}`);
+  const handleNavigate = (path: string) => {
+    // Replace :plantId with the current plant ID if it exists in the path
+    const currentPlantId = location.pathname.match(/\/plants\/([^\/]+)/)?.[1];
+    const finalPath = currentPlantId ? path.replace(':plantId', currentPlantId) : path;
+    navigate(finalPath);
   };
 
   return (
@@ -153,14 +66,14 @@ export function AppSidebar() {
                           <item.icon className="h-4 w-4" />
                           <span>{item.title}</span>
                           {expandedItems.includes(item.title) ? (
-                            <ChevronDown className="ml-auto h-4 w-4" />
+                            <ChevronRight className="ml-auto h-4 w-4 rotate-90" />
                           ) : (
                             <ChevronRight className="ml-auto h-4 w-4" />
                           )}
                         </SidebarMenuButton>
                       ) : (
                         <SidebarMenuButton
-                          onClick={() => navigate(item.path)}
+                          onClick={() => item.path && handleNavigate(item.path)}
                           data-active={location.pathname === item.path}
                           className="group"
                         >
@@ -171,43 +84,10 @@ export function AppSidebar() {
                       )}
                     </SidebarMenuItem>
                     {item.isExpandable && expandedItems.includes(item.title) && (
-                      <div className="pl-6 space-y-1">
-                        {sitesList.map((site) => (
-                          <React.Fragment key={site.id}>
-                            <SidebarMenuItem>
-                              <SidebarMenuButton
-                                onClick={() => toggleSite(site.id)}
-                                data-active={location.pathname === `/site/${site.id}`}
-                                className="group"
-                              >
-                                <span>{site.name}</span>
-                                {expandedSites.includes(site.id) ? (
-                                  <ChevronDown className="ml-auto h-4 w-4" />
-                                ) : (
-                                  <ChevronRight className="ml-auto h-4 w-4" />
-                                )}
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            {expandedSites.includes(site.id) && (
-                              <div className="pl-4 space-y-1">
-                                {site.plants.map((plant) => (
-                                  <SidebarMenuItem key={plant.id}>
-                                    <SidebarMenuButton
-                                      onClick={() => handlePlantClick(plant.id)}
-                                      data-active={location.pathname === `/plants/${plant.id}`}
-                                      className="group"
-                                    >
-                                      <Factory className="h-4 w-4" />
-                                      <span>{plant.name}</span>
-                                      <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
-                                    </SidebarMenuButton>
-                                  </SidebarMenuItem>
-                                ))}
-                              </div>
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </div>
+                      <SitesList 
+                        expandedSites={expandedSites}
+                        toggleSite={toggleSite}
+                      />
                     )}
                   </React.Fragment>
                 ))}
