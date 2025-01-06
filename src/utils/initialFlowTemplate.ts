@@ -201,4 +201,5 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
   },
 ];
 
-export { getInitialNodes, getInitialEdges };
+// Remove the duplicate export at the end and only export getInitialEdges from here
+export { getInitialEdges };
