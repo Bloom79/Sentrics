@@ -45,23 +45,6 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
-  // BESS units to Consumers
-  {
-    id: 'bess1-to-residential',
-    source: 'bess-1',
-    target: 'consumer-residential',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  {
-    id: 'bess2-to-industrial',
-    source: 'bess-2',
-    target: 'consumer-industrial',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
   // Grid to BESS units
   {
     id: 'grid-to-bess1',
@@ -75,6 +58,23 @@ export const getInitialEdges = (): Edge[] => [
     id: 'grid-to-bess2',
     source: 'grid-1',
     target: 'bess-2',
+    animated: true,
+    style: { stroke: '#22c55e' },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  },
+  // BESS units to Consumers
+  {
+    id: 'bess1-to-residential',
+    source: 'bess-1',
+    target: 'consumer-residential',
+    animated: true,
+    style: { stroke: '#22c55e' },
+    markerEnd: { type: MarkerType.ArrowClosed },
+  },
+  {
+    id: 'bess2-to-industrial',
+    source: 'bess-2',
+    target: 'consumer-industrial',
     animated: true,
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },

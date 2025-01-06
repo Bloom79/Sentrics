@@ -1,7 +1,7 @@
 import { Node } from '@xyflow/react';
 import { FlowNodeData } from '@/types/flowComponents';
 
-export const STORAGE_X = 600;
+export const STORAGE_X = 700;
 
 export const getStorageNodes = (): Node<FlowNodeData>[] => [
   {
