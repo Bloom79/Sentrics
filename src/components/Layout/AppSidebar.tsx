@@ -39,7 +39,17 @@ export function AppSidebar() {
 
   const handleNavigate = (paths: { [key: string]: string } | string) => {
     if (typeof paths === 'string') {
-      navigate(paths);
+      // Extract plantId from the current URL if it exists
+      const urlParts = location.pathname.split('/');
+      const plantIdIndex = urlParts.indexOf('plants') + 1;
+      const plantId = plantIdIndex > 0 && urlParts[plantIdIndex];
+      
+      // If the path contains :plantId and we have a plantId, replace it
+      if (paths.includes(':plantId') && plantId) {
+        navigate(paths.replace(':plantId', plantId));
+      } else {
+        navigate(paths);
+      }
       return;
     }
 
@@ -66,7 +76,7 @@ export function AppSidebar() {
       <SidebarContent>
         {navigationGroups.map((group) => (
           <SidebarGroup key={group.label} className="mb-4">
-            <SidebarGroupLabel className="px-3 py-2 text-base font-semibold tracking-wide text-primary">
+            <SidebarGroupLabel className="px-3 py-2 text-lg font-semibold tracking-wide text-primary">
               {group.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
