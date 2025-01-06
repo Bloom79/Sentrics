@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { ReactFlow, Controls, Edge } from "@xyflow/react";
+import { ReactFlow, Controls, Edge, Panel } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
 import { TimeRange } from "@/types/flowComponents";
@@ -10,6 +10,8 @@ import NodeDialog from "./NodeDialog";
 import EdgeDialog from "./EdgeDialog";
 import { useFlowData } from "@/hooks/useFlowData";
 import { getEdgeOptions } from "./FlowEdgeOptions";
+import { Button } from "@/components/ui/button";
+import { ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 
 // Import node components
 import SourceNode from "./FlowNodes/SourceNode";
@@ -41,6 +43,8 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const { nodes, edges } = React.useMemo(() => {
     const layout = getInitialLayout(site.energySources.length);
@@ -79,6 +83,27 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     setTimeRange(newRange);
   };
 
+  const handleZoomIn = () => {
+    if (reactFlowInstance) {
+      reactFlowInstance.zoomIn();
+      setZoomLevel(prev => Math.min(prev + 0.2, 2));
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (reactFlowInstance) {
+      reactFlowInstance.zoomOut();
+      setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+    }
+  };
+
+  const handleFitView = () => {
+    if (reactFlowInstance) {
+      reactFlowInstance.fitView({ padding: 0.2 });
+      setZoomLevel(1);
+    }
+  };
+
   const enhancedEdges = getEdgeOptions({ flowData, faults, efficiencyMetrics, edges });
 
   return (
@@ -92,14 +117,43 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         edges={enhancedEdges}
         nodeTypes={nodeTypes}
         fitView
-        nodesDraggable={false}
+        nodesDraggable={true}
         nodesConnectable={false}
         elementsSelectable={true}
         onEdgeClick={handleEdgeClick}
         onNodeClick={handleNodeClick}
         proOptions={{ hideAttribution: true }}
+        onInit={setReactFlowInstance}
+        minZoom={0.5}
+        maxZoom={2}
       >
-        <Controls />
+        <Controls showInteractive={false} />
+        <Panel position="top-right" className="bg-background/95 p-2 rounded-lg shadow-sm border flex gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleZoomIn}
+            className="h-8 w-8"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleZoomOut}
+            className="h-8 w-8"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleFitView}
+            className="h-8 w-8"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </Button>
+        </Panel>
       </ReactFlow>
 
       {selectedEdge && (
