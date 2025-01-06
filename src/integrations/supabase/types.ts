@@ -9,25 +9,76 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      invitations: {
+        Row: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          role: Database["public"]["Enums"]["user_role"] | null
+          status: string | null
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by: string
+          role?: Database["public"]["Enums"]["user_role"] | null
+          status?: string | null
+          token: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          role?: Database["public"]["Enums"]["user_role"] | null
+          status?: string | null
+          token?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
+          full_name: string | null
           id: string
+          invitation_sent_at: string | null
+          invitation_token: string | null
+          invited_by: string | null
+          role: string | null
+          status: string | null
           updated_at: string
           username: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          full_name?: string | null
           id: string
+          invitation_sent_at?: string | null
+          invitation_token?: string | null
+          invited_by?: string | null
+          role?: string | null
+          status?: string | null
           updated_at?: string
           username?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          full_name?: string | null
           id?: string
+          invitation_sent_at?: string | null
+          invitation_token?: string | null
+          invited_by?: string | null
+          role?: string | null
+          status?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -41,7 +92,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "admin" | "user" | "manager"
     }
     CompositeTypes: {
       [_ in never]: never

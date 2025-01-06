@@ -19,6 +19,7 @@ import PlantDetail from "./pages/PlantDetail";
 import Financials from "./pages/Financials";
 import Consumers from "./pages/Consumers";
 import Auth from "./pages/Auth";
+import UserManagement from "./pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,7 @@ const App = () => {
                               <Route path="/settings" element={<div>Settings</div>} />
                               <Route path="/site/:siteId" element={<SiteDetail />} />
                               <Route path="/storage-unit/:unitId" element={<StorageUnitDetail />} />
+                              <Route path="/users" element={<UserManagement />} />
                             </Routes>
                           </div>
                         </main>
