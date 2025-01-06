@@ -12,7 +12,7 @@ import {
 import { getEdgeOptions } from "../FlowEdgeOptions";
 import { nodeTypes } from "./FlowNodeTypes";
 import { useReactFlow } from "@xyflow/react";
-import { FlowNodeData } from "@/types/flowComponents";
+import { FlowNodeData, NodeStatus } from "@/types/flowComponents";
 import { Card } from "@/components/ui/card";
 import { Sun, Wind, Battery, Factory, Grid, Zap, Cable } from "lucide-react";
 import SidePanel from "./SidePanel";
@@ -98,10 +98,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
     const nodeData: FlowNodeData = {
       id: node.id,
       type: node.type as FlowNodeData['type'],
-      label: node.data.label,
-      specs: node.data.specs,
-      status: node.data.status,
-      onNodeClick: node.data.onNodeClick,
+      label: node.data.label as string,
+      specs: node.data.specs || {},
+      status: (node.data.status || 'active') as NodeStatus,
+      onNodeClick: (node.data.onNodeClick as (id: string, type: string) => void) || (() => {}),
     };
     setSelectedNode(nodeData);
     if (onNodeClick) {
