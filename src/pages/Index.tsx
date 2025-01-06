@@ -37,18 +37,20 @@ const Index = () => {
             <StorageStatus />
           </div>
 
-          {/* Middle Row - Grid Status and Site Metrics */}
+          {/* Main Content - Combined Site Status and Metrics */}
+          <div className="grid grid-cols-1 gap-4">
+            <DetailedMetrics 
+              selectedSiteId={selectedSiteId}
+              onSiteSelect={setSelectedSiteId}
+              searchTerm={searchTerm}
+              selectedStatus={selectedStatus}
+              selectedTimeRange={selectedTimeRange}
+            />
+          </div>
+
+          {/* Bottom Row - Grid Status */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <GridStatus />
-            <div className="lg:col-span-2">
-              <DetailedMetrics 
-                selectedSiteId={selectedSiteId}
-                onSiteSelect={setSelectedSiteId}
-                searchTerm={searchTerm}
-                selectedStatus={selectedStatus}
-                selectedTimeRange={selectedTimeRange}
-              />
-            </div>
           </div>
         </div>
       </div>
