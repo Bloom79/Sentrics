@@ -1,16 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ContractFormValues, contractSchema } from "./schema";
 import { v4 as uuidv4 } from 'uuid';
+import { RateFields } from "./RateFields";
+import { BasicContractFields } from "./BasicContractFields";
 
 interface ContractFormProps {
   consumerId: string;
@@ -32,8 +31,6 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
   });
 
   const onSubmit = async (data: ContractFormValues) => {
-    if (!consumerId) return;
-
     try {
       const contractData = {
         id: uuidv4(),
@@ -104,180 +101,8 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
           )}
         />
 
-        {form.watch("type") === "fixed_rate" && (
-          <FormField
-            control={form.control}
-            name="rate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Rate (per kWh)</FormLabel>
-                <FormControl>
-                  <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
-
-        {form.watch("type") === "peak_off_peak" && (
-          <>
-            <FormField
-              control={form.control}
-              name="peak_rate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Peak Rate (per kWh)</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="off_peak_rate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Off-Peak Rate (per kWh)</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        {form.watch("type") === "variable_rate" && (
-          <>
-            <FormField
-              control={form.control}
-              name="variable_rate_base"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Base Rate (per kWh)</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="variable_rate_adjustment_formula"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rate Adjustment Formula</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </>
-        )}
-
-        <FormField
-          control={form.control}
-          name="minimum_purchase"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Minimum Purchase (kWh)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="end_date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>End Date</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="billing_cycle"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Billing Cycle</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select billing cycle" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="quarterly">Quarterly</SelectItem>
-                  <SelectItem value="annually">Annually</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="payment_terms"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Payment Terms (days)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="termination_notice_days"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Termination Notice (days)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="auto_renewal"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Auto Renewal</FormLabel>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <RateFields form={form} contractType={form.watch("type")} />
+        <BasicContractFields form={form} />
 
         <Button type="submit" className="w-full">Create Contract</Button>
       </form>
