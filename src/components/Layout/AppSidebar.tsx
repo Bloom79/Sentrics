@@ -2,15 +2,13 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  Wind,
-  Battery,
-  Activity,
-  Settings,
-  ChevronRight,
-  Search,
-  Wrench,
+  Factory,
+  Users,
+  Power,
   LineChart,
-  MonitorCheck,
+  Settings,
+  Wrench,
+  ChevronRight,
 } from "lucide-react";
 import {
   Sidebar,
@@ -22,22 +20,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarInput,
 } from "@/components/ui/sidebar";
 
-type NavigationItem = {
-  title: string;
-  path: string;
-  icon: React.ComponentType<any>;
-  children?: NavigationItem[];
-};
-
-type NavigationGroup = {
-  label: string;
-  items: NavigationItem[];
-};
-
-const navigationItems: NavigationGroup[] = [
+const navigationItems = [
   {
     label: "Overview",
     items: [
@@ -49,22 +34,22 @@ const navigationItems: NavigationGroup[] = [
     ],
   },
   {
-    label: "Monitoring",
+    label: "Asset Management",
     items: [
       {
-        title: "Grid Analysis",
+        title: "Plants",
+        path: "/plants",
+        icon: Factory,
+      },
+      {
+        title: "Consumers",
+        path: "/consumers",
+        icon: Users,
+      },
+      {
+        title: "Energy Grid",
         path: "/grid-analysis",
-        icon: Activity,
-      },
-      {
-        title: "Sites",
-        path: "/sites",
-        icon: Wind,
-      },
-      {
-        title: "Storage Units",
-        path: "/storage",
-        icon: Battery,
+        icon: Power,
       },
     ],
   },
@@ -93,23 +78,11 @@ const navigationItems: NavigationGroup[] = [
 export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = React.useState("");
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-    // TODO: Implement search functionality
-  };
 
   return (
     <Sidebar>
-      <SidebarHeader>
-        <SidebarInput
-          type="search"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="w-full"
-        />
+      <SidebarHeader className="p-4">
+        <h2 className="text-lg font-semibold">SentricS</h2>
       </SidebarHeader>
       <SidebarContent>
         {navigationItems.map((group) => (
@@ -122,7 +95,6 @@ export function AppSidebar() {
                     <SidebarMenuButton
                       onClick={() => navigate(item.path)}
                       data-active={location.pathname === item.path}
-                      tooltip={item.title}
                     >
                       <item.icon className="w-4 h-4" />
                       <span>{item.title}</span>

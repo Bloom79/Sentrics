@@ -5,6 +5,7 @@ import ProductionOverview from "@/components/Dashboard/Overview/ProductionOvervi
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
+import { AppBreadcrumb } from "@/components/Layout/Breadcrumb";
 
 const Index = () => {
   const { language, setLanguage } = useLanguage();
@@ -16,6 +17,8 @@ const Index = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="container py-6">
+        <AppBreadcrumb items={[{ label: "Dashboard" }]} />
+        
         <DashboardHeader
           selectedTimeRange={selectedTimeRange}
           setSelectedTimeRange={setSelectedTimeRange}

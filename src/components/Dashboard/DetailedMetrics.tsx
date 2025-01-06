@@ -1,9 +1,13 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, CheckCircle, AlertCircle, XCircle, Battery, Wind, Sun, Zap } from "lucide-react";
+import { Activity } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Badge } from "@/components/ui/badge";
+import { StatusIcon } from "./DetailedMetrics/StatusIcon";
+import { EnergySourceInfo } from "./DetailedMetrics/EnergySourceInfo";
+import { StorageInfo } from "./DetailedMetrics/StorageInfo";
+import { GridConnectionInfo } from "./DetailedMetrics/GridConnectionInfo";
 
 interface DetailedMetricsProps {
   selectedSiteId: string | null;
@@ -73,30 +77,6 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
   selectedTimeRange 
 }) => {
   const { t } = useLanguage();
-  
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "online":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "maintenance":
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      default:
-        return <XCircle className="h-4 w-4 text-red-500" />;
-    }
-  };
-
-  const getCongestionColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case "low":
-        return "bg-green-500";
-      case "medium":
-        return "bg-yellow-500";
-      case "high":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
 
   const filteredSites = mockSiteData.filter(site => {
     const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -152,7 +132,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
                 >
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {getStatusIcon(site.status)}
+                      <StatusIcon status={site.status} />
                       <span className="text-sm font-medium">
                         {site.status.charAt(0).toUpperCase() + site.status.slice(1)}
                       </span>
@@ -160,38 +140,13 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({
                   </TableCell>
                   <TableCell className="font-medium">{site.name}</TableCell>
                   <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1">
-                        <Sun className="h-4 w-4 text-yellow-500" />
-                        <span className="text-sm">{`${site.energySources[0].output}/${site.energySources[0].capacity} kW`}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Wind className="h-4 w-4 text-blue-500" />
-                        <span className="text-sm">{`${site.energySources[1].output}/${site.energySources[1].capacity} kW`}</span>
-                      </div>
-                    </div>
+                    <EnergySourceInfo sources={site.energySources} />
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Battery className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">
-                        {`${Math.round((site.storage.currentCharge / site.storage.capacity) * 100)}% (${site.storage.currentCharge} kWh)`}
-                      </span>
-                    </div>
+                    <StorageInfo storage={site.storage} />
                   </TableCell>
                   <TableCell>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${getCongestionColor(site.gridConnection.congestion)}`} />
-                        <span className="text-sm">{site.gridConnection.congestion}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Zap className="h-4 w-4 text-accent" />
-                        <span className="text-sm">
-                          {`${site.gridConnection.frequency} Hz / ${site.gridConnection.voltage} V`}
-                        </span>
-                      </div>
-                    </div>
+                    <GridConnectionInfo connection={site.gridConnection} />
                   </TableCell>
                   <TableCell className="text-right">{site.dailyProduction.toLocaleString()}</TableCell>
                   <TableCell className="text-right">{site.monthlyProduction.toLocaleString()}</TableCell>
