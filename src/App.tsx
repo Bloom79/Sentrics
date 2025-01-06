@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Layout/AppSidebar";
 import { AppBreadcrumb } from "@/components/Layout/Breadcrumb";
+import { UserProfile } from "@/components/Layout/UserProfile";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
@@ -68,7 +69,10 @@ const App = () => {
                         <AppSidebar />
                         <main className="flex-1 overflow-x-hidden bg-background">
                           <div className="container py-6">
-                            <AppBreadcrumb />
+                            <div className="flex justify-between items-center mb-6">
+                              <AppBreadcrumb />
+                              <UserProfile />
+                            </div>
                             <Routes>
                               <Route path="/" element={<Index />} />
                               <Route path="/plants/:plantId" element={<PlantDetail />} />
