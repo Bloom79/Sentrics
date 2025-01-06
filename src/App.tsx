@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import GridAnalysis from "./pages/GridAnalysis";
 import SiteDetail from "./pages/SiteDetail";
 import StorageUnitDetail from "./pages/StorageUnitDetail";
+import PlantDetail from "./pages/PlantDetail";
 
 const queryClient = new QueryClient();
 
@@ -31,8 +32,7 @@ const App = () => {
                     <AppBreadcrumb />
                     <Routes>
                       <Route path="/" element={<Index />} />
-                      <Route path="/plants" element={<div>Plants Overview</div>} />
-                      <Route path="/plants/:plantId" element={<div>Plant Detail</div>} />
+                      <Route path="/plants/:plantId" element={<PlantDetail />} />
                       <Route path="/consumers" element={<div>Consumers Overview</div>} />
                       <Route path="/consumers/:consumerId" element={<div>Consumer Detail</div>} />
                       <Route path="/grid-analysis" element={<GridAnalysis />} />
