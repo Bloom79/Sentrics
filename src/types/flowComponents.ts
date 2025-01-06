@@ -2,7 +2,7 @@ export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverte
 
 export type ConsumerType = 'residential' | 'industrial' | 'commercial';
 
-export type NodeStatus = 'active' | 'inactive' | 'maintenance';
+export type NodeStatus = 'active' | 'inactive' | 'maintenance' | 'charging' | 'discharging';
 
 export type FlowNodeData = {
   id: string;
