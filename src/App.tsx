@@ -13,6 +13,7 @@ import GridAnalysis from "./pages/GridAnalysis";
 import SiteDetail from "./pages/SiteDetail";
 import StorageUnitDetail from "./pages/StorageUnitDetail";
 import PlantDetail from "./pages/PlantDetail";
+import Financials from "./pages/Financials";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => {
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/plants/:plantId" element={<PlantDetail />} />
+                      <Route path="/plants/:plantId/financials" element={<Financials />} />
                       <Route path="/consumers" element={<div>Consumers Overview</div>} />
                       <Route path="/consumers/:consumerId" element={<div>Consumer Detail</div>} />
                       <Route path="/grid-analysis" element={<GridAnalysis />} />
