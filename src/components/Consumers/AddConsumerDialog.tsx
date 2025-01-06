@@ -21,6 +21,7 @@ export const AddConsumerDialog = () => {
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
+          id: crypto.randomUUID(), // Generate a new UUID for the consumer
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
