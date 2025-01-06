@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sun, Wind, Activity, AlertCircle } from "lucide-react";
+import { Sun, Wind, Activity, AlertCircle, Battery, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   AreaChart,
@@ -10,22 +10,41 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { Button } from "@/components/ui/button";
 
 // Mock forecast data - replace with actual API data later
 const mockForecastData = {
   solar: [
-    { time: "06:00", value: 200 },
-    { time: "09:00", value: 450 },
-    { time: "12:00", value: 850 },
-    { time: "15:00", value: 650 },
-    { time: "18:00", value: 200 },
+    { time: "06:00", value: 200, confidence: 90 },
+    { time: "09:00", value: 450, confidence: 85 },
+    { time: "12:00", value: 850, confidence: 95 },
+    { time: "15:00", value: 650, confidence: 90 },
+    { time: "18:00", value: 200, confidence: 85 },
   ],
   wind: [
-    { time: "06:00", value: 300 },
-    { time: "09:00", value: 400 },
-    { time: "12:00", value: 350 },
-    { time: "15:00", value: 450 },
-    { time: "18:00", value: 500 },
+    { time: "06:00", value: 300, confidence: 80 },
+    { time: "09:00", value: 400, confidence: 85 },
+    { time: "12:00", value: 350, confidence: 75 },
+    { time: "15:00", value: 450, confidence: 80 },
+    { time: "18:00", value: 500, confidence: 85 },
+  ],
+  batteryRecommendations: [
+    {
+      id: 1,
+      priority: "high",
+      action: "Schedule battery charge",
+      time: "10:00",
+      description: "High solar production expected at 12:00. Charge batteries before peak to optimize storage.",
+      impact: "Potential savings: 200 EUR",
+    },
+    {
+      id: 2,
+      priority: "medium",
+      action: "Optimize wind turbines",
+      time: "15:00",
+      description: "Strong winds expected from 15:00. Adjust turbine angles for maximum efficiency.",
+      impact: "Efficiency increase: 15%",
+    },
   ],
 };
 
@@ -123,37 +142,41 @@ const ForecastOverview = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-start gap-4 p-2 rounded-lg bg-yellow-500/10">
-              <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Schedule Battery Charge</p>
-                <p className="text-xs text-muted-foreground mb-2">
-                  High solar production expected at 12:00. Charge batteries before peak to optimize storage.
-                </p>
-                <button
-                  onClick={() => handleActionClick("Battery charge scheduled for 10:00")}
-                  className="text-xs bg-background hover:bg-accent px-2 py-1 rounded-md transition-colors"
-                >
-                  Schedule Charge
-                </button>
+            {mockForecastData.batteryRecommendations.map((recommendation) => (
+              <div
+                key={recommendation.id}
+                className={`flex items-start gap-4 p-2 rounded-lg ${
+                  recommendation.priority === "high"
+                    ? "bg-yellow-500/10"
+                    : "bg-green-500/10"
+                }`}
+              >
+                <AlertCircle
+                  className={`h-5 w-5 mt-0.5 ${
+                    recommendation.priority === "high"
+                      ? "text-yellow-500"
+                      : "text-green-500"
+                  }`}
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{recommendation.action}</p>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {recommendation.description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => handleActionClick(recommendation.action)}
+                      className="text-xs bg-background hover:bg-accent px-2 py-1 rounded-md transition-colors"
+                    >
+                      Schedule Action
+                    </button>
+                    <span className="text-xs text-muted-foreground">
+                      {recommendation.impact}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-2 rounded-lg bg-green-500/10">
-              <AlertCircle className="h-5 w-5 text-green-500 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm font-medium">Optimize Wind Turbines</p>
-                <p className="text-xs text-muted-foreground mb-2">
-                  Strong winds expected from 15:00. Adjust turbine angles for maximum efficiency.
-                </p>
-                <button
-                  onClick={() => handleActionClick("Turbine optimization scheduled")}
-                  className="text-xs bg-background hover:bg-accent px-2 py-1 rounded-md transition-colors"
-                >
-                  Schedule Optimization
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
