@@ -48,29 +48,22 @@ const mockSites: SiteStatus[] = [
 ];
 
 interface SiteMonitoringProps {
-  onSiteSelect: (siteIds: string[] | null) => void;
+  onSiteSelect: (siteId: string | null) => void;
 }
 
 const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const [selectedSites, setSelectedSites] = useState<string[]>([]);
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
   const handleSiteClick = (siteId: string) => {
-    const newSelectedSites = selectedSites.includes(siteId)
-      ? selectedSites.filter(id => id !== siteId)
-      : [...selectedSites, siteId];
-    
-    setSelectedSites(newSelectedSites);
-    onSiteSelect(newSelectedSites.length > 0 ? newSelectedSites : null);
-  };
-
-  const handleSiteDoubleClick = (siteId: string) => {
-    navigate(`/site/${siteId}`);
+    const newSelectedSiteId = selectedSiteId === siteId ? null : siteId;
+    setSelectedSiteId(newSelectedSiteId);
+    onSiteSelect(newSelectedSiteId);
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       <Card className="bg-white dark:bg-gray-800">
         <CardHeader className="border-b border-gray-100 dark:border-gray-700">
           <CardTitle className="flex items-center gap-2 text-primary">
@@ -85,12 +78,11 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
                 <div
                   key={site.id}
                   className={`rounded-lg border p-4 space-y-4 cursor-pointer transition-colors ${
-                    selectedSites.includes(site.id)
+                    selectedSiteId === site.id
                       ? "border-primary bg-primary/5"
                       : "border-gray-100 dark:border-gray-700 hover:border-primary/50"
                   }`}
                   onClick={() => handleSiteClick(site.id)}
-                  onDoubleClick={() => handleSiteDoubleClick(site.id)}
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-primary">{site.name}</h3>
@@ -152,7 +144,7 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
         </CardContent>
       </Card>
       
-      <BatteryStatus selectedSiteId={selectedSites} />
+      <BatteryStatus selectedSiteId={selectedSiteId ? [selectedSiteId] : null} />
     </div>
   );
 };

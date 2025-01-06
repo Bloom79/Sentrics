@@ -17,10 +17,10 @@ import {
 
 const Index = () => {
   const { language, setLanguage, t } = useLanguage();
-  const [selectedSiteIds, setSelectedSiteIds] = useState<string[]>([]);
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
-  const handleSiteSelect = (siteIds: string[] | null) => {
-    setSelectedSiteIds(siteIds || []);
+  const handleSiteSelect = (siteId: string | null) => {
+    setSelectedSiteId(siteId);
   };
 
   return (
@@ -34,7 +34,10 @@ const Index = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'it')}>
+            <Select 
+              value={language} 
+              onValueChange={(value: string) => setLanguage(value as 'en' | 'it')}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select language" />
               </SelectTrigger>
@@ -93,7 +96,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 gap-4">
-            <DetailedMetrics selectedSiteId={selectedSiteIds.length === 1 ? selectedSiteIds[0] : null} />
+            <DetailedMetrics selectedSiteId={selectedSiteId} />
           </div>
         </div>
       </div>
