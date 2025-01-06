@@ -1,17 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import { MapPin, Factory, Users, Battery, Plug } from "lucide-react";
 import SiteHeader from "@/components/SiteDetail/SiteHeader";
 import PlantsList from "@/components/SiteDetail/PlantsList";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
-import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
-import StorageOverview from "@/components/SiteAnalysis/StorageOverview";
-import EnergyEfficiencyDisplay from "@/components/SiteAnalysis/EnergyEfficiencyDisplay";
-import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
-import EfficiencyMetrics from "@/components/SiteAnalysis/EfficiencyMetrics";
-import HistoricalPerformance from "@/components/SiteAnalysis/HistoricalPerformance";
-import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
-import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
 import { Site } from "@/types/site";
 
 // Mock data for development
@@ -39,7 +34,8 @@ const mockSite: Site = {
       capacity: 500,
       currentOutput: 350,
       efficiency: 95,
-      status: "online"
+      status: "online",
+      lastUpdate: new Date().toISOString()
     },
     {
       id: "2",
@@ -48,35 +44,40 @@ const mockSite: Site = {
       capacity: 300,
       currentOutput: 250,
       efficiency: 89,
-      status: "online"
+      status: "online",
+      lastUpdate: new Date().toISOString()
     }
   ],
   consumers: [
     {
       id: "1",
       name: "Industrial Park A",
+      type: "industrial",
+      status: "active",
       consumption: 450,
-      type: "industrial"
+      lastUpdate: new Date().toISOString()
     },
     {
       id: "2",
       name: "Commercial Center B",
+      type: "commercial",
+      status: "active",
       consumption: 200,
-      type: "commercial"
+      lastUpdate: new Date().toISOString()
     }
   ],
-  energySources: [
-    { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
-    { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
-  ],
-  storage: { capacity: 1000, currentCharge: 750 },
   storageUnits: [
     {
       id: "1",
       name: "BESS Unit 1",
       capacity: 1000,
       currentCharge: 750,
-      status: "charging"
+      status: "charging",
+      efficiency: 95,
+      stateOfHealth: 98,
+      chargingRate: 100,
+      cycleCount: 150,
+      temperature: 25
     }
   ],
   gridConnection: {
@@ -95,37 +96,135 @@ const SiteDetail = () => {
     <div className="container mx-auto p-4 space-y-6">
       <SiteHeader site={site} />
       
-      {/* Energy Flow Visualization */}
-      <div className="mb-6">
-        <EnergyFlowVisualization site={site} />
-      </div>
+      <Tabs defaultValue="flow" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="flow">Energy Flow</TabsTrigger>
+          <TabsTrigger value="info" className="flex items-center gap-2">
+            <MapPin className="h-4 w-4" />
+            Basic Info
+          </TabsTrigger>
+          <TabsTrigger value="plants" className="flex items-center gap-2">
+            <Factory className="h-4 w-4" />
+            Plants
+          </TabsTrigger>
+          <TabsTrigger value="consumers" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Consumers
+          </TabsTrigger>
+          <TabsTrigger value="storage" className="flex items-center gap-2">
+            <Battery className="h-4 w-4" />
+            Storage
+          </TabsTrigger>
+          <TabsTrigger value="grid" className="flex items-center gap-2">
+            <Plug className="h-4 w-4" />
+            Grid
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Plants and Consumers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <PlantsList plants={site.plants} />
-        <ConsumersList consumers={site.consumers} />
-      </div>
+        <TabsContent value="flow" className="mt-6">
+          <EnergyFlowVisualization site={site} />
+        </TabsContent>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 space-y-6">
-          <SiteProductionGraph siteId={site.id} />
-          <StorageOverview siteId={site.id} />
-          <EnergyEfficiencyDisplay siteId={site.id} />
-        </div>
+        <TabsContent value="info" className="mt-6">
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <h3 className="font-semibold">{site.name}</h3>
+                  <p className="text-sm text-muted-foreground">{site.location}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium">Type</p>
+                  <p className="text-sm text-muted-foreground capitalize">{site.type}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Capacity</p>
+                  <p className="text-sm text-muted-foreground">{site.capacity} kW</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Efficiency</p>
+                  <p className="text-sm text-muted-foreground">{site.efficiency}%</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">CO2 Saved</p>
+                  <p className="text-sm text-muted-foreground">{site.co2Saved} tons</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
 
-        <div className="space-y-6">
-          <SiteAlerts siteId={site.id} />
-          <EfficiencyMetrics siteId={site.id} />
-          <HistoricalPerformance siteId={site.id} />
-        </div>
-      </div>
+        <TabsContent value="plants" className="mt-6">
+          <PlantsList plants={site.plants} />
+        </TabsContent>
 
-      {/* Bottom Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <MaintenanceSchedule siteId={site.id} />
-        <EquipmentStatus siteId={site.id} />
-      </div>
+        <TabsContent value="consumers" className="mt-6">
+          <ConsumersList consumers={site.consumers} />
+        </TabsContent>
+
+        <TabsContent value="storage" className="mt-6">
+          <Card className="p-6">
+            <div className="space-y-4">
+              {site.storageUnits.map((unit) => (
+                <div key={unit.id} className="flex items-center justify-between border-b pb-4 last:border-0">
+                  <div className="flex items-center gap-2">
+                    <Battery className="h-5 w-5 text-green-500" />
+                    <div>
+                      <h3 className="font-semibold">{unit.name}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {unit.currentCharge} / {unit.capacity} kWh
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground capitalize">
+                    {unit.status}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="grid" className="mt-6">
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Plug className="h-5 w-5 text-blue-500" />
+                <h3 className="font-semibold">Grid Connection Status</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium">Status</p>
+                  <p className="text-sm text-muted-foreground capitalize">
+                    {site.gridConnection.status}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Frequency</p>
+                  <p className="text-sm text-muted-foreground">
+                    {site.gridConnection.frequency} Hz
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Voltage</p>
+                  <p className="text-sm text-muted-foreground">
+                    {site.gridConnection.voltage} V
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Congestion</p>
+                  <p className="text-sm text-muted-foreground capitalize">
+                    {site.gridConnection.congestion}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
