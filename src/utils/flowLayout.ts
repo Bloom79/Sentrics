@@ -13,7 +13,8 @@ export const getInitialLayout = (sourceCount: number) => {
   // Calculate how many rows we need for cells
   const rowsPerSource = 3;
   
-  sourceCount.forEach((sourceIndex) => {
+  // Create an array from sourceCount to iterate over
+  Array.from({ length: sourceCount }).forEach((_, sourceIndex) => {
     const baseY = sourceIndex * (rowsPerSource * VERTICAL_SPACING);
     
     // Add cells (3 per string)
@@ -90,6 +91,7 @@ export const getInitialLayout = (sourceCount: number) => {
     data: {
       type: 'grid',
       label: 'Power Grid',
+      delivery: 335,
     },
   });
 
@@ -99,9 +101,9 @@ export const getInitialLayout = (sourceCount: number) => {
     nodes.push({
       id: `consumer-${type}`,
       type: 'consumer',
-      position: calculateNodePosition(5, index * 2 + 3),
+      position: calculateNodePosition(6, index * 2 + 1),
       data: {
-        type: type,
+        type,
         label: `${type.charAt(0).toUpperCase() + type.slice(1)} Consumer`,
         consumption: 150 + (index * 100),
       },
