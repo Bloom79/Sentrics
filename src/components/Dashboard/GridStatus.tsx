@@ -1,18 +1,16 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Activity, Zap } from "lucide-react";
 import { Site } from "@/types/site";
-import { GridConnectionInfo } from "./DetailedMetrics/GridConnectionInfo";
-import { Zap } from "lucide-react";
 
+// Mock data
 const mockSites: Site[] = [
   {
     id: "1",
-    name: "Milano Nord",
-    location: "Northern Region",
-    type: "hybrid",
-    capacity: 800,
+    name: "North Site",
     status: "online",
-    lastUpdate: new Date().toISOString(),
+    lastUpdate: "2024-02-20T11:30:00",
     dailyProduction: 2500,
     monthlyProduction: 75000,
     efficiency: 92,
@@ -22,29 +20,12 @@ const mockSites: Site[] = [
       { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
       { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
     ],
-    storage: { capacity: 1000, currentCharge: 750 },
-    storageUnits: [
-      {
-        id: "1",
-        name: "BESS Unit 1",
-        capacity: 1000,
-        currentCharge: 750,
-        status: "charging"
-      }
-    ],
-    gridConnection: {
-      status: "connected",
-      frequency: 50.02,
-      voltage: 230.5,
-      congestion: "Low"
-    }
+    storage: { capacity: 5000, currentCharge: 4200 },
+    gridConnection: { status: "connected", frequency: 50.02, voltage: 230.5, congestion: "Low" }
   },
   {
     id: "2",
     name: "South Site",
-    location: "Southern Region",
-    type: "solar",
-    capacity: 600,
     status: "online",
     lastUpdate: "2024-02-20T11:25:00",
     dailyProduction: 2100,
@@ -57,7 +38,6 @@ const mockSites: Site[] = [
       { type: "wind", output: 200, capacity: 250, currentOutput: 200, status: "online" }
     ],
     storage: { capacity: 4000, currentCharge: 2800 },
-    storageUnits: [],
     gridConnection: { status: "connected", frequency: 49.98, voltage: 229.8, congestion: "Medium" }
   }
 ];
