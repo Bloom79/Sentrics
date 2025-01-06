@@ -89,7 +89,7 @@ export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
     },
   });
 
-  // Connect transformer to storage and consumers (split flow)
+  // Connect transformer to storage (split flow)
   ['main', 'backup'].forEach(storageType => {
     edges.push({
       id: `transformer-to-storage-${storageType}`,
@@ -102,6 +102,21 @@ export const generateEdges = (nodes: Node<FlowNodeData>[]) => {
         efficiency: 98,
         status: 'active' as const,
         type: 'storage' as const,
+      },
+    });
+
+    // Connect grid to storage units
+    edges.push({
+      id: `grid-to-storage-${storageType}`,
+      source: 'grid',
+      target: `storage-${storageType}`,
+      animated: true,
+      style: getEdgeStyle(200), // Grid backup power
+      data: {
+        energyFlow: generateFlowData(200),
+        efficiency: 98,
+        status: 'active' as const,
+        type: 'grid' as const,
       },
     });
   });
