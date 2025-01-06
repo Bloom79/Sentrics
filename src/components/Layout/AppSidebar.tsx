@@ -95,6 +95,7 @@ export function AppSidebar() {
                     <SidebarMenuButton
                       onClick={() => navigate(item.path)}
                       data-active={location.pathname === item.path}
+                      className="group"
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>

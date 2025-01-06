@@ -1,21 +1,21 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronRight, Home } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Home } from "lucide-react";
+
+interface BreadcrumbItem {
+  label: string;
+  path?: string;
+}
 
 interface BreadcrumbProps {
-  items?: Array<{
-    label: string;
-    path?: string;
-  }>;
+  items?: BreadcrumbItem[];
 }
 
 export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
@@ -26,9 +26,14 @@ export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
     if (items.length > 0) return items;
     
     const pathSegments = location.pathname.split('/').filter(Boolean);
+    if (pathSegments.length === 0) return [];
+
     return pathSegments.map((segment, index) => {
       const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
-      const label = segment.charAt(0).toUpperCase() + segment.slice(1);
+      const label = segment
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
       return { label, path };
     });
   };
@@ -37,29 +42,30 @@ export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
 
   return (
     <Breadcrumb className="mb-6">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link to="/">
-              <Home className="h-4 w-4" />
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {breadcrumbItems.map((item, index) => (
-          <React.Fragment key={item.label}>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              {index === breadcrumbItems.length - 1 ? (
-                <BreadcrumbPage>{item.label}</BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={item.path || "#"}>{item.label}</Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
-          </React.Fragment>
-        ))}
-      </BreadcrumbList>
+      <BreadcrumbItem>
+        <BreadcrumbLink asChild>
+          <Link to="/" className="flex items-center gap-2">
+            <Home className="h-4 w-4" />
+            <span>Home</span>
+          </Link>
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+      {breadcrumbItems.map((item, index) => (
+        <React.Fragment key={item.label}>
+          <BreadcrumbSeparator>
+            <ChevronRight className="h-4 w-4" />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            {index === breadcrumbItems.length - 1 ? (
+              <BreadcrumbPage>{item.label}</BreadcrumbPage>
+            ) : (
+              <BreadcrumbLink asChild>
+                <Link to={item.path || "#"}>{item.label}</Link>
+              </BreadcrumbLink>
+            )}
+          </BreadcrumbItem>
+        </React.Fragment>
+      ))}
     </Breadcrumb>
   );
 }
