@@ -6,7 +6,8 @@ import { TimeRange, EnergyFlow } from "@/types/flowComponents";
 import TimeRangeSelector from "./TimeRangeSelector";
 import FlowChartDialog from "./FlowChartDialog";
 import FlowEdgeTooltip from "./FlowEdgeTooltip";
-import { getInitialLayout, getEdgeStyle, generateEdges } from "@/utils/flowLayout";
+import { getInitialLayout, generateEdges } from "@/utils/flowLayout";
+import { getEdgeStyle } from "@/utils/edgeUtils";
 import { useToast } from "@/components/ui/use-toast";
 
 // Import your node components
