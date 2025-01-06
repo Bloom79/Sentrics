@@ -30,24 +30,24 @@ const sitesList = [
     id: "1", 
     name: "Milano Nord",
     plants: [
-      { id: "1", name: "Solar Farm A", type: "solar" },
-      { id: "2", name: "Wind Farm B", type: "wind" }
+      { id: "p1", name: "Solar Farm A", type: "solar" },
+      { id: "p2", name: "Wind Farm B", type: "wind" }
     ]
   },
   { 
     id: "2", 
     name: "Roma Sud",
     plants: [
-      { id: "3", name: "Solar Farm C", type: "solar" },
-      { id: "4", name: "Wind Farm D", type: "wind" }
+      { id: "p3", name: "Solar Farm C", type: "solar" },
+      { id: "p4", name: "Wind Farm D", type: "wind" }
     ]
   },
   { 
     id: "3", 
     name: "Torino Est",
     plants: [
-      { id: "5", name: "Solar Farm E", type: "solar" },
-      { id: "6", name: "Wind Farm F", type: "wind" }
+      { id: "p5", name: "Solar Farm E", type: "solar" },
+      { id: "p6", name: "Wind Farm F", type: "wind" }
     ]
   },
 ];
@@ -127,6 +127,10 @@ export function AppSidebar() {
     );
   };
 
+  const handlePlantClick = (plantId: string) => {
+    navigate(`/plants/${plantId}`);
+  };
+
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
@@ -189,8 +193,8 @@ export function AppSidebar() {
                                 {site.plants.map((plant) => (
                                   <SidebarMenuItem key={plant.id}>
                                     <SidebarMenuButton
-                                      onClick={() => navigate(`/plant/${plant.id}`)}
-                                      data-active={location.pathname === `/plant/${plant.id}`}
+                                      onClick={() => handlePlantClick(plant.id)}
+                                      data-active={location.pathname === `/plants/${plant.id}`}
                                       className="group"
                                     >
                                       <Factory className="h-4 w-4" />
