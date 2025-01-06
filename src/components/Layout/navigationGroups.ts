@@ -7,6 +7,7 @@ import {
   Settings,
   Wrench,
   Building2,
+  DollarSign,
 } from "lucide-react";
 
 export const navigationGroups = [
@@ -37,6 +38,17 @@ export const navigationGroups = [
         title: "Energy Grid",
         path: "/grid-analysis",
         icon: Power,
+      },
+    ],
+  },
+  {
+    label: "Financials",
+    items: [
+      {
+        title: "Plant Financials",
+        icon: DollarSign,
+        isExpandable: true,
+        path: "/plants/:plantId/financials",
       },
     ],
   },
