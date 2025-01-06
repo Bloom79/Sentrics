@@ -19,51 +19,153 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SolarAsset, WindAsset } from "@/types/site";
+import { AssetType } from "@/types/site";
 
-const solarAssetSchema = z.object({
-  type: z.enum(["panel", "inverter"]),
-  serialNumber: z.string().min(1, "Serial number is required"),
-  model: z.string().min(1, "Model is required"),
-  location: z.string().min(1, "Location is required"),
-  efficiency: z.coerce.number().min(0).max(100),
-  status: z.enum(["operational", "faulty", "maintenance"]),
-});
-
-const windAssetSchema = z.object({
-  type: z.literal("turbine"),
+const baseAssetSchema = {
   serialNumber: z.string().min(1, "Serial number is required"),
   model: z.string().min(1, "Model is required"),
   manufacturer: z.string().min(1, "Manufacturer is required"),
   location: z.string().min(1, "Location is required"),
-  ratedCapacity: z.coerce.number().min(0),
   status: z.enum(["operational", "faulty", "maintenance"]),
+};
+
+const solarPanelSchema = z.object({
+  type: z.literal("panel"),
+  ...baseAssetSchema,
+  ratedPower: z.coerce.number().min(0),
+  efficiency: z.coerce.number().min(0).max(100),
+  orientation: z.string().optional(),
+  tilt: z.coerce.number().min(0).max(90).optional(),
 });
 
+const inverterSchema = z.object({
+  type: z.literal("inverter"),
+  ...baseAssetSchema,
+  efficiency: z.coerce.number().min(0).max(100),
+  ratedPower: z.coerce.number().min(0),
+});
+
+const windTurbineSchema = z.object({
+  type: z.literal("turbine"),
+  ...baseAssetSchema,
+  ratedCapacity: z.coerce.number().min(0),
+  rotorDiameter: z.coerce.number().min(0),
+  hubHeight: z.coerce.number().min(0),
+  cutInSpeed: z.coerce.number().min(0),
+  cutOutSpeed: z.coerce.number().min(0),
+});
+
+const transformerSchema = z.object({
+  type: z.literal("transformer"),
+  ...baseAssetSchema,
+  capacity: z.coerce.number().min(0),
+  voltageIn: z.coerce.number().min(0),
+  voltageOut: z.coerce.number().min(0),
+  efficiency: z.coerce.number().min(0).max(100),
+});
+
+const batterySchema = z.object({
+  type: z.literal("battery"),
+  ...baseAssetSchema,
+  technology: z.enum(["lithium-ion", "lead-acid", "flow"]),
+  ratedPower: z.coerce.number().min(0),
+  energyCapacity: z.coerce.number().min(0),
+  roundTripEfficiency: z.coerce.number().min(0).max(100).optional(),
+});
+
+const assetSchema = z.discriminatedUnion("type", [
+  solarPanelSchema,
+  inverterSchema,
+  windTurbineSchema,
+  transformerSchema,
+  batterySchema,
+]);
+
 interface EditAssetFormProps {
-  asset: SolarAsset | WindAsset;
-  onSubmit: (values: SolarAsset | WindAsset) => void;
+  asset: AssetType;
+  onSubmit: (values: AssetType) => void;
 }
 
 export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
-  const isSolarAsset = 'efficiency' in asset;
-  const schema = isSolarAsset ? solarAssetSchema : windAssetSchema;
-  
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof assetSchema>>({
+    resolver: zodResolver(assetSchema),
     defaultValues: {
       ...asset,
-      efficiency: isSolarAsset ? asset.efficiency : undefined,
-      ratedCapacity: !isSolarAsset ? asset.ratedCapacity : undefined,
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof schema>) => {
-    const updatedAsset = {
-      ...asset,
-      ...values,
-    };
-    onSubmit(updatedAsset);
+  const handleSubmit = (values: z.infer<typeof assetSchema>) => {
+    onSubmit(values as AssetType);
+  };
+
+  const renderAssetSpecificFields = () => {
+    switch (asset.type) {
+      case "panel":
+        return (
+          <>
+            <FormField
+              control={form.control}
+              name="ratedPower"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rated Power (W)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="efficiency"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Efficiency (%)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        );
+      case "turbine":
+        return (
+          <>
+            <FormField
+              control={form.control}
+              name="ratedCapacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rated Capacity (kW)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="rotorDiameter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rotor Diameter (m)</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        );
+      // Add cases for other asset types
+      default:
+        return null;
+    }
   };
 
   return (
@@ -76,7 +178,7 @@ export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
             <FormItem>
               <FormLabel>Serial Number</FormLabel>
               <FormControl>
-                <Input placeholder="Enter serial number" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,28 +192,26 @@ export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
             <FormItem>
               <FormLabel>Model</FormLabel>
               <FormControl>
-                <Input placeholder="Enter model" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {!isSolarAsset && (
-          <FormField
-            control={form.control}
-            name="manufacturer"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Manufacturer</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter manufacturer" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="manufacturer"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Manufacturer</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -120,52 +220,14 @@ export const EditAssetForm = ({ asset, onSubmit }: EditAssetFormProps) => {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Input placeholder="Enter location" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        {isSolarAsset ? (
-          <FormField
-            control={form.control}
-            name="efficiency"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Efficiency (%)</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter efficiency" 
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ) : (
-          <FormField
-            control={form.control}
-            name="ratedCapacity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Rated Capacity (kW)</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter rated capacity" 
-                    {...field}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        {renderAssetSpecificFields()}
 
         <FormField
           control={form.control}
