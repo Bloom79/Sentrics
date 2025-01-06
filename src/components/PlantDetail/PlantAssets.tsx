@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plant, SolarAsset, WindAsset } from "@/types/site";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { SolarPanel, Wind, AlertCircle, Server, Gauge } from "lucide-react";
+import { Wind, AlertCircle, Server, Gauge } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface PlantAssetsProps {
@@ -81,7 +81,7 @@ const PlantAssets: React.FC<PlantAssetsProps> = ({ plant }) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <SolarPanel className="h-5 w-5" />
+              <Server className="h-5 w-5" />
               Solar Panels
             </CardTitle>
           </CardHeader>

@@ -43,10 +43,11 @@ export interface WindAsset {
 }
 
 export interface EnergySource {
+  id?: string;
   type: string;
   capacity: number;
-  currentOutput: number;
   output: number;
+  currentOutput: number;
   status: string;
 }
 
@@ -60,10 +61,13 @@ export interface GridConnection {
 
 export interface StorageUnit {
   id: string;
-  type: string;
+  type?: string;
   capacity: number;
   currentCharge: number;
   status: string;
+  health?: number;
+  temperature?: number;
+  powerRating?: number;
 }
 
 export interface Site {
@@ -82,6 +86,6 @@ export interface Site {
     capacity: number;
     currentCharge: number;
   };
-  storageUnits: StorageUnit[];
+  storageUnits?: StorageUnit[];
   gridConnection: GridConnection;
 }
