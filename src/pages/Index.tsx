@@ -36,7 +36,7 @@ const Index = () => {
           <div className="flex items-center gap-4">
             <Select 
               value={language} 
-              onValueChange={(value) => setLanguage(value as 'en' | 'it')}
+              onValueChange={(value: 'en' | 'it') => setLanguage(value)}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select language" />

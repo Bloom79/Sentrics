@@ -91,7 +91,7 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
         </CardContent>
       </Card>
       
-      <BatteryStatus selectedSiteId={selectedSiteId ? [selectedSiteId] : []} />
+      <BatteryStatus selectedSiteId={selectedSiteId ? [selectedSiteId] : null} />
     </div>
   );
 };
