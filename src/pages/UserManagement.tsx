@@ -51,17 +51,7 @@ export default function UserManagement() {
 
       if (profilesError) throw profilesError;
 
-      // Fetch emails from auth.users table for each profile
-      const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers();
-      
-      if (usersError) throw usersError;
-
-      const userEmailMap = new Map(usersData.users.map(user => [user.id, user.email]));
-
-      return profilesData.map(profile => ({
-        ...profile,
-        email: userEmailMap.get(profile.id) || null
-      })) as Profile[];
+      return profilesData as Profile[];
     },
   });
 
