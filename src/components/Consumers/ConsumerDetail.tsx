@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Consumer } from "@/types/site";
+import ConsumerContract from "./ConsumerContract";
 
 const ConsumerDetail = () => {
   const { consumerId } = useParams();
@@ -95,21 +96,13 @@ const ConsumerDetail = () => {
               <CardTitle>Consumption History</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Add consumption history chart here */}
               <p>Consumption history visualization will be implemented here</p>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="contracts">
-          <Card>
-            <CardHeader>
-              <CardTitle>Contract Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Contract details will be displayed here</p>
-            </CardContent>
-          </Card>
+          <ConsumerContract />
         </TabsContent>
 
         <TabsContent value="settings">

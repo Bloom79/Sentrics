@@ -9,6 +9,50 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      contracts: {
+        Row: {
+          consumer_id: string
+          created_at: string
+          end_date: string
+          id: string
+          minimum_purchase: number
+          rate: number
+          start_date: string
+          status: Database["public"]["Enums"]["contract_status"] | null
+          updated_at: string
+        }
+        Insert: {
+          consumer_id: string
+          created_at?: string
+          end_date: string
+          id?: string
+          minimum_purchase: number
+          rate: number
+          start_date: string
+          status?: Database["public"]["Enums"]["contract_status"] | null
+          updated_at?: string
+        }
+        Update: {
+          consumer_id?: string
+          created_at?: string
+          end_date?: string
+          id?: string
+          minimum_purchase?: number
+          rate?: number
+          start_date?: string
+          status?: Database["public"]["Enums"]["contract_status"] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_consumer"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           created_at: string
@@ -92,6 +136,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      contract_status: "active" | "pending" | "expired"
       user_role: "admin" | "user" | "manager"
     }
     CompositeTypes: {
