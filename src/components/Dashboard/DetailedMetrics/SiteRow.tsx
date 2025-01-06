@@ -6,6 +6,7 @@ import { EnergySourceInfo } from "./EnergySourceInfo";
 import { StorageInfo } from "./StorageInfo";
 import { GridConnectionInfo } from "./GridConnectionInfo";
 import { Site } from "@/types/site";
+import { useNavigate } from "react-router-dom";
 
 interface SiteRowProps {
   site: Site;
@@ -14,14 +15,34 @@ interface SiteRowProps {
 }
 
 export const SiteRow: React.FC<SiteRowProps> = ({ site, isExpanded, onToggle }) => {
+  const navigate = useNavigate();
+
+  const handleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    // Only navigate if clicking the row itself, not the expand toggle
+    if (!target.closest('button')) {
+      navigate(`/site/${site.id}`);
+    }
+  };
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggle();
+  };
+
   return (
-    <TableRow className="cursor-pointer hover:bg-muted/50" onClick={onToggle}>
+    <TableRow 
+      className="cursor-pointer hover:bg-muted/50" 
+      onClick={handleClick}
+    >
       <TableCell>
-        {isExpanded ? (
-          <ChevronDown className="h-4 w-4" />
-        ) : (
-          <ChevronRight className="h-4 w-4" />
-        )}
+        <button onClick={handleToggle}>
+          {isExpanded ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </button>
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
