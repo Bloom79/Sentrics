@@ -1,0 +1,110 @@
+import React from "react";
+import { Filter } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+interface DashboardHeaderProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  selectedStatus: string;
+  setSelectedStatus: (value: string) => void;
+  selectedTimeRange: string;
+  setSelectedTimeRange: (value: string) => void;
+  language: string;
+  setLanguage: (value: 'en' | 'it') => void;
+}
+
+const DashboardHeader = ({
+  searchTerm,
+  setSearchTerm,
+  selectedStatus,
+  setSelectedStatus,
+  selectedTimeRange,
+  setSelectedTimeRange,
+  language,
+  setLanguage,
+}: DashboardHeaderProps) => {
+  const { t } = useLanguage();
+
+  return (
+    <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:space-y-0 mb-8">
+      <div>
+        <h1 className="text-3xl font-bold text-primary">SentricS Dashboard</h1>
+        <p className="text-muted-foreground mt-2">{t('dashboard.subtitle')}</p>
+      </div>
+      <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-4 md:space-y-0">
+        <Input
+          placeholder="Search sites..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full md:w-64"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="w-full md:w-auto">
+              <Filter className="mr-2 h-4 w-4" />
+              Filters
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => setSelectedStatus("all")}>
+                All Status
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedStatus("online")}>
+                Online Only
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedStatus("maintenance")}>
+                Maintenance
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Time Range</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => setSelectedTimeRange("24h")}>
+                Last 24 Hours
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedTimeRange("7d")}>
+                Last 7 Days
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedTimeRange("30d")}>
+                Last 30 Days
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Select value={language} onValueChange={(value: 'en' | 'it') => setLanguage(value)}>
+          <SelectTrigger className="w-full md:w-[180px]">
+            <SelectValue placeholder="Select language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="it">Italiano</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardHeader;
