@@ -46,8 +46,14 @@ export interface Consumer {
   id: string;
   name: string;
   consumption: number;
-  type: string;
+  type: "industrial" | "commercial" | "residential";
   status: "active" | "inactive";
+  specs?: {
+    peakDemand?: number;
+    dailyUsage?: number;
+    powerFactor?: number;
+    connectionType?: string;
+  };
 }
 
 export interface EnergySource {
@@ -73,3 +79,5 @@ export interface StorageUnit {
   voltage?: number;
   current?: number;
 }
+
+export type AssetType = "inverter" | "panel" | "battery" | "transformer" | "turbine";

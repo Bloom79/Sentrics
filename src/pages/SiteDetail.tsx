@@ -2,12 +2,13 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Factory, Users, Battery, Plug } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import SiteHeader from "@/components/SiteDetail/SiteHeader";
 import { PlantsTab } from "@/components/SiteDetail/PlantsTab/PlantsTab";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
 import StorageTab from "@/components/SiteDetail/StorageTab";
+import { InfoTab } from "@/components/SiteDetail/InfoTab";
+import { GridTab } from "@/components/SiteDetail/GridTab";
 import { Site } from "@/types/site";
 
 // Mock data for development
@@ -155,35 +156,7 @@ const SiteDetail = () => {
         </TabsContent>
 
         <TabsContent value="info">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <h3 className="font-semibold">{site.name}</h3>
-                  <p className="text-sm text-muted-foreground">{site.location}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium">Type</p>
-                  <p className="text-sm text-muted-foreground capitalize">{site.type}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Capacity</p>
-                  <p className="text-sm text-muted-foreground">{site.capacity} kW</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Efficiency</p>
-                  <p className="text-sm text-muted-foreground">{site.efficiency}%</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">CO2 Saved</p>
-                  <p className="text-sm text-muted-foreground">{site.co2Saved} tons</p>
-                </div>
-              </div>
-            </div>
-          </Card>
+          <InfoTab site={site} />
         </TabsContent>
 
         <TabsContent value="plants">
@@ -199,40 +172,7 @@ const SiteDetail = () => {
         </TabsContent>
 
         <TabsContent value="grid">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Plug className="h-5 w-5 text-blue-500" />
-                <h3 className="font-semibold">Grid Connection Status</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium">Status</p>
-                  <p className="text-sm text-muted-foreground capitalize">
-                    {site.gridConnection.status}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Frequency</p>
-                  <p className="text-sm text-muted-foreground">
-                    {site.gridConnection.frequency} Hz
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Voltage</p>
-                  <p className="text-sm text-muted-foreground">
-                    {site.gridConnection.voltage} V
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Congestion</p>
-                  <p className="text-sm text-muted-foreground capitalize">
-                    {site.gridConnection.congestion}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Card>
+          <GridTab site={site} />
         </TabsContent>
       </Tabs>
     </div>
