@@ -3,7 +3,6 @@ import { Activity, Battery, Zap, Sun, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
-import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -15,13 +14,43 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+// Mock data for sites
+const sites = [
+  {
+    id: "1",
+    name: "Milano Nord",
+    status: "online",
+    lastUpdate: "2024-02-20T10:30:00Z",
+    dailyProduction: 2500,
+    monthlyProduction: 75000,
+    efficiency: 92,
+    co2Saved: 45.2,
+  },
+  {
+    id: "2",
+    name: "Roma Est",
+    status: "maintenance",
+    lastUpdate: "2024-02-20T09:15:00Z",
+    dailyProduction: 2100,
+    monthlyProduction: 63000,
+    efficiency: 88,
+    co2Saved: 38.5,
+  },
+  {
+    id: "3",
+    name: "Torino Sud",
+    status: "online",
+    lastUpdate: "2024-02-20T10:25:00Z",
+    dailyProduction: 1800,
+    monthlyProduction: 54000,
+    efficiency: 90,
+    co2Saved: 32.8,
+  },
+];
+
 const Index = () => {
   const { language, setLanguage, t } = useLanguage();
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
-
-  const handleSiteSelect = (siteId: string | null) => {
-    setSelectedSiteId(siteId);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -87,16 +116,66 @@ const Index = () => {
             <EnergyFlow />
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <SiteMonitoring onSiteSelect={handleSiteSelect} />
-            <div className="bg-card p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Map View</h2>
-              <p className="text-muted-foreground">Map view is temporarily disabled.</p>
-            </div>
-          </div>
-          
           <div className="grid grid-cols-1 gap-4">
-            <DetailedMetrics selectedSiteId={selectedSiteId} />
+            <div className="bg-card rounded-lg shadow">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Sites Overview</h2>
+                <div className="space-y-4">
+                  {sites.map((site) => (
+                    <div
+                      key={site.id}
+                      className="bg-background rounded-lg p-4 hover:bg-muted/50 transition-colors"
+                      onClick={() => setSelectedSiteId(site.id)}
+                    >
+                      <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+                        {/* Site Status */}
+                        <div className="lg:col-span-2">
+                          <div className="flex items-center gap-4">
+                            <div
+                              className={`h-3 w-3 rounded-full ${
+                                site.status === "online"
+                                  ? "bg-green-500"
+                                  : site.status === "maintenance"
+                                  ? "bg-yellow-500"
+                                  : "bg-red-500"
+                              }`}
+                            />
+                            <div>
+                              <Link to={`/site/${site.id}`} className="font-medium hover:underline">
+                                {site.name}
+                              </Link>
+                              <p className="text-sm text-muted-foreground">
+                                Last update: {new Date(site.lastUpdate).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Site Metrics */}
+                        <div className="lg:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Daily Production</p>
+                            <p className="font-medium">{site.dailyProduction.toLocaleString()} kWh</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Monthly Production</p>
+                            <p className="font-medium">{site.monthlyProduction.toLocaleString()} kWh</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Efficiency</p>
+                            <p className="font-medium">{site.efficiency}%</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">CO2 Saved</p>
+                            <p className="font-medium">{site.co2Saved.toFixed(1)} tons</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
