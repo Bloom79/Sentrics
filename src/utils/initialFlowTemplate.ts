@@ -6,7 +6,6 @@ const CONVERSION_X = 300;
 const STORAGE_X = 600;
 const CONSUMPTION_X = 900;
 
-// Split into separate files for better organization
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
   // Generation Section
   {
@@ -96,7 +95,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
     data: {
       id: 'storage-1',
       type: 'bess',
-      label: 'Battery Storage',
+      label: 'Battery Storage (BESS)',
       specs: {
         maxCapacity: 1000,
         currentCharge: 750,
