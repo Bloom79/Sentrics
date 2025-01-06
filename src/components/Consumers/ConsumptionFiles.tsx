@@ -13,6 +13,7 @@ interface ConsumptionFile {
   upload_date: string;
   content_type: string;
   file_size: number;
+  file_path: string;
 }
 
 const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
