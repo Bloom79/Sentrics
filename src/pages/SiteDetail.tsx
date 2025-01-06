@@ -7,6 +7,7 @@ import SiteHeader from "@/components/SiteDetail/SiteHeader";
 import PlantsList from "@/components/SiteDetail/PlantsList";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
+import StorageTab from "@/components/SiteDetail/StorageTab";
 import { Site } from "@/types/site";
 
 // Mock data for development
@@ -53,17 +54,15 @@ const mockSite: Site = {
       id: "1",
       name: "Industrial Park A",
       type: "industrial",
-      status: "active",
       consumption: 450,
-      lastUpdate: new Date().toISOString()
+      status: "active"
     },
     {
       id: "2",
       name: "Commercial Center B",
       type: "commercial",
-      status: "active",
       consumption: 200,
-      lastUpdate: new Date().toISOString()
+      status: "active"
     }
   ],
   storageUnits: [
@@ -73,13 +72,51 @@ const mockSite: Site = {
       capacity: 1000,
       currentCharge: 750,
       status: "charging",
+      powerRating: 250,
+      temperature: 25,
+      health: 98,
       efficiency: 95,
-      stateOfHealth: 98,
-      chargingRate: 100,
       cycleCount: 150,
-      temperature: 25
+      stateOfHealth: 98,
+      voltage: 800,
+      current: 300
+    },
+    {
+      id: "2",
+      name: "BESS Unit 2",
+      capacity: 1000,
+      currentCharge: 600,
+      status: "discharging",
+      powerRating: 250,
+      temperature: 26,
+      health: 97,
+      efficiency: 94,
+      cycleCount: 120,
+      stateOfHealth: 97,
+      voltage: 800,
+      current: -280
     }
   ],
+  energySources: [
+    {
+      type: "solar",
+      output: 350,
+      capacity: 500,
+      currentOutput: 350,
+      status: "online"
+    },
+    {
+      type: "wind",
+      output: 250,
+      capacity: 300,
+      currentOutput: 250,
+      status: "online"
+    }
+  ],
+  storage: {
+    capacity: 2000,
+    currentCharge: 1350
+  },
   gridConnection: {
     status: "connected",
     frequency: 50.02,
@@ -121,11 +158,11 @@ const SiteDetail = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="flow" className="mt-6">
+        <TabsContent value="flow">
           <EnergyFlowVisualization site={site} />
         </TabsContent>
 
-        <TabsContent value="info" className="mt-6">
+        <TabsContent value="info">
           <Card className="p-6">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
@@ -157,38 +194,19 @@ const SiteDetail = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="plants" className="mt-6">
+        <TabsContent value="plants">
           <PlantsList plants={site.plants} />
         </TabsContent>
 
-        <TabsContent value="consumers" className="mt-6">
+        <TabsContent value="consumers">
           <ConsumersList consumers={site.consumers} />
         </TabsContent>
 
-        <TabsContent value="storage" className="mt-6">
-          <Card className="p-6">
-            <div className="space-y-4">
-              {site.storageUnits.map((unit) => (
-                <div key={unit.id} className="flex items-center justify-between border-b pb-4 last:border-0">
-                  <div className="flex items-center gap-2">
-                    <Battery className="h-5 w-5 text-green-500" />
-                    <div>
-                      <h3 className="font-semibold">{unit.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {unit.currentCharge} / {unit.capacity} kWh
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-sm text-muted-foreground capitalize">
-                    {unit.status}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+        <TabsContent value="storage">
+          <StorageTab site={site} />
         </TabsContent>
 
-        <TabsContent value="grid" className="mt-6">
+        <TabsContent value="grid">
           <Card className="p-6">
             <div className="space-y-4">
               <div className="flex items-center gap-2">

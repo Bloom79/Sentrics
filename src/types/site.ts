@@ -59,6 +59,15 @@ export interface StorageUnit {
   capacity: number;
   currentCharge: number;
   status: "charging" | "discharging" | "idle" | "offline";
+  powerRating: number;
+  temperature: number;
+  health: number;
+  efficiency: number;
+  cycleCount?: number;
+  stateOfHealth?: number;
+  voltage?: number;
+  current?: number;
+  alerts?: string[];
 }
 
 interface BaseAsset {
