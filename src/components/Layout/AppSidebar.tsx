@@ -37,11 +37,27 @@ export function AppSidebar() {
     );
   };
 
-  const handleNavigate = (path: string) => {
-    // Replace :plantId with the current plant ID if it exists in the path
-    const currentPlantId = location.pathname.match(/\/plants\/([^\/]+)/)?.[1];
-    const finalPath = currentPlantId ? path.replace(':plantId', currentPlantId) : path;
-    navigate(finalPath);
+  const handleNavigate = (paths: { [key: string]: string } | string) => {
+    if (typeof paths === 'string') {
+      navigate(paths);
+      return;
+    }
+
+    // Get current entity type from URL
+    const urlParts = location.pathname.split('/');
+    if (urlParts.includes('plants')) {
+      const plantId = urlParts[urlParts.indexOf('plants') + 1];
+      navigate(paths.plant.replace(':plantId', plantId));
+    } else if (urlParts.includes('sites')) {
+      const siteId = urlParts[urlParts.indexOf('sites') + 1];
+      navigate(paths.site.replace(':siteId', siteId));
+    } else if (urlParts.includes('consumers')) {
+      const consumerId = urlParts[urlParts.indexOf('consumers') + 1];
+      navigate(paths.consumer.replace(':consumerId', consumerId));
+    } else {
+      // Default to site view if no specific context
+      navigate(paths.site.replace(':siteId', '1')); // Navigate to first site by default
+    }
   };
 
   return (
@@ -73,7 +89,7 @@ export function AppSidebar() {
                         </SidebarMenuButton>
                       ) : (
                         <SidebarMenuButton
-                          onClick={() => item.path && handleNavigate(item.path)}
+                          onClick={() => handleNavigate(item.paths || item.path)}
                           data-active={location.pathname === item.path}
                           className="group"
                         >

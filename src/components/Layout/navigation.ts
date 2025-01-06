@@ -72,7 +72,11 @@ export const navigationGroups = [
     items: [
       {
         title: "Earnings & Expenses",
-        path: "/plants/:plantId/financials",
+        paths: {
+          site: "/sites/:siteId/financials",
+          plant: "/plants/:plantId/financials",
+          consumer: "/consumers/:consumerId/financials"
+        },
         icon: DollarSign,
       },
     ],

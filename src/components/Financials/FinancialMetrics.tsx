@@ -1,14 +1,15 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { DollarSign, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
 
 interface FinancialMetricsProps {
   plantId?: string;
+  siteId?: string;
+  consumerId?: string;
   dateRange: { from: Date; to: Date };
 }
 
-const FinancialMetrics = ({ plantId, dateRange }: FinancialMetricsProps) => {
+const FinancialMetrics = ({ plantId, siteId, consumerId, dateRange }: FinancialMetricsProps) => {
   // Mock data - in a real app, this would come from an API
   const metrics = {
     totalRevenue: 125000,

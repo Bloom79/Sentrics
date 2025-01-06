@@ -17,10 +17,12 @@ import {
 
 interface RevenueBreakdownProps {
   plantId?: string;
+  siteId?: string;
+  consumerId?: string;
   dateRange: { from: Date; to: Date };
 }
 
-const RevenueBreakdown = ({ plantId, dateRange }: RevenueBreakdownProps) => {
+const RevenueBreakdown = ({ plantId, siteId, consumerId, dateRange }: RevenueBreakdownProps) => {
   // Mock data - in a real app, this would come from an API
   const gridRevenue = [
     {
