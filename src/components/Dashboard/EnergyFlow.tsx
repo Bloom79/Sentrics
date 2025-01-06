@@ -95,12 +95,12 @@ const EnergyFlow = () => {
 
         {/* Energy Distribution */}
         <div className="space-y-4">
-          <h3 className="font-medium mb-4">Power Distribution</h3>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Direct Consumption</span>
-                <span>{Math.round(energyData.distribution.directConsumption / totalProduction * 100)}%</span>
+          <h3 className="font-medium mb-6">Power Distribution</h3>
+          <div className="space-y-8">
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium">Direct Consumption</span>
+                <span className="text-muted-foreground">{Math.round(energyData.distribution.directConsumption / totalProduction * 100)}%</span>
               </div>
               <Progress 
                 value={energyData.distribution.directConsumption / totalProduction * 100} 
@@ -109,10 +109,10 @@ const EnergyFlow = () => {
               />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Grid Export</span>
-                <span>{Math.round(energyData.distribution.gridDelivery / totalProduction * 100)}%</span>
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium">Grid Export</span>
+                <span className="text-muted-foreground">{Math.round(energyData.distribution.gridDelivery / totalProduction * 100)}%</span>
               </div>
               <Progress 
                 value={energyData.distribution.gridDelivery / totalProduction * 100} 
@@ -121,10 +121,10 @@ const EnergyFlow = () => {
               />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Storage Charging</span>
-                <span>{Math.round(energyData.distribution.storageCharging / totalProduction * 100)}%</span>
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium">Storage Charging</span>
+                <span className="text-muted-foreground">{Math.round(energyData.distribution.storageCharging / totalProduction * 100)}%</span>
               </div>
               <Progress 
                 value={energyData.distribution.storageCharging / totalProduction * 100} 
