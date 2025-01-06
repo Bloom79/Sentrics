@@ -7,6 +7,9 @@ import {
   Activity,
   Settings,
   ChevronRight,
+  Search,
+  Tool,
+  LineChart,
 } from "lucide-react";
 import {
   Sidebar,
@@ -17,7 +20,16 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarHeader,
+  SidebarInput,
 } from "@/components/ui/sidebar";
+
+type NavigationItem = {
+  title: string;
+  path: string;
+  icon: React.ComponentType<any>;
+  children?: NavigationItem[];
+};
 
 const navigationItems = [
   {
@@ -51,8 +63,18 @@ const navigationItems = [
     ],
   },
   {
-    label: "System",
+    label: "Tools",
     items: [
+      {
+        title: "Analytics",
+        path: "/analytics",
+        icon: LineChart,
+      },
+      {
+        title: "Maintenance",
+        path: "/maintenance",
+        icon: Tool,
+      },
       {
         title: "Settings",
         path: "/settings",
@@ -65,9 +87,24 @@ const navigationItems = [
 export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    // TODO: Implement search functionality
+  };
 
   return (
     <Sidebar>
+      <SidebarHeader>
+        <SidebarInput
+          type="search"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="w-full"
+        />
+      </SidebarHeader>
       <SidebarContent>
         {navigationItems.map((group) => (
           <SidebarGroup key={group.label}>

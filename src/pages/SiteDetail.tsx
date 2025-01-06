@@ -29,6 +29,7 @@ const mockSite: Site = {
       status: "charging",
       health: 98,
       temperature: 25,
+      powerRating: 250, // Added power rating in kW
     },
   ],
   totalCapacity: 800,
