@@ -4,11 +4,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Activity, Zap } from "lucide-react";
 import { Site } from "@/types/site";
 
-// Mock data
 const mockSites: Site[] = [
   {
     id: "1",
     name: "North Site",
+    location: "Northern Region",
+    type: "hybrid",
+    capacity: 800,
     status: "online",
     lastUpdate: "2024-02-20T11:30:00",
     dailyProduction: 2500,
@@ -16,6 +18,8 @@ const mockSites: Site[] = [
     efficiency: 92,
     co2Saved: 45.2,
     plants: [],
+    consumers: [],
+    storageUnits: [],
     energySources: [
       { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
       { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
@@ -26,6 +30,9 @@ const mockSites: Site[] = [
   {
     id: "2",
     name: "South Site",
+    location: "Southern Region",
+    type: "hybrid",
+    capacity: 700,
     status: "online",
     lastUpdate: "2024-02-20T11:25:00",
     dailyProduction: 2100,
@@ -33,6 +40,8 @@ const mockSites: Site[] = [
     efficiency: 88,
     co2Saved: 38.5,
     plants: [],
+    consumers: [],
+    storageUnits: [],
     energySources: [
       { type: "solar", output: 300, capacity: 450, currentOutput: 300, status: "online" },
       { type: "wind", output: 200, capacity: 250, currentOutput: 200, status: "online" }
@@ -104,3 +113,4 @@ const GridStatus = () => {
 };
 
 export default GridStatus;
+

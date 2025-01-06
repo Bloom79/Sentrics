@@ -9,6 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] = [
   {
     id: "1",
+    name: "Storage Unit 1",
     siteId: "1",
     siteName: "Milano Nord",
     capacity: 1000,
@@ -17,9 +18,11 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
     health: 98,
     temperature: 25,
     powerRating: 250,
+    efficiency: 95
   },
   {
     id: "2",
+    name: "Storage Unit 2",
     siteId: "2",
     siteName: "Roma Est",
     capacity: 1500,
@@ -28,9 +31,11 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
     health: 95,
     temperature: 27,
     powerRating: 350,
+    efficiency: 94
   },
   {
     id: "3",
+    name: "Storage Unit 3",
     siteId: "1",
     siteName: "Milano Nord",
     capacity: 1200,
@@ -39,6 +44,7 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
     health: 97,
     temperature: 26,
     powerRating: 300,
+    efficiency: 96
   },
 ];
 

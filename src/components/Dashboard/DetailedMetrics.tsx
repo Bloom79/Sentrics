@@ -20,6 +20,9 @@ const mockSiteData: Site[] = [
   {
     id: "1",
     name: "Milano Nord",
+    location: "Northern Italy",
+    type: "hybrid",
+    capacity: 3500,
     status: "online",
     lastUpdate: "2024-02-20T11:30:00",
     dailyProduction: 2500,
@@ -46,6 +49,8 @@ const mockSiteData: Site[] = [
         status: "online"
       }
     ],
+    consumers: [],
+    storageUnits: [],
     energySources: [
       { type: "solar", output: 1500, capacity: 2000, currentOutput: 1500, status: "online" },
       { type: "wind", output: 1000, capacity: 1500, currentOutput: 1000, status: "online" }
@@ -56,6 +61,9 @@ const mockSiteData: Site[] = [
   {
     id: "2",
     name: "Roma Est",
+    location: "Central Italy",
+    type: "hybrid",
+    capacity: 3000,
     status: "maintenance",
     lastUpdate: "2024-02-20T10:15:00",
     dailyProduction: 2100,
@@ -82,6 +90,8 @@ const mockSiteData: Site[] = [
         status: "online"
       }
     ],
+    consumers: [],
+    storageUnits: [],
     energySources: [
       { type: "solar", output: 1200, capacity: 1800, currentOutput: 1200, status: "online" },
       { type: "wind", output: 900, capacity: 1200, currentOutput: 900, status: "online" }
@@ -92,6 +102,9 @@ const mockSiteData: Site[] = [
   {
     id: "3",
     name: "Torino Sud",
+    location: "Northern Italy",
+    type: "hybrid",
+    capacity: 2500,
     status: "online",
     lastUpdate: "2024-02-20T11:25:00",
     dailyProduction: 1800,
@@ -118,6 +131,8 @@ const mockSiteData: Site[] = [
         status: "online"
       }
     ],
+    consumers: [],
+    storageUnits: [],
     energySources: [
       { type: "solar", output: 1000, capacity: 1500, currentOutput: 1000, status: "online" },
       { type: "wind", output: 800, capacity: 1000, currentOutput: 800, status: "online" }

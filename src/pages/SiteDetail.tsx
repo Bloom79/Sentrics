@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapPin, Factory, Users, Battery, Plug } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import SiteHeader from "@/components/SiteDetail/SiteHeader";
 import { PlantsTab } from "@/components/SiteDetail/PlantsTab/PlantsTab";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
@@ -118,7 +119,7 @@ const mockSite: Site = {
 
 const SiteDetail = () => {
   const { siteId } = useParams();
-  const site = mockSite; // In a real app, fetch site data based on siteId
+  const site = mockSite;
 
   return (
     <div className="container mx-auto p-4 space-y-6">
