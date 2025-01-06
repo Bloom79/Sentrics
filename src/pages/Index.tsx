@@ -1,10 +1,10 @@
+import React from "react";
 import { Activity, Battery, Zap, Sun, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
 import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
-import SiteMap from "@/components/Dashboard/SiteMap";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -25,7 +25,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -87,7 +87,10 @@ const Index = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <SiteMonitoring onSiteSelect={handleSiteSelect} />
-            <SiteMap />
+            <div className="bg-card p-6 rounded-lg shadow">
+              <h2 className="text-xl font-semibold mb-4">Map View</h2>
+              <p className="text-muted-foreground">Map view is temporarily disabled.</p>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 gap-4">
