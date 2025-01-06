@@ -5,10 +5,10 @@ import { Site } from "@/types/site";
 import { TimeRange, EnergyFlow } from "@/types/flowComponents";
 import TimeRangeSelector from "./TimeRangeSelector";
 import FlowChartDialog from "./FlowChartDialog";
-import FlowEdgeTooltip from "./FlowEdgeTooltip";
 import { getInitialLayout, generateEdges } from "@/utils/flowLayout";
 import { getEdgeStyle } from "@/utils/edgeUtils";
 import { useToast } from "@/components/ui/use-toast";
+import NodeDialog from "./NodeDialog";
 
 // Import your node components
 import SourceNode from "./FlowNodes/SourceNode";
@@ -39,6 +39,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   const { toast } = useToast();
   const [timeRange, setTimeRange] = useState<TimeRange>("realtime");
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
+  const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
   const [flowData, setFlowData] = useState<Record<string, EnergyFlow[]>>({});
   const [isPaused, setIsPaused] = useState(false);
 
@@ -69,7 +70,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
           const newData = { ...prev };
           edges.forEach(edge => {
             const newFlow = generateFlowData(edge.id);
-            newData[edge.id] = [...(newData[edge.id] || []), newFlow].slice(-50);
+            newData[edge.id] = [...(newData[edge.id] || []).slice(-50), newFlow];
           });
           return newData;
         });
@@ -81,6 +82,12 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
 
   const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
     setSelectedEdge(edge);
+    setSelectedNode(null);
+  }, []);
+
+  const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
+    setSelectedNode({ id: node.id, type: node.type });
+    setSelectedEdge(null);
   }, []);
 
   const handleTimeRangeChange = (newRange: TimeRange) => {
@@ -126,6 +133,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         nodesConnectable={false}
         elementsSelectable={true}
         onEdgeClick={handleEdgeClick}
+        onNodeClick={handleNodeClick}
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
@@ -138,6 +146,16 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
           data={flowData[selectedEdge.id] || []}
           sourceLabel={nodes.find(n => n.id === selectedEdge.source)?.data.label || ''}
           targetLabel={nodes.find(n => n.id === selectedEdge.target)?.data.label || ''}
+          flowType="power"
+        />
+      )}
+
+      {selectedNode && (
+        <NodeDialog
+          open={true}
+          onClose={() => setSelectedNode(null)}
+          nodeType={selectedNode.type}
+          nodeId={selectedNode.id}
         />
       )}
     </div>
