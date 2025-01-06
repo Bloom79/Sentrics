@@ -1,18 +1,18 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Battery, Cloud, Wind, Zap, Share2, Calendar } from "lucide-react";
+import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
 import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
-import SiteServiceLinks from "@/components/SiteAnalysis/SiteServiceLinks";
 import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
 import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
 import { Site } from "@/types/site";
 
+// Mock data for demonstration - replace with actual API call later
 const mockSite: Site = {
   id: "1",
-  name: "North Site",
+  name: "Milano Nord",
   location: "Northern Region",
   energySources: [
     { id: "1", type: "solar", capacity: 500, currentOutput: 350, status: "active" },
@@ -147,9 +147,8 @@ const SiteDetail = () => {
         <MaintenanceSchedule siteId={site.id} />
       </div>
 
-      {/* Service Links and Alerts */}
+      {/* Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SiteServiceLinks />
         <SiteAlerts siteId={site.id} />
       </div>
     </div>
