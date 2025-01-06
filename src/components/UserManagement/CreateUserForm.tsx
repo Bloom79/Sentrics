@@ -39,42 +39,22 @@ export function CreateUserForm({ onSuccess }: { onSuccess: () => void }) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // First create the user in auth
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: values.email,
-      password: values.password,
-      email_confirm: true,
-    });
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify(values)
+        }
+      );
 
-    if (authError) {
-      console.error("Auth error:", authError);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: authError.message || "Failed to create user. Please try again.",
-      });
-      return;
-    }
-
-    if (authData.user) {
-      // Then update the profile with additional information
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update({
-          full_name: values.full_name,
-          role: values.role,
-          status: "active",
-        })
-        .eq("id", authData.user.id);
-
-      if (profileError) {
-        console.error("Profile error:", profileError);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to update user profile. Please try again.",
-        });
-        return;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to create user');
       }
 
       toast({
@@ -83,6 +63,13 @@ export function CreateUserForm({ onSuccess }: { onSuccess: () => void }) {
       });
       onSuccess();
       form.reset();
+    } catch (error) {
+      console.error("Creation error:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to create user. Please try again.",
+      });
     }
   }
 

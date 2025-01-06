@@ -12,6 +12,7 @@ export type Plant = {
     latitude: number;
     longitude: number;
   };
+  lastUpdate?: string;
 };
 
 export type Consumer = {
@@ -85,22 +86,28 @@ export type Site = {
   };
 };
 
-export type Asset = {
-  type: "panel" | "inverter" | "battery";
-  id?: string;
+export type AssetType = {
+  id: string;
+  type: "panel" | "inverter" | "turbine" | "transformer" | "battery";
   serialNumber: string;
   model: string;
   manufacturer: string;
-  location: string;
+  installationDate: string;
   status: AssetStatus;
-  ratedPower: number;
-  efficiency: number;
   lastOutput?: number;
-  stateOfCharge?: number;
-  orientation?: string;
-  tilt?: number;
-  installationDate?: string;
+  efficiency: number;
+  location: string;
+  ratedPower?: number;
   technology?: "lithium-ion" | "lead-acid" | "flow";
   energyCapacity?: number;
   roundTripEfficiency?: number;
+  stateOfCharge?: number;
+  cutInSpeed?: number;
+  cutOutSpeed?: number;
+  rotorDiameter?: number;
+  hubHeight?: number;
+  ratedCapacity?: number;
+  voltageIn?: number;
+  voltageOut?: number;
+  capacity?: number;
 };
