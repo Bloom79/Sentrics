@@ -9,12 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SolarAsset, WindAsset } from "@/types/site";
+import { AssetType } from "@/types/site";
 import { EditAssetForm } from "./EditAssetForm";
 
 interface EditAssetDialogProps {
-  asset: SolarAsset | WindAsset;
-  onEdit: (asset: SolarAsset | WindAsset) => void;
+  asset: AssetType;
+  onEdit: (asset: AssetType) => void;
 }
 
 export const EditAssetDialog = ({ asset, onEdit }: EditAssetDialogProps) => {

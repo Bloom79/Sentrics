@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plant, SolarAsset, WindAsset } from "@/types/site";
+import { Plant, AssetType } from "@/types/site";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Server, Wind, AlertCircle, Gauge, Pencil, Trash2 } from "lucide-react";
+import { Server, Wind, AlertCircle, Gauge, Battery, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AddAssetButton } from "./AddAssetButton";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface AssetListProps {
   plant: Plant;
-  assets: SolarAsset[] | WindAsset[];
+  assets: AssetType[];
 }
 
 export const AssetList = ({ plant, assets }: AssetListProps) => {
@@ -41,8 +41,24 @@ export const AssetList = ({ plant, assets }: AssetListProps) => {
     }
   };
 
+  const getAssetIcon = (type: AssetType["type"]) => {
+    switch (type) {
+      case "panel":
+        return <Server className="h-4 w-4" />;
+      case "inverter":
+        return <Zap className="h-4 w-4" />;
+      case "turbine":
+        return <Wind className="h-4 w-4" />;
+      case "transformer":
+        return <Gauge className="h-4 w-4" />;
+      case "battery":
+        return <Battery className="h-4 w-4" />;
+      default:
+        return <AlertCircle className="h-4 w-4" />;
+    }
+  };
+
   const handleDelete = (assetId: string) => {
-    // In a real app, this would make an API call to delete the asset
     console.log("Deleting asset:", assetId);
     toast({
       title: "Asset deleted",
@@ -50,8 +66,7 @@ export const AssetList = ({ plant, assets }: AssetListProps) => {
     });
   };
 
-  const handleEdit = (asset: SolarAsset | WindAsset) => {
-    // In a real app, this would make an API call to update the asset
+  const handleEdit = (asset: AssetType) => {
     console.log("Editing asset:", asset);
     toast({
       title: "Asset updated",
@@ -71,6 +86,7 @@ export const AssetList = ({ plant, assets }: AssetListProps) => {
           <Collapsible key={asset.id}>
             <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-4 hover:bg-muted">
               <div className="flex items-center gap-2">
+                {getAssetIcon(asset.type)}
                 <div className={`h-2 w-2 rounded-full ${getStatusColor(asset.status)}`} />
                 <span>{asset.serialNumber}</span>
               </div>
@@ -80,20 +96,23 @@ export const AssetList = ({ plant, assets }: AssetListProps) => {
               <div className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>Model: {asset.model}</div>
+                  <div>Manufacturer: {asset.manufacturer}</div>
                   <div>Installation: {new Date(asset.installationDate).toLocaleDateString()}</div>
-                  {'efficiency' in asset && <div>Efficiency: {asset.efficiency}%</div>}
-                  {'lastOutput' in asset && <div>Last Output: {asset.lastOutput}W</div>}
-                  {'currentOutput' in asset && <div>Current Output: {asset.currentOutput}kW</div>}
-                  {'manufacturer' in asset && <div>Manufacturer: {asset.manufacturer}</div>}
-                  {'ratedCapacity' in asset && <div>Rated Capacity: {asset.ratedCapacity}kW</div>}
                   <div>Location: {asset.location}</div>
+                  {'efficiency' in asset && <div>Efficiency: {asset.efficiency}%</div>}
+                  {'ratedPower' in asset && <div>Rated Power: {asset.ratedPower}W</div>}
+                  {'ratedCapacity' in asset && <div>Rated Capacity: {asset.ratedCapacity}kW</div>}
+                  {'energyCapacity' in asset && <div>Energy Capacity: {asset.energyCapacity}kWh</div>}
+                  {'technology' in asset && <div>Technology: {asset.technology}</div>}
+                  {'voltageIn' in asset && <div>Voltage In: {asset.voltageIn}V</div>}
+                  {'voltageOut' in asset && <div>Voltage Out: {asset.voltageOut}V</div>}
                 </div>
                 <div className="flex justify-end gap-2">
                   <EditAssetDialog asset={asset} onEdit={handleEdit} />
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="destructive" size="sm">
-                        <Trash2 className="h-4 w-4 mr-2" />
+                        <AlertCircle className="h-4 w-4 mr-2" />
                         Delete
                       </Button>
                     </AlertDialogTrigger>

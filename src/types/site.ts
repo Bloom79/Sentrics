@@ -1,3 +1,13 @@
+export interface Site {
+  id: string;
+  name: string;
+  location: string;
+  type: "solar" | "wind" | "hybrid";
+  capacity: number;
+  status: "online" | "offline" | "maintenance";
+  plants: Plant[];
+}
+
 export interface Plant {
   id: string;
   name: string;
@@ -10,6 +20,14 @@ export interface Plant {
   location?: string;
 }
 
+export interface StorageUnit {
+  id: string;
+  name: string;
+  capacity: number;
+  currentCharge: number;
+  status: "charging" | "discharging" | "idle" | "offline";
+}
+
 interface BaseAsset {
   id: string;
   serialNumber: string;
@@ -17,7 +35,7 @@ interface BaseAsset {
   manufacturer: string;
   installationDate: string;
   status: "operational" | "faulty" | "maintenance";
-  location?: string;
+  location: string;
 }
 
 export interface SolarPanel extends BaseAsset {
@@ -27,6 +45,8 @@ export interface SolarPanel extends BaseAsset {
   orientation?: string;
   tilt?: number;
   lastOutput?: number;
+  temperature?: number;
+  performanceRatio?: number;
 }
 
 export interface Inverter extends BaseAsset {
@@ -69,6 +89,11 @@ export interface Battery extends BaseAsset {
   stateOfCharge?: number;
   roundTripEfficiency?: number;
   cycleCount?: number;
+  thermalManagement?: string;
 }
 
 export type AssetType = SolarPanel | Inverter | WindTurbine | Transformer | Battery;
+
+// For backward compatibility with existing components
+export type SolarAsset = SolarPanel | Inverter;
+export type WindAsset = WindTurbine;
