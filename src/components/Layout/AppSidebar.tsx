@@ -46,11 +46,6 @@ const navigationGroups = [
     label: "Asset Management",
     items: [
       {
-        title: "Plants",
-        path: "/plants",
-        icon: Factory,
-      },
-      {
         title: "Sites",
         icon: Building2,
         isExpandable: true,
