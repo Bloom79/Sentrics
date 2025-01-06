@@ -1,11 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
+import { Battery, Cloud, Wind, Zap, Share2, Tool, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
 import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
 import SiteServiceLinks from "@/components/SiteAnalysis/SiteServiceLinks";
+import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
+import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
 import { Site } from "@/types/site";
 
 const mockSite: Site = {
@@ -38,7 +40,7 @@ const mockSite: Site = {
 
 const SiteDetail = () => {
   const { siteId } = useParams();
-  const site = mockSite;
+  const site = mockSite; // In a real app, fetch site data based on siteId
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -51,8 +53,8 @@ const SiteDetail = () => {
         <div className="flex gap-2">
           <span className={`px-3 py-1 rounded-full text-sm ${
             site.gridConnection.status === "connected" 
-              ? "bg-green-100 text-green-800" 
-              : "bg-red-100 text-red-800"
+              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" 
+              : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
           }`}>
             {site.gridConnection.status}
           </span>
@@ -93,26 +95,26 @@ const SiteDetail = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Direct Consumption</CardTitle>
+            <CardTitle className="text-sm font-medium">Grid Frequency</CardTitle>
             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">160 kW</div>
+            <div className="text-2xl font-bold">{site.gridConnection.frequency} Hz</div>
             <p className="text-xs text-muted-foreground">
-              Local usage
+              Nominal: 50.00 Hz
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Grid Delivery</CardTitle>
+            <CardTitle className="text-sm font-medium">Grid Voltage</CardTitle>
             <Share2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">120 kW</div>
+            <div className="text-2xl font-bold">{site.gridConnection.voltage} V</div>
             <p className="text-xs text-muted-foreground">
-              To Terna
+              Nominal: 230 V
             </p>
           </CardContent>
         </Card>
@@ -133,10 +135,16 @@ const SiteDetail = () => {
         </Card>
       </div>
 
-      {/* Graphs and Storage Status Section */}
+      {/* Production Graph and Storage Status */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SiteProductionGraph siteId={site.id} />
         <StorageStatus siteId={site.id} />
+      </div>
+
+      {/* Equipment Status and Maintenance Schedule */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <EquipmentStatus siteId={site.id} />
+        <MaintenanceSchedule siteId={site.id} />
       </div>
 
       {/* Service Links and Alerts */}
