@@ -8,9 +8,15 @@ interface StyledFlowNodeProps {
   onClick?: () => void;
 }
 
-const StyledFlowNode: React.FC<StyledFlowNodeProps> = ({ children, type = "both", className = "", onClick }) => {
-  const handleClick = (e: React.MouseEvent) => {
+const StyledFlowNode: React.FC<StyledFlowNodeProps> = ({ 
+  children, 
+  type = "both", 
+  className = "", 
+  onClick 
+}) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (onClick) {
+      e.stopPropagation();
       onClick();
     }
   };

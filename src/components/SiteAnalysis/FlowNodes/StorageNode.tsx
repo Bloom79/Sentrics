@@ -1,8 +1,8 @@
 import React from 'react';
-import { Handle, Position } from '@xyflow/react';
 import { Battery } from 'lucide-react';
 import { FlowNodeData } from '@/types/flowComponents';
 import NodeTooltip from "./NodeTooltip";
+import StyledFlowNode from "./StyledFlowNode";
 
 interface StorageNodeProps {
   data: FlowNodeData;
@@ -43,8 +43,11 @@ const StorageNode: React.FC<StorageNodeProps> = ({ data }) => {
 
   return (
     <NodeTooltip tooltipContent={tooltipContent}>
-      <div className="flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200">
-        <Handle type="target" position={Position.Left} />
+      <StyledFlowNode 
+        type="both"
+        className="min-w-[140px]"
+        onClick={() => data.onNodeClick(data.id, 'storage')}
+      >
         <div className="flex flex-col items-center gap-2">
           <Battery className="w-8 h-8 text-green-500" />
           <span className="text-sm font-medium">{data.label}</span>
@@ -57,8 +60,7 @@ const StorageNode: React.FC<StorageNodeProps> = ({ data }) => {
             </span>
           </div>
         </div>
-        <Handle type="source" position={Position.Right} />
-      </div>
+      </StyledFlowNode>
     </NodeTooltip>
   );
 };

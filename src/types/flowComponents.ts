@@ -33,19 +33,17 @@ export interface NodeSpecs {
   currentCharge?: number;
   maxCapacity?: number;
   depthOfDischarge?: number;
+  powerRating?: number;
+  health?: number;
+  cycles?: number;
 
   // Consumer specs
   consumption?: number;
   connectedLoad?: number;
   powerFactor?: number;
   peakDemand?: number;
-
-  // Grid specs
-  importPower?: number;
-  exportPower?: number;
-  voltage?: number;
-  frequency?: number;
-  reliability?: number;
+  dailyUsage?: number;
+  connectionType?: string;
 }
 
 export type FlowNodeData = {
