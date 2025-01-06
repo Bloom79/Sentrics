@@ -1,9 +1,9 @@
 import React from "react";
 import { ArrowUp, ArrowDown } from "lucide-react";
-import { ChargingDirection } from "@/types/battery";
+import type { ChargingDirection as ChargingDirectionType } from "@/types/battery";
 
 interface ChargingDirectionProps {
-  direction: ChargingDirection;
+  direction: ChargingDirectionType;
 }
 
 const ChargingDirection: React.FC<ChargingDirectionProps> = ({ direction }) => {
