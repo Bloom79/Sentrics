@@ -76,8 +76,9 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   }, [faults, flowData, efficiencyMetrics]);
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
-    // Only show node dialog if it's a direct click, not a drag event
-    if (event.target === event.currentTarget) {
+    // Check if the click is on the node container itself and not a child element
+    const isNodeContainer = (event.target as HTMLElement).classList.contains('react-flow__node');
+    if (isNodeContainer) {
       setSelectedNode({ id: node.id, type: node.type });
       setSelectedEdge(null);
     }
@@ -130,6 +131,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         onInit={setReactFlowInstance}
         minZoom={0.5}
         maxZoom={2}
+        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
       >
         <Controls showInteractive={false} />
         <Panel position="top-right" className="bg-background/95 p-2 rounded-lg shadow-sm border flex gap-2">
