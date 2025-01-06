@@ -44,7 +44,7 @@ export interface Site {
 export interface Plant {
   id: string;
   name: string;
-  type: "solar" | "wind";
+  type: "solar" | "wind" | "hybrid";
   capacity: number;
   currentOutput: number;
   efficiency: number;
@@ -59,9 +59,6 @@ export interface StorageUnit {
   capacity: number;
   currentCharge: number;
   status: "charging" | "discharging" | "idle" | "offline";
-  powerRating?: number;
-  temperature?: number;
-  health?: number;
 }
 
 interface BaseAsset {
@@ -133,4 +130,3 @@ export type AssetType = SolarPanel | Inverter | WindTurbine | Transformer | Batt
 // For backward compatibility with existing components
 export type SolarAsset = SolarPanel | Inverter;
 export type WindAsset = WindTurbine;
-
