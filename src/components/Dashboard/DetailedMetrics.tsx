@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge";
 interface DetailedMetricsProps {
   selectedSiteId: string | null;
   onSiteSelect?: (siteId: string) => void;
+  searchTerm: string;
+  selectedStatus: string;
+  selectedTimeRange: string;
 }
 
 // Mock data - replace with actual data later
@@ -46,10 +49,8 @@ const mockSiteData = [
   },
 ];
 
-const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSiteSelect }) => {
+const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSiteSelect, searchTerm, selectedStatus, selectedTimeRange }) => {
   const { t } = useLanguage();
-  const [statusFilter, setStatusFilter] = React.useState("all");
-  const [searchTerm, setSearchTerm] = React.useState("");
   
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -64,7 +65,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
 
   const filteredSites = mockSiteData.filter(site => {
     const matchesSearch = site.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || site.status === statusFilter;
+    const matchesStatus = selectedStatus === "all" || site.status === selectedStatus;
     return matchesSearch && matchesStatus;
   });
 
@@ -86,29 +87,9 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
             Sites Overview & Metrics
           </CardTitle>
           <div className="flex items-center space-x-2">
+            <Badge variant="outline">{selectedTimeRange}</Badge>
             <Badge variant="outline">{`${filteredSites.length} sites`}</Badge>
           </div>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 mt-4">
-          <div className="flex-1">
-            <Input
-              placeholder="Search sites..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-xs"
-            />
-          </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="online">Online</SelectItem>
-              <SelectItem value="maintenance">Maintenance</SelectItem>
-              <SelectItem value="offline">Offline</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </CardHeader>
       <CardContent>
@@ -135,6 +116,9 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {getStatusIcon(site.status)}
+                      <span className="text-sm font-medium">
+                        {site.status.charAt(0).toUpperCase() + site.status.slice(1)}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell className="font-medium">{site.name}</TableCell>
@@ -145,10 +129,8 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
                   <TableCell className="text-right">{site.co2Saved.toFixed(1)}</TableCell>
                 </TableRow>
               ))}
-              <TableRow className="font-semibold">
-                <TableCell>Total / Average</TableCell>
-                <TableCell>-</TableCell>
-                <TableCell>-</TableCell>
+              <TableRow className="font-semibold bg-muted/50">
+                <TableCell colSpan={3}>Total / Average</TableCell>
                 <TableCell className="text-right">{totals.dailyProduction.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{totals.monthlyProduction.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{totals.efficiency.toFixed(1)}%</TableCell>

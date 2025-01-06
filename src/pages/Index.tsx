@@ -6,11 +6,12 @@ import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import ForecastOverview from "@/components/Dashboard/Overview/ForecastOverview";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
-import GridStatus from "@/components/Dashboard/GridStatus";
 
 const Index = () => {
   const { language, setLanguage } = useLanguage();
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("24h");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
   return (
@@ -21,28 +22,34 @@ const Index = () => {
           setSelectedTimeRange={setSelectedTimeRange}
           language={language}
           setLanguage={setLanguage}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
         />
 
         <div className="grid gap-6">
-          {/* Top Row KPIs */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Top Row - Production & Storage Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <ProductionOverview />
             <SolarProduction />
             <WindProduction />
             <StorageStatus />
           </div>
 
-          {/* Forecast & Grid Status */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Middle Row - Forecast Overview */}
+          <div className="grid grid-cols-1 gap-4">
             <ForecastOverview />
-            <GridStatus />
           </div>
 
-          {/* Sites Overview & Metrics */}
+          {/* Bottom Row - Detailed Metrics & Site Overview */}
           <div className="grid grid-cols-1 gap-4">
             <DetailedMetrics 
               selectedSiteId={selectedSiteId}
               onSiteSelect={setSelectedSiteId}
+              searchTerm={searchTerm}
+              selectedStatus={selectedStatus}
+              selectedTimeRange={selectedTimeRange}
             />
           </div>
         </div>

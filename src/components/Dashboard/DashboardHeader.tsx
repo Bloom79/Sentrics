@@ -66,87 +66,34 @@ const DashboardHeader = ({
           <LayoutDashboard className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
         </div>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full md:w-auto">
-              <Clock className="mr-2 h-4 w-4" />
-              {selectedTimeRange}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-56 p-2">
-            <div className="space-y-1">
-              <Button
-                variant={selectedTimeRange === "24h" ? "secondary" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => setSelectedTimeRange("24h")}
-              >
-                Last 24 Hours
-              </Button>
-              <Button
-                variant={selectedTimeRange === "7d" ? "secondary" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => setSelectedTimeRange("7d")}
-              >
-                Last 7 Days
-              </Button>
-              <Button
-                variant={selectedTimeRange === "30d" ? "secondary" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => setSelectedTimeRange("30d")}
-              >
-                Last 30 Days
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+        <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="online">Online</SelectItem>
+            <SelectItem value="maintenance">Maintenance</SelectItem>
+            <SelectItem value="offline">Offline</SelectItem>
+          </SelectContent>
+        </Select>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full md:w-auto">
-              <Filter className="mr-2 h-4 w-4" />
-              Filters
-              {selectedStatus !== "all" && (
-                <Badge variant="secondary" className="ml-2">1</Badge>
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 bg-background">
-            <DropdownMenuLabel>Site Status</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem 
-                onClick={() => setSelectedStatus("all")}
-                className={selectedStatus === "all" ? "bg-accent" : ""}
-              >
-                All Status
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setSelectedStatus("online")}
-                className={selectedStatus === "online" ? "bg-accent" : ""}
-              >
-                Online Only
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setSelectedStatus("maintenance")}
-                className={selectedStatus === "maintenance" ? "bg-accent" : ""}
-              >
-                Maintenance
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setSelectedStatus("offline")}
-                className={selectedStatus === "offline" ? "bg-accent" : ""}
-              >
-                Offline
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Time range" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="24h">Last 24 Hours</SelectItem>
+            <SelectItem value="7d">Last 7 Days</SelectItem>
+            <SelectItem value="30d">Last 30 Days</SelectItem>
+          </SelectContent>
+        </Select>
 
         <Select value={language} onValueChange={(value: 'en' | 'it') => setLanguage(value)}>
-          <SelectTrigger className="w-full md:w-[120px]">
+          <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Language" />
           </SelectTrigger>
-          <SelectContent className="bg-background">
+          <SelectContent>
             <SelectItem value="en">English</SelectItem>
             <SelectItem value="it">Italiano</SelectItem>
           </SelectContent>
