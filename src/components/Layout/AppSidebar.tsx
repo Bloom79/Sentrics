@@ -31,7 +31,12 @@ type NavigationItem = {
   children?: NavigationItem[];
 };
 
-const navigationItems = [
+type NavigationGroup = {
+  label: string;
+  items: NavigationItem[];
+};
+
+const navigationItems: NavigationGroup[] = [
   {
     label: "Main",
     items: [
