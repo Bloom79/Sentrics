@@ -10,15 +10,15 @@ interface StyledFlowNodeProps {
 
 const StyledFlowNode: React.FC<StyledFlowNodeProps> = ({ children, type = "both", className = "", onClick }) => {
   const handleClick = (e: React.MouseEvent) => {
-    // Only trigger onClick if the click wasn't on a Handle
-    if (!(e.target as HTMLElement).closest('.react-flow__handle')) {
+    // Only trigger onClick if it's a direct click on the content, not during drag
+    if (e.target === e.currentTarget && !e.defaultPrevented) {
       onClick?.();
     }
   };
 
   return (
     <div 
-      className={`p-4 rounded-lg border bg-white shadow-lg transition-shadow cursor-pointer ${className}`}
+      className={`nodrag p-4 rounded-lg border bg-white shadow-lg ${className}`}
       onClick={handleClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}

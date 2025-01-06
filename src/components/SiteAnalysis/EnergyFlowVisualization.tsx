@@ -76,12 +76,8 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   }, [faults, flowData, efficiencyMetrics]);
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
-    // Check if the click is on the node container itself and not a child element
-    const isNodeContainer = (event.target as HTMLElement).classList.contains('react-flow__node');
-    if (isNodeContainer) {
-      setSelectedNode({ id: node.id, type: node.type });
-      setSelectedEdge(null);
-    }
+    setSelectedNode({ id: node.id, type: node.type });
+    setSelectedEdge(null);
   }, []);
 
   const handleTimeRangeChange = (newRange: TimeRange) => {
@@ -132,6 +128,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         minZoom={0.5}
         maxZoom={2}
         defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+        className="touch-none"
       >
         <Controls showInteractive={false} />
         <Panel position="top-right" className="bg-background/95 p-2 rounded-lg shadow-sm border flex gap-2">
