@@ -103,8 +103,8 @@ export const sitesList = [
       { id: "p2", name: "Wind Farm B", type: "wind" }
     ],
     consumers: [
-      { id: "c1", name: "Industrial Park A" },
-      { id: "c2", name: "Commercial Center B" }
+      { id: "123e4567-e89b-12d3-a456-426614174000", name: "Industrial Park A" },
+      { id: "223e4567-e89b-12d3-a456-426614174000", name: "Commercial Center B" }
     ]
   },
   { 
@@ -115,8 +115,8 @@ export const sitesList = [
       { id: "p4", name: "Wind Farm D", type: "wind" }
     ],
     consumers: [
-      { id: "c3", name: "Residential Complex A" },
-      { id: "c4", name: "Shopping Mall C" }
+      { id: "323e4567-e89b-12d3-a456-426614174000", name: "Residential Complex A" },
+      { id: "423e4567-e89b-12d3-a456-426614174000", name: "Shopping Mall C" }
     ]
   },
   { 
@@ -127,8 +127,8 @@ export const sitesList = [
       { id: "p6", name: "Wind Farm F", type: "wind" }
     ],
     consumers: [
-      { id: "c5", name: "Factory Complex D" },
-      { id: "c6", name: "Office Park E" }
+      { id: "523e4567-e89b-12d3-a456-426614174000", name: "Factory Complex D" },
+      { id: "623e4567-e89b-12d3-a456-426614174000", name: "Office Park E" }
     ]
   },
 ];
