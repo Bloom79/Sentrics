@@ -1,10 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { Activity, CheckCircle, AlertCircle, XCircle, Battery, Wind, Sun } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
 interface DetailedMetricsProps {
@@ -26,6 +24,12 @@ const mockSiteData = [
     monthlyProduction: 75000,
     efficiency: 92,
     co2Saved: 45.2,
+    energySources: [
+      { type: "solar", output: 1500, capacity: 2000 },
+      { type: "wind", output: 1000, capacity: 1500 }
+    ],
+    storage: { capacity: 5000, currentCharge: 4200 },
+    gridConnection: { status: "connected", frequency: 50.02, congestion: "Low" }
   },
   {
     id: "2",
@@ -36,6 +40,12 @@ const mockSiteData = [
     monthlyProduction: 63000,
     efficiency: 88,
     co2Saved: 38.5,
+    energySources: [
+      { type: "solar", output: 1200, capacity: 1800 },
+      { type: "wind", output: 900, capacity: 1200 }
+    ],
+    storage: { capacity: 4000, currentCharge: 2800 },
+    gridConnection: { status: "connected", frequency: 49.98, congestion: "Medium" }
   },
   {
     id: "3",
@@ -46,10 +56,22 @@ const mockSiteData = [
     monthlyProduction: 54000,
     efficiency: 90,
     co2Saved: 32.8,
+    energySources: [
+      { type: "solar", output: 1000, capacity: 1500 },
+      { type: "wind", output: 800, capacity: 1000 }
+    ],
+    storage: { capacity: 3000, currentCharge: 2700 },
+    gridConnection: { status: "connected", frequency: 50.00, congestion: "Low" }
   },
 ];
 
-const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSiteSelect, searchTerm, selectedStatus, selectedTimeRange }) => {
+const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ 
+  selectedSiteId, 
+  onSiteSelect, 
+  searchTerm, 
+  selectedStatus, 
+  selectedTimeRange 
+}) => {
   const { t } = useLanguage();
   
   const getStatusIcon = (status: string) => {
@@ -84,7 +106,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5 text-accent" />
-            Sites Overview & Metrics
+            Sites Overview
           </CardTitle>
           <div className="flex items-center space-x-2">
             <Badge variant="outline">{selectedTimeRange}</Badge>
@@ -99,7 +121,8 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
               <TableRow>
                 <TableHead>Status</TableHead>
                 <TableHead>Site Name</TableHead>
-                <TableHead>Last Update</TableHead>
+                <TableHead>Energy Sources</TableHead>
+                <TableHead>Storage</TableHead>
                 <TableHead className="text-right">Daily Production (kWh)</TableHead>
                 <TableHead className="text-right">Monthly Production (kWh)</TableHead>
                 <TableHead className="text-right">Efficiency (%)</TableHead>
@@ -122,7 +145,26 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
                     </div>
                   </TableCell>
                   <TableCell className="font-medium">{site.name}</TableCell>
-                  <TableCell>{new Date(site.lastUpdate).toLocaleString()}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-1">
+                        <Sun className="h-4 w-4 text-yellow-500" />
+                        <span className="text-sm">{`${site.energySources[0].output}/${site.energySources[0].capacity} kW`}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Wind className="h-4 w-4 text-blue-500" />
+                        <span className="text-sm">{`${site.energySources[1].output}/${site.energySources[1].capacity} kW`}</span>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Battery className="h-4 w-4 text-green-500" />
+                      <span className="text-sm">
+                        {`${Math.round((site.storage.currentCharge / site.storage.capacity) * 100)}% (${site.storage.currentCharge} kWh)`}
+                      </span>
+                    </div>
+                  </TableCell>
                   <TableCell className="text-right">{site.dailyProduction.toLocaleString()}</TableCell>
                   <TableCell className="text-right">{site.monthlyProduction.toLocaleString()}</TableCell>
                   <TableCell className="text-right">{site.efficiency}%</TableCell>
@@ -130,7 +172,7 @@ const DetailedMetrics: React.FC<DetailedMetricsProps> = ({ selectedSiteId, onSit
                 </TableRow>
               ))}
               <TableRow className="font-semibold bg-muted/50">
-                <TableCell colSpan={3}>Total / Average</TableCell>
+                <TableCell colSpan={4}>Total / Average</TableCell>
                 <TableCell className="text-right">{totals.dailyProduction.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{totals.monthlyProduction.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{totals.efficiency.toFixed(1)}%</TableCell>

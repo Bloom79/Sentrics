@@ -4,8 +4,8 @@ import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
-import ForecastOverview from "@/components/Dashboard/Overview/ForecastOverview";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
+import GridStatus from "@/components/Dashboard/GridStatus";
 
 const Index = () => {
   const { language, setLanguage } = useLanguage();
@@ -15,8 +15,8 @@ const Index = () => {
   const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900">
-      <div className="container py-8">
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="container py-6">
         <DashboardHeader
           selectedTimeRange={selectedTimeRange}
           setSelectedTimeRange={setSelectedTimeRange}
@@ -37,20 +37,18 @@ const Index = () => {
             <StorageStatus />
           </div>
 
-          {/* Middle Row - Forecast Overview */}
-          <div className="grid grid-cols-1 gap-4">
-            <ForecastOverview />
-          </div>
-
-          {/* Bottom Row - Detailed Metrics & Site Overview */}
-          <div className="grid grid-cols-1 gap-4">
-            <DetailedMetrics 
-              selectedSiteId={selectedSiteId}
-              onSiteSelect={setSelectedSiteId}
-              searchTerm={searchTerm}
-              selectedStatus={selectedStatus}
-              selectedTimeRange={selectedTimeRange}
-            />
+          {/* Middle Row - Grid Status and Site Metrics */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <GridStatus />
+            <div className="lg:col-span-2">
+              <DetailedMetrics 
+                selectedSiteId={selectedSiteId}
+                onSiteSelect={setSelectedSiteId}
+                searchTerm={searchTerm}
+                selectedStatus={selectedStatus}
+                selectedTimeRange={selectedTimeRange}
+              />
+            </div>
           </div>
         </div>
       </div>
