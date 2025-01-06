@@ -21,7 +21,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         {/* Plant Section */}
         <div className="absolute left-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <div className="p-4 bg-green-100 dark:bg-green-900 rounded-full hover:scale-110 transition-transform cursor-pointer">
                 <LeafyGreen className="w-8 h-8 text-green-600 dark:text-green-400" />
               </div>
@@ -59,10 +59,15 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         {/* Storage Section */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <div 
                 className="p-4 bg-blue-100 dark:bg-blue-900 rounded-full hover:scale-110 transition-transform cursor-pointer"
-                onClick={() => site.storageUnits[0] && handleStorageClick(site.storageUnits[0].id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (site.storageUnits[0]) {
+                    handleStorageClick(site.storageUnits[0].id);
+                  }
+                }}
               >
                 <Battery className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
@@ -103,7 +108,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         {/* Consumer/Grid Section */}
         <div className="absolute right-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <div className="p-4 bg-red-100 dark:bg-red-900 rounded-full hover:scale-110 transition-transform cursor-pointer">
                 <Power className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
