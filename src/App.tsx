@@ -14,6 +14,7 @@ import SiteDetail from "./pages/SiteDetail";
 import StorageUnitDetail from "./pages/StorageUnitDetail";
 import PlantDetail from "./pages/PlantDetail";
 import Financials from "./pages/Financials";
+import Consumers from "./pages/Consumers";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,7 @@ const App = () => {
                       <Route path="/" element={<Index />} />
                       <Route path="/plants/:plantId" element={<PlantDetail />} />
                       <Route path="/plants/:plantId/financials" element={<Financials />} />
-                      <Route path="/consumers" element={<div>Consumers Overview</div>} />
+                      <Route path="/consumers" element={<Consumers />} />
                       <Route path="/consumers/:consumerId" element={<div>Consumer Detail</div>} />
                       <Route path="/grid-analysis" element={<GridAnalysis />} />
                       <Route path="/analytics" element={<div>Analytics Dashboard</div>} />
