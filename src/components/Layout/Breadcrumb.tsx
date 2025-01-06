@@ -20,6 +20,20 @@ interface BreadcrumbProps {
 
 export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
   const location = useLocation();
+  
+  // Generate breadcrumb items based on current path if no items provided
+  const getBreadcrumbItems = () => {
+    if (items.length > 0) return items;
+    
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    return pathSegments.map((segment, index) => {
+      const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
+      const label = segment.charAt(0).toUpperCase() + segment.slice(1);
+      return { label, path };
+    });
+  };
+
+  const breadcrumbItems = getBreadcrumbItems();
 
   return (
     <Breadcrumb className="mb-6">
@@ -31,11 +45,11 @@ export function AppBreadcrumb({ items = [] }: BreadcrumbProps) {
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {items.map((item, index) => (
+        {breadcrumbItems.map((item, index) => (
           <React.Fragment key={item.label}>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              {index === items.length - 1 ? (
+              {index === breadcrumbItems.length - 1 ? (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>

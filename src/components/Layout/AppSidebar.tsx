@@ -22,7 +22,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 
-const navigationItems = [
+const navigationGroups = [
   {
     label: "Overview",
     items: [
@@ -85,7 +85,7 @@ export function AppSidebar() {
         <h2 className="text-lg font-semibold">SentricS</h2>
       </SidebarHeader>
       <SidebarContent>
-        {navigationItems.map((group) => (
+        {navigationGroups.map((group) => (
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -96,9 +96,9 @@ export function AppSidebar() {
                       onClick={() => navigate(item.path)}
                       data-active={location.pathname === item.path}
                     >
-                      <item.icon className="w-4 h-4" />
+                      <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                      {item.children && <ChevronRight className="ml-auto h-4 w-4" />}
+                      <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
