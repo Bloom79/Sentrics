@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Activity, Battery, Zap, Sun, Wind } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 import MetricsCard from "@/components/Dashboard/MetricsCard";
-import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
@@ -50,7 +49,11 @@ const sites = [
 
 const Index = () => {
   const { language, setLanguage, t } = useLanguage();
-  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleSiteClick = (siteId: string) => {
+    navigate(`/site/${siteId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -124,8 +127,8 @@ const Index = () => {
                   {sites.map((site) => (
                     <div
                       key={site.id}
-                      className="bg-background rounded-lg p-4 hover:bg-muted/50 transition-colors"
-                      onClick={() => setSelectedSiteId(site.id)}
+                      className="bg-background rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer"
+                      onClick={() => handleSiteClick(site.id)}
                     >
                       <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
                         {/* Site Status */}
@@ -141,9 +144,9 @@ const Index = () => {
                               }`}
                             />
                             <div>
-                              <Link to={`/site/${site.id}`} className="font-medium hover:underline">
+                              <p className="font-medium hover:underline">
                                 {site.name}
-                              </Link>
+                              </p>
                               <p className="text-sm text-muted-foreground">
                                 Last update: {new Date(site.lastUpdate).toLocaleString()}
                               </p>
