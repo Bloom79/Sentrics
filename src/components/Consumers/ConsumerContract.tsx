@@ -10,9 +10,16 @@ import { AddContractDialog } from "./AddContractDialog";
 const ConsumerContract = () => {
   const { consumerId } = useParams();
 
-  const { data: contract, isLoading } = useQuery({
+  // Validate if consumerId is in UUID format
+  const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(consumerId || '');
+
+  const { data: contract, isLoading, error } = useQuery({
     queryKey: ['contract', consumerId],
     queryFn: async () => {
+      if (!isValidUUID) {
+        throw new Error('Invalid consumer ID format');
+      }
+
       const { data, error } = await supabase
         .from('contracts')
         .select('*')
@@ -22,10 +29,19 @@ const ConsumerContract = () => {
       if (error) throw error;
       return data as Contract | null;
     },
+    enabled: isValidUUID, // Only run query if UUID is valid
   });
+
+  if (!isValidUUID) {
+    return <div>Invalid consumer ID format</div>;
+  }
 
   if (isLoading) {
     return <div>Loading contract details...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading contract: {error.message}</div>;
   }
 
   const renderContractDetails = () => {
