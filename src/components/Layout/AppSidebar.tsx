@@ -10,6 +10,7 @@ import {
   Search,
   Wrench,
   LineChart,
+  MonitorCheck,
 } from "lucide-react";
 import {
   Sidebar,
@@ -38,23 +39,23 @@ type NavigationGroup = {
 
 const navigationItems: NavigationGroup[] = [
   {
-    label: "Main",
+    label: "Overview",
     items: [
       {
         title: "Dashboard",
         path: "/",
         icon: LayoutDashboard,
       },
+    ],
+  },
+  {
+    label: "Monitoring",
+    items: [
       {
         title: "Grid Analysis",
         path: "/grid-analysis",
         icon: Activity,
       },
-    ],
-  },
-  {
-    label: "Management",
-    items: [
       {
         title: "Sites",
         path: "/sites",
@@ -68,7 +69,7 @@ const navigationItems: NavigationGroup[] = [
     ],
   },
   {
-    label: "Tools",
+    label: "Analysis & Admin",
     items: [
       {
         title: "Analytics",
