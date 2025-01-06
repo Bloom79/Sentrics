@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// Mock data for sites
 const sites = [
   {
     id: "1",
@@ -56,7 +55,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-900">
       <div className="container py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -78,12 +77,6 @@ const Index = () => {
                 <SelectItem value="it">Italiano</SelectItem>
               </SelectContent>
             </Select>
-            <Link to="/grid-analysis">
-              <Button variant="outline" className="flex items-center gap-2">
-                <Activity className="w-4 h-4" />
-                {t('dashboard.gridAnalysis')}
-              </Button>
-            </Link>
           </div>
         </div>
         

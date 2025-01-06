@@ -13,6 +13,7 @@ export type StorageUnit = {
   status: 'charging' | 'discharging' | 'idle';
   health: number; // percentage
   temperature: number; // in Celsius
+  powerRating: number; // in kW
 };
 
 export type Site = {
@@ -29,4 +30,11 @@ export type Site = {
     voltage: number; // in V
     congestionLevel: 'Low' | 'Medium' | 'High';
   };
+};
+
+export type NavigationItem = {
+  title: string;
+  path: string;
+  icon: string;
+  children?: NavigationItem[];
 };
