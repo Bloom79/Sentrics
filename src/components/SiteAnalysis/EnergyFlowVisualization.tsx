@@ -44,6 +44,12 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   const [flowData, setFlowData] = useState<Record<string, EnergyFlow[]>>({});
   const [isPaused, setIsPaused] = useState(false);
   const [faults, setFaults] = useState<Record<string, { type: 'warning' | 'error'; message: string }[]>>({});
+  
+  // Add new state for efficiency metrics
+  const [efficiencyMetrics, setEfficiencyMetrics] = useState<Record<string, {
+    efficiency: number;
+    losses: { type: string; value: number; }[];
+  }>({});
 
   // Mock function to generate flow data and faults
   const generateFlowData = useCallback((edgeId: string): EnergyFlow => {
@@ -89,13 +95,30 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     };
   }, [faults, toast]);
 
+  // Mock function to generate efficiency metrics
+  const generateEfficiencyMetrics = useCallback((edgeId: string) => {
+    const baseEfficiency = 85 + Math.random() * 10; // 85-95% efficiency
+    const transmissionLoss = Math.random() * 2; // 0-2% transmission loss
+    const conversionLoss = Math.random() * 3; // 0-3% conversion loss
+    const resistiveLoss = Math.random() * 1.5; // 0-1.5% resistive loss
+
+    return {
+      efficiency: baseEfficiency,
+      losses: [
+        { type: 'Transmission', value: transmissionLoss },
+        { type: 'Conversion', value: conversionLoss },
+        { type: 'Resistive', value: resistiveLoss },
+      ]
+    };
+  }, []);
+
   const { nodes, edges } = React.useMemo(() => {
     const layout = getInitialLayout(site.energySources.length);
     const edges = generateEdges(layout.nodes);
     return { nodes: layout.nodes, edges };
   }, [site.energySources.length]);
 
-  // Update flow data periodically
+  // Update flow data periodically with efficiency metrics
   useEffect(() => {
     if (timeRange === 'realtime' && !isPaused) {
       const interval = setInterval(() => {
@@ -104,6 +127,12 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
           edges.forEach(edge => {
             const newFlow = generateFlowData(edge.id);
             newData[edge.id] = [...(newData[edge.id] || []).slice(-50), newFlow];
+            
+            // Update efficiency metrics
+            setEfficiencyMetrics(prev => ({
+              ...prev,
+              [edge.id]: generateEfficiencyMetrics(edge.id)
+            }));
           });
           return newData;
         });
@@ -111,18 +140,27 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
 
       return () => clearInterval(interval);
     }
-  }, [timeRange, isPaused, generateFlowData, edges]);
+  }, [timeRange, isPaused, generateFlowData, edges, generateEfficiencyMetrics]);
 
   const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    const currentFlow = flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue || 0;
+    const metrics = efficiencyMetrics[edge.id] || {
+      efficiency: 95,
+      losses: []
+    };
+
     setSelectedEdge({
       ...edge,
       data: {
         ...edge.data,
-        faults: faults[edge.id] || []
+        faults: faults[edge.id] || [],
+        energyFlow: currentFlow,
+        efficiency: metrics.efficiency,
+        losses: metrics.losses,
       }
     });
     setSelectedNode(null);
-  }, [faults]);
+  }, [faults, flowData, efficiencyMetrics]);
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
     setSelectedNode({ id: node.id, type: node.type });
@@ -164,8 +202,13 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
             stroke: faults[edge.id]?.some(f => f.type === 'error') ? '#ef4444' : 
                    faults[edge.id]?.some(f => f.type === 'warning') ? '#f59e0b' : 
                    undefined,
+            opacity: efficiencyMetrics[edge.id]?.efficiency 
+              ? (efficiencyMetrics[edge.id].efficiency / 100) 
+              : 1,
           },
-          label: flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1) + ' kW',
+          label: `${flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue.toFixed(1)} kW (${
+            efficiencyMetrics[edge.id]?.efficiency.toFixed(1) || 95
+          }%)`,
           labelStyle: { fill: 'black', fontWeight: 500 },
           labelBgStyle: { fill: 'white', opacity: 0.8 },
         }))}
@@ -190,9 +233,10 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
             source: selectedEdge.source,
             target: selectedEdge.target,
             energyFlow: flowData[selectedEdge.id]?.[flowData[selectedEdge.id].length - 1]?.currentValue || 0,
-            efficiency: 95,
+            efficiency: efficiencyMetrics[selectedEdge.id]?.efficiency || 95,
             status: faults[selectedEdge.id]?.some(f => f.type === 'error') ? 'error' : 'active',
             faults: faults[selectedEdge.id] || [],
+            losses: efficiencyMetrics[selectedEdge.id]?.losses || [],
           }}
         />
       )}
