@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Battery, Factory, Building2, Users, CircuitBoard, Zap, Cable, SolarPanel } from "lucide-react";
+import { Battery, Factory, Building2, Users, CircuitBoard, Zap, Cable, Sun } from "lucide-react";
 
 interface NodeDialogProps {
   open: boolean;
@@ -23,7 +23,7 @@ const NodeDialog: React.FC<NodeDialogProps> = ({ open, onClose, nodeType, nodeId
           <>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <SolarPanel className="w-5 h-5" />
+                <Sun className="w-5 h-5" />
                 Solar Cell Details
               </DialogTitle>
               <DialogDescription>
