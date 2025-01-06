@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { ReactFlow, Controls, Node, Edge } from "@xyflow/react";
+import { ReactFlow, Controls, Node, Edge, MarkerType } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
 import SourceNode from "./FlowNodes/SourceNode";
 import StorageNode from "./FlowNodes/StorageNode";
 import ConsumerNode from "./FlowNodes/ConsumerNode";
 import GridNode from "./FlowNodes/GridNode";
+import CellNode from "./FlowNodes/CellNode";
+import StringNode from "./FlowNodes/StringNode";
+import InverterNode from "./FlowNodes/InverterNode";
+import TransformerNode from "./FlowNodes/TransformerNode";
 import NodeDialog from "./NodeDialog";
 import EdgeDialog from "./EdgeDialog";
+import { FlowNodeData, EnergyFlowEdge } from "@/types/flowComponents";
 
 interface EnergyFlowVisualizationProps {
   site: Site;
@@ -18,6 +23,10 @@ const nodeTypes = {
   storage: StorageNode,
   consumer: ConsumerNode,
   grid: GridNode,
+  cell: CellNode,
+  string: StringNode,
+  inverter: InverterNode,
+  transformer: TransformerNode,
 };
 
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
@@ -38,121 +47,233 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
     setSelectedEdge(edge);
   };
 
+  // Generate nodes for the solar components
+  const generateSolarNodes = (): Node[] => {
+    const nodes: Node[] = [];
+    let yOffset = 50;
+
+    // Add cells
+    site.energySources
+      .filter(source => source.type === 'solar')
+      .forEach((source, sourceIndex) => {
+        // Add cells (3 per string)
+        for (let i = 0; i < 3; i++) {
+          nodes.push({
+            id: `cell-${source.id}-${i}`,
+            type: 'cell',
+            position: { x: 50 + (i * 100), y: yOffset },
+            data: {
+              type: 'cell',
+              label: `Cell ${i + 1}`,
+              specs: {
+                voltage: 0.6,
+                current: 8,
+              },
+              onNodeClick: handleNodeClick,
+            },
+          });
+        }
+
+        // Add string
+        nodes.push({
+          id: `string-${source.id}`,
+          type: 'string',
+          position: { x: 200, y: yOffset + 100 },
+          data: {
+            type: 'string',
+            label: `String ${sourceIndex + 1}`,
+            specs: {
+              voltage: 1.8,
+              current: 8,
+            },
+            onNodeClick: handleNodeClick,
+          },
+        });
+
+        yOffset += 200;
+      });
+
+    // Add inverter and transformer
+    nodes.push({
+      id: 'inverter-1',
+      type: 'inverter',
+      position: { x: 200, y: yOffset },
+      data: {
+        type: 'inverter',
+        label: 'Inverter',
+        specs: {
+          efficiency: 98,
+        },
+        onNodeClick: handleNodeClick,
+      },
+    });
+
+    nodes.push({
+      id: 'transformer-1',
+      type: 'transformer',
+      position: { x: 200, y: yOffset + 100 },
+      data: {
+        type: 'transformer',
+        label: 'Transformer',
+        specs: {
+          voltage: 400,
+        },
+        onNodeClick: handleNodeClick,
+      },
+    });
+
+    return nodes;
+  };
+
+  // Generate edges connecting the components
+  const generateEdges = (): Edge[] => {
+    const edges: Edge[] = [];
+    
+    // Connect cells to strings
+    site.energySources
+      .filter(source => source.type === 'solar')
+      .forEach((source) => {
+        for (let i = 0; i < 3; i++) {
+          edges.push({
+            id: `cell-${source.id}-${i}-to-string`,
+            source: `cell-${source.id}-${i}`,
+            target: `string-${source.id}`,
+            animated: true,
+            style: { stroke: '#f59e0b' },
+            data: {
+              energyFlow: 250,
+              efficiency: 98,
+              status: 'active' as const,
+              type: 'grid',
+            },
+          });
+        }
+
+        // Connect string to inverter
+        edges.push({
+          id: `string-${source.id}-to-inverter`,
+          source: `string-${source.id}`,
+          target: 'inverter-1',
+          animated: true,
+          style: { stroke: '#f59e0b' },
+          data: {
+            energyFlow: 750,
+            efficiency: 98,
+            status: 'active' as const,
+            type: 'grid',
+          },
+        });
+      });
+
+    // Connect inverter to transformer
+    edges.push({
+      id: 'inverter-to-transformer',
+      source: 'inverter-1',
+      target: 'transformer-1',
+      animated: true,
+      style: { stroke: '#8b5cf6' },
+      data: {
+        energyFlow: 735,
+        efficiency: 98,
+        status: 'active' as const,
+        type: 'grid',
+      },
+    });
+
+    // Connect transformer to storage and grid
+    edges.push({
+      id: 'transformer-to-storage',
+      source: 'transformer-1',
+      target: 'storage-1',
+      animated: true,
+      style: { stroke: '#3b82f6' },
+      data: {
+        energyFlow: 400,
+        efficiency: 95,
+        status: 'active' as const,
+        type: 'storage',
+      },
+    });
+
+    edges.push({
+      id: 'transformer-to-grid',
+      source: 'transformer-1',
+      target: 'grid',
+      animated: true,
+      style: { stroke: '#10b981' },
+      data: {
+        energyFlow: 335,
+        efficiency: 95,
+        status: 'active' as const,
+        type: 'grid',
+      },
+    });
+
+    return edges;
+  };
+
   const nodes: Node[] = [
-    // Solar and Wind nodes
-    ...site.energySources.map((source, index) => ({
-      id: `source-${source.id}`,
-      type: "source",
-      position: { x: 50, y: 50 + (index * 120) },
-      data: {
-        type: source.type,
-        output: source.currentOutput,
-        capacity: source.capacity,
-        onNodeClick: handleNodeClick,
-      },
-    })),
-
-    // Multiple Storage nodes
-    ...[1, 2, 3].map((_, index) => ({
-      id: `storage-${index + 1}`,
+    ...generateSolarNodes(),
+    {
+      id: "storage-1",
       type: "storage",
-      position: { x: 300, y: 50 + (index * 120) },
+      position: { x: 400, y: 200 },
       data: {
-        id: `${index + 1}`,
-        charge: 750,
-        capacity: 1000,
+        type: "storage",
+        label: "Storage Unit",
         onNodeClick: handleNodeClick,
       },
-    })),
-
-    // Grid and Consumer nodes at the same level
+    },
     {
       id: "grid",
       type: "grid",
-      position: { x: 550, y: 200 },
+      position: { x: 600, y: 200 },
       data: {
-        delivery: 300,
+        type: "grid",
+        label: "Power Grid",
         onNodeClick: handleNodeClick,
       },
     },
     {
-      id: "residential",
+      id: "consumer",
       type: "consumer",
-      position: { x: 550, y: 50 },
+      position: { x: 600, y: 350 },
       data: {
-        type: "residential",
-        consumption: 200,
-        onNodeClick: handleNodeClick,
-      },
-    },
-    {
-      id: "industrial",
-      type: "consumer",
-      position: { x: 550, y: 350 },
-      data: {
-        type: "industrial",
-        consumption: 450,
+        type: "consumer",
+        label: "Consumer",
         onNodeClick: handleNodeClick,
       },
     },
   ];
 
   const edges: Edge[] = [
-    // Connect sources to all storage units
-    ...site.energySources.flatMap(source =>
-      [1, 2, 3].map((storageIndex) => ({
-        id: `${source.id}-to-storage-${storageIndex}`,
-        source: `source-${source.id}`,
-        target: `storage-${storageIndex}`,
-        animated: true,
-        style: { stroke: source.type === "solar" ? "#f59e0b" : "#3b82f6", cursor: 'pointer' },
-        data: {
-          energyFlow: 250,
-          efficiency: 98,
-          status: 'active' as const,
-        },
-      }))
-    ),
-
-    // Connect storage units to grid and consumers
-    ...[1, 2, 3].flatMap(storageIndex => [
-      {
-        id: `storage-${storageIndex}-to-grid`,
-        source: `storage-${storageIndex}`,
-        target: "grid",
-        animated: true,
-        style: { stroke: "#8b5cf6", cursor: 'pointer' },
-        data: {
-          energyFlow: 180,
-          efficiency: 95,
-          status: 'active' as const,
-        },
+    ...generateEdges(),
+    {
+      id: "storage-to-grid",
+      source: "storage-1",
+      target: "grid",
+      animated: true,
+      style: { stroke: "#3b82f6" },
+      data: {
+        energyFlow: 200,
+        efficiency: 95,
+        status: "active" as const,
+        type: "grid",
       },
-      {
-        id: `storage-${storageIndex}-to-residential`,
-        source: `storage-${storageIndex}`,
-        target: "residential",
-        animated: true,
-        style: { stroke: "#8b5cf6", cursor: 'pointer' },
-        data: {
-          energyFlow: 120,
-          efficiency: 97,
-          status: 'active' as const,
-        },
+    },
+    {
+      id: "storage-to-consumer",
+      source: "storage-1",
+      target: "consumer",
+      animated: true,
+      style: { stroke: "#10b981" },
+      data: {
+        energyFlow: 150,
+        efficiency: 95,
+        status: "active" as const,
+        type: "consumption",
       },
-      {
-        id: `storage-${storageIndex}-to-industrial`,
-        source: `storage-${storageIndex}`,
-        target: "industrial",
-        animated: true,
-        style: { stroke: "#8b5cf6", cursor: 'pointer' },
-        data: {
-          energyFlow: 150,
-          efficiency: 96,
-          status: 'active' as const,
-        },
-      },
-    ]),
+    },
   ];
 
   return (
