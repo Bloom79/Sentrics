@@ -27,7 +27,7 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
 
   const handleSiteClick = (siteId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/sites/${siteId}`);
+    navigate(`/site/${siteId}`);
   };
 
   return (
@@ -54,10 +54,9 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
           </SidebarMenuItem>
           
           {expandedSites.includes(site.id) && (
-            <div className="ml-3 border-l border-border pl-3 animate-in slide-in-from-left-2 duration-200">
-              {/* Plants Section */}
+            <div className="ml-3 border-l border-border/50 pl-3 animate-in slide-in-from-left-2 duration-200">
               <div className="py-2">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 mb-2 block">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-2 block">
                   Plants
                 </span>
                 <div className="space-y-1">
@@ -77,9 +76,8 @@ export const SitesList: React.FC<SitesListProps> = ({ expandedSites, toggleSite 
                 </div>
               </div>
               
-              {/* Consumers Section */}
               <div className="py-2">
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-2 mb-2 block">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-2 block">
                   Consumers
                 </span>
                 <div className="space-y-1">

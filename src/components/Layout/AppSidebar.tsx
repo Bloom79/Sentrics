@@ -43,7 +43,6 @@ export function AppSidebar() {
       return;
     }
 
-    // Get current entity type from URL
     const urlParts = location.pathname.split('/');
     if (urlParts.includes('plants')) {
       const plantId = urlParts[urlParts.indexOf('plants') + 1];
@@ -55,20 +54,21 @@ export function AppSidebar() {
       const consumerId = urlParts[urlParts.indexOf('consumers') + 1];
       navigate(paths.consumer.replace(':consumerId', consumerId));
     } else {
-      // Default to site view if no specific context
-      navigate(paths.site.replace(':siteId', '1')); // Navigate to first site by default
+      navigate(paths.site.replace(':siteId', '1'));
     }
   };
 
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
-        <h2 className="text-lg font-semibold">SentricS</h2>
+        <h2 className="text-xl font-bold">SentricS</h2>
       </SidebarHeader>
       <SidebarContent>
         {navigationGroups.map((group) => (
-          <SidebarGroup key={group.label}>
-            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+          <SidebarGroup key={group.label} className="mb-4">
+            <SidebarGroupLabel className="px-3 py-2 text-base font-semibold tracking-wide text-primary">
+              {group.label}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {group.items.map((item) => (
@@ -77,25 +77,25 @@ export function AppSidebar() {
                       {item.isExpandable ? (
                         <SidebarMenuButton
                           onClick={() => toggleExpand(item.title)}
-                          className="group"
+                          className="group w-full px-3 py-2 hover:bg-accent/50 transition-colors duration-200 flex items-center"
                         >
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.title}</span>
+                          <item.icon className="h-4 w-4 mr-2" />
+                          <span className="flex-1 text-sm">{item.title}</span>
                           {expandedItems.includes(item.title) ? (
-                            <ChevronRight className="ml-auto h-4 w-4 rotate-90" />
+                            <ChevronRight className="h-4 w-4 rotate-90 transition-transform duration-200" />
                           ) : (
-                            <ChevronRight className="ml-auto h-4 w-4" />
+                            <ChevronRight className="h-4 w-4 transition-transform duration-200" />
                           )}
                         </SidebarMenuButton>
                       ) : (
                         <SidebarMenuButton
                           onClick={() => handleNavigate(item.paths || item.path)}
                           data-active={location.pathname === item.path}
-                          className="group"
+                          className="group w-full px-3 py-2 hover:bg-accent/50 transition-colors duration-200 flex items-center"
                         >
-                          <item.icon className="h-4 w-4" />
-                          <span>{item.title}</span>
-                          <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100" />
+                          <item.icon className="h-4 w-4 mr-2" />
+                          <span className="flex-1 text-sm">{item.title}</span>
+                          <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </SidebarMenuButton>
                       )}
                     </SidebarMenuItem>
