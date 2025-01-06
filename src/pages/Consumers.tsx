@@ -1,8 +1,9 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
 import ConsumerOverview from "@/components/Consumers/ConsumerOverview";
 import ConsumerManagement from "@/components/Consumers/ConsumerManagement";
+import { ConsumerContractsList } from "@/components/Financials/Contracts/ConsumerContractsList";
+import ConsumerAnalytics from "@/components/Consumers/ConsumerAnalytics";
 
 const Consumers = () => {
   return (
@@ -15,9 +16,11 @@ const Consumers = () => {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="management">Management</TabsTrigger>
+          <TabsTrigger value="management">All Consumers</TabsTrigger>
+          <TabsTrigger value="contracts">Contracts</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="space-y-4">
@@ -26,6 +29,14 @@ const Consumers = () => {
         
         <TabsContent value="management" className="space-y-4">
           <ConsumerManagement />
+        </TabsContent>
+
+        <TabsContent value="contracts" className="space-y-4">
+          <ConsumerContractsList />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <ConsumerAnalytics />
         </TabsContent>
       </Tabs>
     </div>

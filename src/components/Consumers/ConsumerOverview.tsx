@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Building2, Factory } from "lucide-react";
+import { Users, Building2, Factory, Power, TrendingUp, AlertTriangle } from "lucide-react";
 
 const ConsumerOverview = () => {
   const consumerStats = [
@@ -25,6 +25,27 @@ const ConsumerOverview = () => {
       change: "+8%",
       description: "Commercial consumers",
     },
+    {
+      title: "Current Demand",
+      value: "1.2 GW",
+      icon: Power,
+      change: "+15%",
+      description: "Total power demand",
+    },
+    {
+      title: "Monthly Usage",
+      value: "28.5 GWh",
+      icon: TrendingUp,
+      change: "+6%",
+      description: "Total energy consumption",
+    },
+    {
+      title: "Alerts",
+      value: "3",
+      icon: AlertTriangle,
+      change: "-2",
+      description: "Active consumer alerts",
+    },
   ];
 
   return (
@@ -42,7 +63,9 @@ const ConsumerOverview = () => {
             <p className="text-xs text-muted-foreground">
               {stat.description}
             </p>
-            <div className="text-sm text-green-600">
+            <div className={`text-sm ${
+              stat.change.startsWith('+') ? 'text-green-600' : 'text-red-600'
+            }`}>
               {stat.change} from last month
             </div>
           </CardContent>
