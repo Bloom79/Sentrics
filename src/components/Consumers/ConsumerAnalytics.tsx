@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { addDays } from "date-fns";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ConsumerAnalytics = () => {
   const [date, setDate] = React.useState<{ from: Date; to: Date }>({
@@ -10,7 +11,9 @@ const ConsumerAnalytics = () => {
     to: addDays(new Date(), 7),
   });
 
-  // Mock data for the chart
+  const [granularity, setGranularity] = React.useState("daily");
+
+  // Mock data for the chart - in a real app, this would come from the API
   const data = [
     { name: 'Mon', industrial: 4000, commercial: 2400, residential: 1000 },
     { name: 'Tue', industrial: 3000, commercial: 1398, residential: 900 },
@@ -27,17 +30,30 @@ const ConsumerAnalytics = () => {
         <h2 className="text-2xl font-semibold tracking-tight">
           Consumption Analytics
         </h2>
-        <DatePickerWithRange 
-          date={date} 
-          setDate={(newDate) => {
-            if (newDate?.from) {
-              setDate({ 
-                from: newDate.from, 
-                to: newDate.to || addDays(newDate.from, 7) 
-              });
-            }
-          }} 
-        />
+        <div className="flex items-center gap-4">
+          <Select value={granularity} onValueChange={setGranularity}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select granularity" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="hourly">Hourly</SelectItem>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="monthly">Monthly</SelectItem>
+            </SelectContent>
+          </Select>
+          <DatePickerWithRange 
+            date={date} 
+            setDate={(newDate) => {
+              if (newDate?.from) {
+                setDate({ 
+                  from: newDate.from, 
+                  to: newDate.to || addDays(newDate.from, 7) 
+                });
+              }
+            }} 
+          />
+        </div>
       </div>
 
       <Card>
