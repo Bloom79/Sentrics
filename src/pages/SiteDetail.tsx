@@ -3,16 +3,14 @@ import { useParams } from "react-router-dom";
 import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
-import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
+import StorageOverview from "@/components/SiteAnalysis/StorageOverview";
 import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
 import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
 import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
-import ChargingStatus from "@/components/SiteAnalysis/ChargingStatus";
 import HistoricalPerformance from "@/components/SiteAnalysis/HistoricalPerformance";
 import EfficiencyMetrics from "@/components/SiteAnalysis/EfficiencyMetrics";
 import { Site } from "@/types/site";
 
-// Mock data for demonstration - replace with actual API call later
 const mockSite: Site = {
   id: "1",
   name: "Milano Nord",
@@ -143,10 +141,7 @@ const SiteDetail = () => {
         {/* Left Column */}
         <div className="xl:col-span-2 space-y-6">
           <SiteProductionGraph siteId={site.id} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ChargingStatus siteId={site.id} />
-            <StorageStatus siteId={site.id} />
-          </div>
+          <StorageOverview siteId={site.id} />
         </div>
 
         {/* Right Column */}
