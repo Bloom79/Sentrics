@@ -79,6 +79,12 @@
   .animate-flow-right {
     animation: flowRight 2s linear infinite;
     background-size: 200% 100%;
+    background-image: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--tw-gradient-from) 50%,
+      transparent 100%
+    );
   }
   
   @keyframes flowRight {

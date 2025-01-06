@@ -1,5 +1,5 @@
 import React from "react";
-import { Battery, Sun, Wind, Factory, Grid } from "lucide-react";
+import { Battery, Sun, Wind } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -96,38 +96,41 @@ const EnergyFlow = () => {
         {/* Energy Distribution */}
         <div className="space-y-4">
           <h3 className="font-medium mb-4">Power Distribution</h3>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <Factory className="w-4 h-4" />
-                  <span>Direct Consumption</span>
-                </div>
+                <span>Direct Consumption</span>
                 <span>{Math.round(energyData.distribution.directConsumption / totalProduction * 100)}%</span>
               </div>
-              <Progress value={energyData.distribution.directConsumption / totalProduction * 100} className="h-2" />
+              <Progress 
+                value={energyData.distribution.directConsumption / totalProduction * 100} 
+                className="h-3 bg-muted/30"
+                indicatorClassName="bg-green-500 animate-flow-right"
+              />
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <Grid className="w-4 h-4" />
-                  <span>Grid Export</span>
-                </div>
+                <span>Grid Export</span>
                 <span>{Math.round(energyData.distribution.gridDelivery / totalProduction * 100)}%</span>
               </div>
-              <Progress value={energyData.distribution.gridDelivery / totalProduction * 100} className="h-2" />
+              <Progress 
+                value={energyData.distribution.gridDelivery / totalProduction * 100} 
+                className="h-3 bg-muted/30"
+                indicatorClassName="bg-blue-500 animate-flow-right"
+              />
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <Battery className="w-4 h-4" />
-                  <span>Storage Charging</span>
-                </div>
+                <span>Storage Charging</span>
                 <span>{Math.round(energyData.distribution.storageCharging / totalProduction * 100)}%</span>
               </div>
-              <Progress value={energyData.distribution.storageCharging / totalProduction * 100} className="h-2" />
+              <Progress 
+                value={energyData.distribution.storageCharging / totalProduction * 100} 
+                className="h-3 bg-muted/30"
+                indicatorClassName="bg-yellow-500 animate-flow-right"
+              />
             </div>
           </div>
         </div>
