@@ -10,6 +10,7 @@ import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
 import HistoricalPerformance from "@/components/SiteAnalysis/HistoricalPerformance";
 import EfficiencyMetrics from "@/components/SiteAnalysis/EfficiencyMetrics";
 import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
+import EnergyEfficiencyDisplay from "@/components/SiteAnalysis/EnergyEfficiencyDisplay";
 import { Site } from "@/types/site";
 
 const mockSite: Site = {
@@ -148,6 +149,7 @@ const SiteDetail = () => {
         <div className="xl:col-span-2 space-y-6">
           <SiteProductionGraph siteId={site.id} />
           <StorageOverview siteId={site.id} />
+          <EnergyEfficiencyDisplay siteId={site.id} />
         </div>
 
         {/* Right Column */}
