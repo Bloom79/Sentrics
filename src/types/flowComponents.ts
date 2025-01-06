@@ -1,8 +1,8 @@
-import { Site } from "./site";
-
-export type FlowNodeType = 'cell' | 'string' | 'array' | 'inverter' | 'transformer' | 'storage' | 'grid' | 'consumer';
+export type FlowNodeType = 'source' | 'storage' | 'grid' | 'consumer' | 'inverter' | 'transformer' | 'bess';
 
 export type ConsumerType = 'residential' | 'industrial' | 'commercial';
+
+export type NodeStatus = 'active' | 'inactive' | 'maintenance';
 
 export type FlowNodeData = {
   id: string;
@@ -16,8 +16,9 @@ export type FlowNodeData = {
     power?: number;
     charge?: number;
   };
+  status?: NodeStatus;
   consumption?: number;
-  status?: 'active' | 'inactive' | 'maintenance';
+  output?: number;
   onNodeClick: (id: string, type: string) => void;
 };
 

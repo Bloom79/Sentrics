@@ -1,13 +1,15 @@
 import React, { DragEvent } from 'react';
-import { Sun, Wind, Battery, Factory, Grid } from 'lucide-react';
+import { Sun, Wind, Battery, Factory, Grid, Zap, Cable } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const paletteItems = [
   { type: 'source', label: 'Solar Array', icon: Sun },
   { type: 'source', label: 'Wind Farm', icon: Wind },
-  { type: 'storage', label: 'Storage', icon: Battery },
+  { type: 'bess', label: 'Battery Storage', icon: Battery },
   { type: 'consumer', label: 'Consumer', icon: Factory },
   { type: 'grid', label: 'Grid', icon: Grid },
+  { type: 'inverter', label: 'Inverter', icon: Zap },
+  { type: 'transformer', label: 'Transformer', icon: Cable },
 ];
 
 interface NodePaletteProps {
