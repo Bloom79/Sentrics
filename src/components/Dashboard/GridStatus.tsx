@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Site } from "@/types/site";
 import { GridConnectionInfo } from "./DetailedMetrics/GridConnectionInfo";
+import { Zap } from "lucide-react";
 
 const mockSites: Site[] = [
   {
@@ -41,6 +42,9 @@ const mockSites: Site[] = [
   {
     id: "2",
     name: "South Site",
+    location: "Southern Region",
+    type: "solar",
+    capacity: 600,
     status: "online",
     lastUpdate: "2024-02-20T11:25:00",
     dailyProduction: 2100,
@@ -53,6 +57,7 @@ const mockSites: Site[] = [
       { type: "wind", output: 200, capacity: 250, currentOutput: 200, status: "online" }
     ],
     storage: { capacity: 4000, currentCharge: 2800 },
+    storageUnits: [],
     gridConnection: { status: "connected", frequency: 49.98, voltage: 229.8, congestion: "Medium" }
   }
 ];

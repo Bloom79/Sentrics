@@ -4,7 +4,7 @@ import { Site } from "@/types/site";
 import { GridConnectionInfo } from "./DetailedMetrics/GridConnectionInfo";
 import { StorageInfo } from "./DetailedMetrics/StorageInfo";
 import { EnergySourceInfo } from "./DetailedMetrics/EnergySourceInfo";
-import SiteRow from "./DetailedMetrics/SiteRow";
+import { SiteRow } from "./DetailedMetrics/SiteRow";
 
 const mockSites: Site[] = [
   {
@@ -132,9 +132,11 @@ const DetailedMetrics = () => {
             <SiteRow site={site} />
             <GridConnectionInfo connection={site.gridConnection} />
             <StorageInfo storage={site.storage} />
-            {site.energySources.map((source, index) => (
-              <EnergySourceInfo key={index} source={source} />
-            ))}
+            <div className="space-y-4">
+              {site.energySources.map((source, index) => (
+                <EnergySourceInfo key={index} sources={[source]} />
+              ))}
+            </div>
           </CardContent>
         </Card>
       ))}

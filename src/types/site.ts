@@ -59,6 +59,9 @@ export interface StorageUnit {
   capacity: number;
   currentCharge: number;
   status: "charging" | "discharging" | "idle" | "offline";
+  health?: number;
+  temperature?: number;
+  powerRating?: number;
 }
 
 interface BaseAsset {
@@ -69,6 +72,7 @@ interface BaseAsset {
   installationDate: string;
   status: "operational" | "faulty" | "maintenance";
   location: string;
+  type: "solar" | "wind" | "hybrid";
 }
 
 export interface SolarPanel extends BaseAsset {
