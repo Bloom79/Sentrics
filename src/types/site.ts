@@ -2,7 +2,7 @@ export interface Site {
   id: string;
   name: string;
   location: string;
-  type: "solar" | "wind" | "hybrid";
+  type: "solar" | "wind";
   capacity: number;
   status: "online" | "offline" | "maintenance";
   lastUpdate: string;
