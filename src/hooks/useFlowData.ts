@@ -12,7 +12,7 @@ export const useFlowData = (timeRange: string, isPaused: boolean, edges: Edge[])
 
   const generateFlowData = useCallback((edgeId: string): EnergyFlow => {
     const now = new Date();
-    const currentValue = Math.random() * 1000;
+    const currentValue = Math.round(Math.random() * 1000 * 10) / 10; // Round to 1 decimal
     
     if (Math.random() < 0.1) {
       const newFaults = [...(faults[edgeId] || [])];
@@ -44,18 +44,18 @@ export const useFlowData = (timeRange: string, isPaused: boolean, edges: Edge[])
 
     return {
       currentValue,
-      maxValue: currentValue * 1.2,
-      minValue: currentValue * 0.8,
-      avgValue: currentValue,
+      maxValue: Math.round(currentValue * 1.2 * 10) / 10,
+      minValue: Math.round(currentValue * 0.8 * 10) / 10,
+      avgValue: Math.round(currentValue * 10) / 10,
       timestamp: now,
     };
   }, [faults, toast]);
 
   const generateEfficiencyMetrics = useCallback((edgeId: string) => {
-    const baseEfficiency = 85 + Math.random() * 10;
-    const transmissionLoss = Math.random() * 2;
-    const conversionLoss = Math.random() * 3;
-    const resistiveLoss = Math.random() * 1.5;
+    const baseEfficiency = Math.round((85 + Math.random() * 10) * 10) / 10;
+    const transmissionLoss = Math.round(Math.random() * 2 * 10) / 10;
+    const conversionLoss = Math.round(Math.random() * 3 * 10) / 10;
+    const resistiveLoss = Math.round(Math.random() * 1.5 * 10) / 10;
 
     return {
       efficiency: baseEfficiency,
