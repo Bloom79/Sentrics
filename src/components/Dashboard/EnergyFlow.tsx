@@ -38,17 +38,17 @@ const EnergyFlow = () => {
 
   return (
     <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <h2 className="text-xl font-semibold">Energy Flow & Storage</h2>
         <div className="text-sm text-muted-foreground">
           System Efficiency: {energyData.systemEfficiency}%
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Energy Sources & Storage */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between gap-4">
+        <div className="space-y-8">
+          <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-yellow-500/10 rounded-full">
                 <Sun className="w-6 h-6 text-yellow-500" />
@@ -79,12 +79,12 @@ const EnergyFlow = () => {
                 <Battery className="w-6 h-6 text-green-500" />
               </div>
               <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">Storage Level</span>
                   <span>{energyData.storage.level}%</span>
                 </div>
                 <Progress value={energyData.storage.level} className="h-2" />
-                <div className="flex justify-between mt-1 text-sm text-muted-foreground">
+                <div className="flex justify-between mt-2 text-sm text-muted-foreground">
                   <span>Charging: {energyData.storage.chargingRate} kW</span>
                   <span>{energyData.storage.temperature}°C</span>
                 </div>
@@ -95,10 +95,10 @@ const EnergyFlow = () => {
 
         {/* Energy Distribution */}
         <div className="space-y-4">
-          <h3 className="font-medium mb-6">Power Distribution</h3>
-          <div className="space-y-8">
+          <h3 className="font-medium text-lg mb-8">Power Distribution</h3>
+          <div className="space-y-10">
             <div>
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-sm mb-3">
                 <span className="font-medium">Direct Consumption</span>
                 <span className="text-muted-foreground">{Math.round(energyData.distribution.directConsumption / totalProduction * 100)}%</span>
               </div>
@@ -110,7 +110,7 @@ const EnergyFlow = () => {
             </div>
 
             <div>
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-sm mb-3">
                 <span className="font-medium">Grid Export</span>
                 <span className="text-muted-foreground">{Math.round(energyData.distribution.gridDelivery / totalProduction * 100)}%</span>
               </div>
@@ -122,7 +122,7 @@ const EnergyFlow = () => {
             </div>
 
             <div>
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-sm mb-3">
                 <span className="font-medium">Storage Charging</span>
                 <span className="text-muted-foreground">{Math.round(energyData.distribution.storageCharging / totalProduction * 100)}%</span>
               </div>
