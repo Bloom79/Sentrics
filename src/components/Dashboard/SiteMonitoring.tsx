@@ -66,22 +66,22 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.currentOutput')}</p>
+                    <p className="text-sm text-muted-foreground">Current Output</p>
                     <p className="font-medium">{site.currentOutput}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.efficiency')}</p>
+                    <p className="text-sm text-muted-foreground">Efficiency</p>
                     <p className="font-medium">{site.efficiency}</p>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.dailyProduction')}</p>
+                    <p className="text-sm text-muted-foreground">Daily Production</p>
                     <p className="font-medium">{site.dailyProduction}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.uptime')}</p>
+                    <p className="text-sm text-muted-foreground">Uptime</p>
                     <p className="font-medium">{site.uptime}</p>
                   </div>
                 </div>
