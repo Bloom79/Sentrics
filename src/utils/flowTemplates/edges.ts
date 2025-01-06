@@ -28,7 +28,7 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
-  // Transformer to BESS units
+  // Transformer to BESS 1
   {
     id: 'transformer-to-bess1',
     source: 'transformer-1',
@@ -37,15 +37,7 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
-  {
-    id: 'transformer-to-bess2',
-    source: 'transformer-1',
-    target: 'bess-2',
-    animated: true,
-    style: { stroke: '#22c55e' },
-    markerEnd: { type: MarkerType.ArrowClosed },
-  },
-  // BESS units to Consumers
+  // BESS 1 to Residential
   {
     id: 'bess1-to-residential',
     source: 'bess-1',
@@ -54,6 +46,7 @@ export const getInitialEdges = (): Edge[] => [
     style: { stroke: '#22c55e' },
     markerEnd: { type: MarkerType.ArrowClosed },
   },
+  // BESS 2 to Industrial
   {
     id: 'bess2-to-industrial',
     source: 'bess-2',
