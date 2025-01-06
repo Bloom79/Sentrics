@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Building2,
   ChevronDown,
+  DollarSign,
 } from "lucide-react";
 import {
   Sidebar,
@@ -80,6 +81,11 @@ const navigationGroups = [
         title: "Energy Grid",
         path: "/grid-analysis",
         icon: Power,
+      },
+      {
+        title: "Earnings & Expenses",
+        path: "/financials",
+        icon: DollarSign,
       },
     ],
   },
