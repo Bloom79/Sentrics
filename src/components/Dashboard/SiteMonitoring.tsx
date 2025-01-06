@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Home, Sun, Wind, Battery, Activity, ArrowRight } from "lucide-react";
+import { Home, Sun, Wind, Activity, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -57,13 +57,9 @@ const SiteMonitoring: React.FC<SiteMonitoringProps> = ({ onSiteSelect }) => {
   const [selectedSites, setSelectedSites] = useState<string[]>([]);
 
   const handleSiteClick = (siteId: string) => {
-    let newSelectedSites: string[];
-    
-    if (selectedSites.includes(siteId)) {
-      newSelectedSites = selectedSites.filter(id => id !== siteId);
-    } else {
-      newSelectedSites = [...selectedSites, siteId];
-    }
+    const newSelectedSites = selectedSites.includes(siteId)
+      ? selectedSites.filter(id => id !== siteId)
+      : [...selectedSites, siteId];
     
     setSelectedSites(newSelectedSites);
     onSiteSelect(newSelectedSites.length > 0 ? newSelectedSites : null);

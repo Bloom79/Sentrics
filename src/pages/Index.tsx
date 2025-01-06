@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Activity, Battery, Zap, Sun, Wind } from "lucide-react";
 import { Link } from "react-router-dom";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
 
 const Index = () => {
   const { language, setLanguage, t } = useLanguage();
