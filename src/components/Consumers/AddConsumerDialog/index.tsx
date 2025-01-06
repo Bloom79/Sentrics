@@ -23,6 +23,8 @@ export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
+      console.log("Submitting consumer data:", data); // Debug log
+
       const { error } = await supabase
         .from('profiles')
         .insert({
@@ -39,11 +41,19 @@ export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
           phone: data.phone,
           vat_number: data.vat_number,
           notes: data.notes,
-          status: 'active'
+          status: 'active',
+          specs: {
+            peakDemand: 0,
+            dailyUsage: 0,
+            powerFactor: 0,
+            connectionType: 'low-voltage'
+          }
         });
 
       if (error) throw error;
 
+      console.log("Consumer created successfully"); // Debug log
+      
       toast({
         title: "Success",
         description: "Consumer has been created successfully.",

@@ -15,21 +15,31 @@ const ConsumerManagement = () => {
         .select('*')
         .in('type', ['residential', 'commercial', 'industrial']);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching consumers:", error);
+        throw error;
+      }
       
-      return data.map(consumer => ({
+      console.log("Fetched consumers:", data); // Debug log
+      
+      return data?.map(consumer => ({
         id: consumer.id,
         full_name: consumer.full_name,
-        type: consumer.type,
+        type: consumer.type as "residential" | "commercial" | "industrial",
         consumption: consumer.consumption || 0,
         status: consumer.status || 'active',
-        specs: consumer.specs || {
+        specs: consumer.specs ? {
+          peakDemand: consumer.specs.peakDemand || 0,
+          dailyUsage: consumer.specs.dailyUsage || 0,
+          powerFactor: consumer.specs.powerFactor || 0,
+          connectionType: consumer.specs.connectionType || 'low-voltage'
+        } : {
           peakDemand: 0,
           dailyUsage: 0,
           powerFactor: 0,
           connectionType: 'low-voltage'
         }
-      })) as Consumer[];
+      })) as Consumer[] || [];
     }
   });
 
@@ -39,7 +49,7 @@ const ConsumerManagement = () => {
         <h2 className="text-2xl font-semibold tracking-tight">
           Consumer Management
         </h2>
-        <AddConsumerDialog onSuccess={() => refetch()} />
+        <AddConsumerDialog onSuccess={refetch} />
       </div>
       
       <Card>
