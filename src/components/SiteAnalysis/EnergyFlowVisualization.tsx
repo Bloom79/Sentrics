@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { ReactFlow, Controls, Node, Edge, MarkerType } from "@xyflow/react";
+import { ReactFlow, Controls, Edge, MarkerType } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { Site } from "@/types/site";
 import SourceNode from "./FlowNodes/SourceNode";
@@ -33,36 +33,30 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   const [selectedNodes, setSelectedNodes] = useState<Array<{ id: string; type: string }>>([]);
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
 
-  const handleNodeClick = (nodeId: string, nodeType: string) => {
-    const existingNodeIndex = selectedNodes.findIndex(node => node.id === nodeId);
+  const handleNodeClick = useCallback((event: React.MouseEvent, node: any) => {
+    const nodeId = node.id;
+    const nodeType = node.type;
+    
+    const existingNodeIndex = selectedNodes.findIndex(n => n.id === nodeId);
     if (existingNodeIndex >= 0) {
       setSelectedNodes(prev => prev.filter((_, index) => index !== existingNodeIndex));
     } else {
       setSelectedNodes(prev => [...prev, { id: nodeId, type: nodeType }]);
     }
-  };
+  }, [selectedNodes]);
 
-  const handleEdgeClick = (_: React.MouseEvent, edge: Edge) => {
+  const handleEdgeClick = useCallback((_: React.MouseEvent, edge: Edge) => {
     setSelectedEdge(edge);
-  };
+  }, []);
 
   const { nodes, edges } = React.useMemo(() => {
     const layout = getInitialLayout(site.energySources.length);
     
-    // Add click handlers to nodes
-    const nodesWithHandlers = layout.nodes.map(node => ({
-      ...node,
-      data: {
-        ...node.data,
-        onNodeClick: handleNodeClick,
-      },
-    }));
-
     // Add animated edges between components
     const edgesWithAnimation = generateEdges(layout.nodes);
 
     return {
-      nodes: nodesWithHandlers,
+      nodes: layout.nodes,
       edges: edgesWithAnimation,
     };
   }, [site.energySources.length]);
@@ -77,6 +71,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable={true}
+        onNodeClick={handleNodeClick}
         onEdgeClick={handleEdgeClick}
         proOptions={{ hideAttribution: true }}
       >
@@ -115,7 +110,7 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
   );
 };
 
-const generateEdges = (nodes: Node[]): Edge[] => {
+const generateEdges = (nodes: any[]): Edge[] => {
   const edges: Edge[] = [];
   
   // Helper to find node by type
