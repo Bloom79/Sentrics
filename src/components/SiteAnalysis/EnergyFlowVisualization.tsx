@@ -12,6 +12,8 @@ import NodePalette from "./FlowComponents/NodePalette";
 import FlowControls from "./FlowComponents/FlowControls";
 import FlowCanvas from "./FlowComponents/FlowCanvas";
 import { getInitialNodes, getInitialEdges } from "@/utils/initialFlowTemplate";
+import { Button } from "@/components/ui/button";
+import { Pencil, Eye } from "lucide-react";
 
 interface EnergyFlowVisualizationProps {
   site: Site;
@@ -25,10 +27,13 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
   const [selectedNode, setSelectedNode] = useState<{ id: string; type: string } | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const { flowData, faults, efficiencyMetrics } = useFlowData(timeRange, isPaused, edges);
 
   const handleEdgeClick = useCallback((event: React.MouseEvent, edge: Edge) => {
+    if (!isEditMode) return;
+    
     event.stopPropagation();
     const currentFlow = flowData[edge.id]?.[flowData[edge.id].length - 1]?.currentValue || 0;
     const metrics = efficiencyMetrics[edge.id] || {
@@ -47,12 +52,13 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
       }
     });
     setSelectedNode(null);
-  }, [faults, flowData, efficiencyMetrics]);
+  }, [faults, flowData, efficiencyMetrics, isEditMode]);
 
   const handleNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+    if (!isEditMode) return;
     setSelectedNode({ id: node.id, type: node.type });
     setSelectedEdge(null);
-  }, []);
+  }, [isEditMode]);
 
   const handleTimeRangeChange = (newRange: TimeRange) => {
     setTimeRange(newRange);
@@ -70,17 +76,43 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
     setZoomLevel(1);
   };
 
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+    setSelectedEdge(null);
+    setSelectedNode(null);
+  };
+
   return (
     <div className="relative h-[600px] bg-background/50 rounded-lg p-6 border">
-      <div className="absolute top-4 left-4 z-10">
+      <div className="absolute top-4 left-4 z-10 flex items-center gap-4">
         <TimeRangeSelector value={timeRange} onChange={handleTimeRangeChange} />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={toggleEditMode}
+          className="flex items-center gap-2"
+        >
+          {isEditMode ? (
+            <>
+              <Eye className="h-4 w-4" />
+              View Mode
+            </>
+          ) : (
+            <>
+              <Pencil className="h-4 w-4" />
+              Edit Mode
+            </>
+          )}
+        </Button>
       </div>
 
-      <NodePalette onDragStart={(event, nodeType, sourceType) => {
-        event.dataTransfer.setData('application/reactflow', nodeType);
-        event.dataTransfer.setData('sourceType', sourceType || '');
-        event.dataTransfer.effectAllowed = 'move';
-      }} />
+      {isEditMode && (
+        <NodePalette onDragStart={(event, nodeType, sourceType) => {
+          event.dataTransfer.setData('application/reactflow', nodeType);
+          event.dataTransfer.setData('sourceType', sourceType || '');
+          event.dataTransfer.effectAllowed = 'move';
+        }} />
+      )}
       
       <FlowCanvas
         nodes={nodes}
@@ -92,6 +124,7 @@ const Flow: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
         efficiencyMetrics={efficiencyMetrics}
         onEdgeClick={handleEdgeClick}
         onNodeClick={handleNodeClick}
+        isEditMode={isEditMode}
       />
 
       <FlowControls

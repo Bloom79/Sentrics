@@ -21,7 +21,7 @@ const SourceNode: React.FC<SourceNodeProps> = ({ data }) => {
         <Icon className={`w-8 h-8 ${iconColor}`} />
         <span className="text-sm font-medium">{data.label}</span>
         <span className="text-xs text-muted-foreground">
-          {data.specs?.output || 0} kW / {data.specs?.capacity || 0} kW
+          {data.specs?.power || 0} kW / {data.specs?.capacity || 0} kW
         </span>
       </div>
     </div>

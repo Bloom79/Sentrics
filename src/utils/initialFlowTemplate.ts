@@ -12,7 +12,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       label: 'Solar Array',
       specs: {
         capacity: 500,
-        output: 350,
+        power: 350,
         efficiency: 98,
       },
       status: 'active',
@@ -29,7 +29,7 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       label: 'Wind Farm',
       specs: {
         capacity: 300,
-        output: 250,
+        power: 250,
         efficiency: 95,
       },
       status: 'active',

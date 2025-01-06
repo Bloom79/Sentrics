@@ -23,6 +23,7 @@ interface FlowCanvasProps {
   efficiencyMetrics: any;
   onEdgeClick: (event: React.MouseEvent, edge: Edge) => void;
   onNodeClick: (event: React.MouseEvent, node: Node) => void;
+  isEditMode: boolean;
 }
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
@@ -35,6 +36,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   efficiencyMetrics,
   onEdgeClick,
   onNodeClick,
+  isEditMode,
 }) => {
   const reactFlowInstance = useReactFlow();
 
@@ -45,6 +47,8 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
   const onDrop = useCallback(
     (event: DragEvent) => {
+      if (!isEditMode) return;
+      
       event.preventDefault();
 
       const type = event.dataTransfer.getData('application/reactflow');
@@ -76,14 +80,15 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, nodes, setNodes, onNodeClick]
+    [reactFlowInstance, nodes, setNodes, onNodeClick, isEditMode]
   );
 
   const onConnect = useCallback(
     (params: Connection) => {
+      if (!isEditMode) return;
       setEdges((eds) => eds.concat({ ...params, id: `edge_${eds.length}` }));
     },
-    [setEdges]
+    [setEdges, isEditMode]
   );
 
   const enhancedEdges = getEdgeOptions({ flowData, faults, efficiencyMetrics, edges });
@@ -93,15 +98,15 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       nodes={nodes}
       edges={enhancedEdges}
       nodeTypes={nodeTypes}
-      onNodesChange={(changes) => setNodes((nds) => applyNodeChanges(changes, nds))}
-      onEdgesChange={(changes) => setEdges((eds) => applyEdgeChanges(changes, eds))}
+      onNodesChange={(changes) => isEditMode && setNodes((nds) => applyNodeChanges(changes, nds))}
+      onEdgesChange={(changes) => isEditMode && setEdges((eds) => applyEdgeChanges(changes, eds))}
       onConnect={onConnect}
       onDrop={onDrop}
       onDragOver={onDragOver}
       fitView
-      nodesDraggable={true}
-      nodesConnectable={true}
-      elementsSelectable={true}
+      nodesDraggable={isEditMode}
+      nodesConnectable={isEditMode}
+      elementsSelectable={isEditMode}
       onEdgeClick={onEdgeClick}
       onNodeClick={onNodeClick}
       proOptions={{ hideAttribution: true }}
