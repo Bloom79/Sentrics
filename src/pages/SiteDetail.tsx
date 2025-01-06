@@ -1,12 +1,15 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
+import { Battery, Cloud, Wind, Zap, Share2, LineChart, Gauge } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
 import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
 import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
 import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
+import ChargingStatus from "@/components/SiteAnalysis/ChargingStatus";
+import HistoricalPerformance from "@/components/SiteAnalysis/HistoricalPerformance";
+import EfficiencyMetrics from "@/components/SiteAnalysis/EfficiencyMetrics";
 import { Site } from "@/types/site";
 
 // Mock data for demonstration - replace with actual API call later
@@ -135,20 +138,27 @@ const SiteDetail = () => {
         </Card>
       </div>
 
-      {/* Production Graph and Storage Status */}
+      {/* Real-time Status and Historical Data */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <ChargingStatus siteId={site.id} />
+        <HistoricalPerformance siteId={site.id} />
+      </div>
+
+      {/* Production Graph and Efficiency Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SiteProductionGraph siteId={site.id} />
+        <EfficiencyMetrics siteId={site.id} />
+      </div>
+
+      {/* Equipment Status and Storage Status */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <EquipmentStatus siteId={site.id} />
         <StorageStatus siteId={site.id} />
       </div>
 
-      {/* Equipment Status and Maintenance Schedule */}
+      {/* Maintenance and Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <EquipmentStatus siteId={site.id} />
         <MaintenanceSchedule siteId={site.id} />
-      </div>
-
-      {/* Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SiteAlerts siteId={site.id} />
       </div>
     </div>
