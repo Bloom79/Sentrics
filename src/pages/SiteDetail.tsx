@@ -1,13 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Wind, Settings, Activity, Battery, Zap } from "lucide-react";
+import { Wind, Activity, Battery, Zap } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "@/components/PlantDetail/Overview";
 import { Performance } from "@/components/PlantDetail/Performance";
 import { Assets } from "@/components/PlantDetail/Assets";
 import { PlantSettings } from "@/components/PlantDetail/PlantSettings";
 import { mockPlants } from "@/data/mockData";
+import { Plant } from "@/types/site";
 
 const SiteDetail = () => {
   const { id } = useParams();
@@ -16,6 +17,11 @@ const SiteDetail = () => {
   if (!plant) {
     return <div>Plant not found</div>;
   }
+
+  const handleUpdatePlant = (updatedPlant: Partial<Plant>) => {
+    console.log("Updating plant:", updatedPlant);
+    // Here you would typically update the plant data
+  };
 
   return (
     <div className="container mx-auto py-6">
@@ -75,7 +81,7 @@ const SiteDetail = () => {
           <Assets plant={plant} />
         </TabsContent>
         <TabsContent value="settings">
-          <PlantSettings plant={plant} />
+          <PlantSettings plant={plant} onUpdate={handleUpdatePlant} />
         </TabsContent>
       </Tabs>
     </div>

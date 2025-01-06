@@ -72,7 +72,7 @@ interface BaseAsset {
   installationDate: string;
   status: "operational" | "faulty" | "maintenance";
   location: string;
-  type: "solar" | "wind" | "hybrid";
+  type: "panel" | "inverter" | "turbine" | "transformer" | "battery";
 }
 
 export interface SolarPanel extends BaseAsset {
