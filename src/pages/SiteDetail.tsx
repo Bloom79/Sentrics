@@ -1,18 +1,15 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Info, Plant, Users, Battery, Zap, Share2 } from "lucide-react";
 import SiteHeader from "@/components/SiteDetail/SiteHeader";
 import PlantsList from "@/components/SiteDetail/PlantsList";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisualization";
-import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageOverview from "@/components/SiteAnalysis/StorageOverview";
-import EnergyEfficiencyDisplay from "@/components/SiteAnalysis/EnergyEfficiencyDisplay";
-import SiteAlerts from "@/components/SiteAnalysis/SiteAlerts";
-import EfficiencyMetrics from "@/components/SiteAnalysis/EfficiencyMetrics";
-import HistoricalPerformance from "@/components/SiteAnalysis/HistoricalPerformance";
-import MaintenanceSchedule from "@/components/SiteAnalysis/MaintenanceSchedule";
-import EquipmentStatus from "@/components/SiteAnalysis/EquipmentStatus";
 import { Site } from "@/types/site";
+import { Card, CardContent } from "@/components/ui/card";
+import { GridConnectionInfo } from "@/components/Dashboard/DetailedMetrics/GridConnectionInfo";
 
 // Mock data for development
 const mockSite: Site = {
@@ -95,37 +92,94 @@ const SiteDetail = () => {
     <div className="container mx-auto p-4 space-y-6">
       <SiteHeader site={site} />
       
-      {/* Energy Flow Visualization */}
-      <div className="mb-6">
-        <EnergyFlowVisualization site={site} />
-      </div>
+      <Tabs defaultValue="basic-info" className="space-y-4">
+        <TabsList className="grid grid-cols-6 w-full">
+          <TabsTrigger value="basic-info" className="flex items-center gap-2">
+            <Info className="h-4 w-4" />
+            Basic Info
+          </TabsTrigger>
+          <TabsTrigger value="plants" className="flex items-center gap-2">
+            <Plant className="h-4 w-4" />
+            Plants
+          </TabsTrigger>
+          <TabsTrigger value="consumers" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Consumers
+          </TabsTrigger>
+          <TabsTrigger value="storage" className="flex items-center gap-2">
+            <Battery className="h-4 w-4" />
+            Storage
+          </TabsTrigger>
+          <TabsTrigger value="grid" className="flex items-center gap-2">
+            <Zap className="h-4 w-4" />
+            Grid
+          </TabsTrigger>
+          <TabsTrigger value="energy-flow" className="flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            Energy Flow
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Plants and Consumers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <PlantsList plants={site.plants} />
-        <ConsumersList consumers={site.consumers} />
-      </div>
+        <TabsContent value="basic-info" className="space-y-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <h3 className="font-medium text-sm">Location</h3>
+                  <p className="text-muted-foreground">{site.location}</p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-medium text-sm">Type</h3>
+                  <p className="text-muted-foreground capitalize">{site.type}</p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-medium text-sm">Total Capacity</h3>
+                  <p className="text-muted-foreground">{site.capacity} kW</p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-medium text-sm">Efficiency</h3>
+                  <p className="text-muted-foreground">{site.efficiency}%</p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-medium text-sm">Daily Production</h3>
+                  <p className="text-muted-foreground">{site.dailyProduction} kWh</p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="font-medium text-sm">CO2 Saved</h3>
+                  <p className="text-muted-foreground">{site.co2Saved} tons</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 space-y-6">
-          <SiteProductionGraph siteId={site.id} />
+        <TabsContent value="plants">
+          <PlantsList plants={site.plants} />
+        </TabsContent>
+
+        <TabsContent value="consumers">
+          <ConsumersList consumers={site.consumers} />
+        </TabsContent>
+
+        <TabsContent value="storage">
           <StorageOverview siteId={site.id} />
-          <EnergyEfficiencyDisplay siteId={site.id} />
-        </div>
+        </TabsContent>
 
-        <div className="space-y-6">
-          <SiteAlerts siteId={site.id} />
-          <EfficiencyMetrics siteId={site.id} />
-          <HistoricalPerformance siteId={site.id} />
-        </div>
-      </div>
+        <TabsContent value="grid">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-6">
+                <h3 className="font-medium">Grid Connection Status</h3>
+                <GridConnectionInfo connection={site.gridConnection} />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Bottom Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <MaintenanceSchedule siteId={site.id} />
-        <EquipmentStatus siteId={site.id} />
-      </div>
+        <TabsContent value="energy-flow">
+          <EnergyFlowVisualization site={site} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
