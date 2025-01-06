@@ -1,4 +1,4 @@
-import React, { useCallback, DragEvent } from "react";
+import React, { useCallback, DragEvent, useState } from "react";
 import { 
   ReactFlow,
   Controls,
@@ -15,6 +15,7 @@ import { useReactFlow } from "@xyflow/react";
 import { FlowNodeData } from "@/types/flowComponents";
 import { Card } from "@/components/ui/card";
 import { Sun, Wind, Battery, Factory, Grid, Zap, Cable } from "lucide-react";
+import SidePanel from "./SidePanel";
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -90,6 +91,15 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   isEditMode,
 }) => {
   const reactFlowInstance = useReactFlow();
+  const [selectedNode, setSelectedNode] = useState<FlowNodeData | undefined>();
+
+  const handleNodeClick = (event: React.MouseEvent, node: Node) => {
+    event.stopPropagation();
+    setSelectedNode(node.data);
+    if (onNodeClick) {
+      onNodeClick(event, node);
+    }
+  };
 
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
@@ -126,13 +136,13 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
             : `${type.charAt(0).toUpperCase() + type.slice(1)} ${nodes.length + 1}`,
           specs,
           status: 'active',
-          onNodeClick: (id: string, type: string) => onNodeClick(event, { id, type } as any),
+          onNodeClick: (id: string, type: string) => handleNodeClick(event, { id, type } as any),
         },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, nodes, setNodes, onNodeClick, isEditMode]
+    [reactFlowInstance, nodes, setNodes, handleNodeClick, isEditMode]
   );
 
   const onConnect = useCallback(
@@ -146,31 +156,38 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   const enhancedEdges = getEdgeOptions({ flowData, faults, efficiencyMetrics, edges });
 
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={enhancedEdges}
-      nodeTypes={nodeTypes}
-      onNodesChange={(changes) => isEditMode && setNodes((nds) => applyNodeChanges(changes, nds))}
-      onEdgesChange={(changes) => isEditMode && setEdges((eds) => applyEdgeChanges(changes, eds))}
-      onConnect={onConnect}
-      onDrop={onDrop}
-      onDragOver={onDragOver}
-      fitView
-      nodesDraggable={isEditMode}
-      nodesConnectable={isEditMode}
-      elementsSelectable={isEditMode}
-      onEdgeClick={onEdgeClick}
-      onNodeClick={onNodeClick}
-      proOptions={{ hideAttribution: true }}
-      minZoom={0.5}
-      maxZoom={2}
-      defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-      className="touch-none"
-    >
-      <Background />
-      <Controls showInteractive={false} />
-      <FlowLegend />
-    </ReactFlow>
+    <>
+      <ReactFlow
+        nodes={nodes}
+        edges={enhancedEdges}
+        nodeTypes={nodeTypes}
+        onNodesChange={(changes) => isEditMode && setNodes((nds) => applyNodeChanges(changes, nds))}
+        onEdgesChange={(changes) => isEditMode && setEdges((eds) => applyEdgeChanges(changes, eds))}
+        onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        fitView
+        nodesDraggable={isEditMode}
+        nodesConnectable={isEditMode}
+        elementsSelectable={isEditMode}
+        onEdgeClick={onEdgeClick}
+        onNodeClick={handleNodeClick}
+        proOptions={{ hideAttribution: true }}
+        minZoom={0.5}
+        maxZoom={2}
+        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+        className="touch-none"
+      >
+        <Background />
+        <Controls showInteractive={false} />
+        <FlowLegend />
+      </ReactFlow>
+      <SidePanel 
+        open={!!selectedNode} 
+        onClose={() => setSelectedNode(undefined)}
+        nodeData={selectedNode}
+      />
+    </>
   );
 };
 

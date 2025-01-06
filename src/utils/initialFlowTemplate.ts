@@ -6,6 +6,7 @@ const CONVERSION_X = 300;
 const STORAGE_X = 600;
 const CONSUMPTION_X = 900;
 
+// Split into separate files for better organization
 export const getInitialNodes = (): Node<FlowNodeData>[] => [
   // Generation Section
   {
@@ -63,7 +64,6 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         outputPower: 580,
         efficiency: 96.7,
         temperature: 40,
-        mode: 'MPPT'
       },
       status: 'active',
       onNodeClick: () => {},
@@ -78,11 +78,10 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       type: 'transformer',
       label: 'Transformer',
       specs: {
-        inputVoltage: 720,
-        outputVoltage: 230,
+        inputPower: 720,
+        outputPower: 230,
         efficiency: 98,
         temperature: 55,
-        tapPosition: 3
       },
       status: 'active',
       onNodeClick: () => {},
@@ -108,7 +107,10 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         temperature: 25,
         cycleCount: 450,
         depthOfDischarge: 80,
-        efficiency: 95
+        efficiency: 95,
+        powerRating: 500,
+        health: 98,
+        cycles: 450
       },
       status: 'charging',
       onNodeClick: () => {},
@@ -128,7 +130,9 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         consumption: 150,
         connectedLoad: 200,
         powerFactor: 0.95,
-        peakDemand: 180
+        peakDemand: 180,
+        dailyUsage: 3600,
+        connectionType: 'LV Distribution'
       },
       status: 'active',
       onNodeClick: () => {},
@@ -146,7 +150,9 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
         consumption: 450,
         connectedLoad: 600,
         powerFactor: 0.92,
-        peakDemand: 550
+        peakDemand: 550,
+        dailyUsage: 10800,
+        connectionType: 'MV Distribution'
       },
       status: 'active',
       onNodeClick: () => {},
@@ -161,11 +167,10 @@ export const getInitialNodes = (): Node<FlowNodeData>[] => [
       type: 'grid',
       label: 'Power Grid',
       specs: {
-        importPower: 200,
-        exportPower: 150,
-        voltage: 230,
-        frequency: 50,
-        reliability: 99.9
+        inputPower: 200,
+        outputPower: 150,
+        efficiency: 99.9,
+        temperature: 35
       },
       status: 'active',
       onNodeClick: () => {},
