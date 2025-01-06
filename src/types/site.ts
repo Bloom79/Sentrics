@@ -1,85 +1,38 @@
-export type StorageUnitStatus = "offline" | "charging" | "discharging" | "idle" | "fault";
-
-export interface StorageUnit {
-  id: string;
-  name: string;
-  capacity: number;
-  currentCharge: number;
-  status: StorageUnitStatus;
-  health: number;
-  stateOfHealth: number;
-  chargingRate: number;
-  cycleCount: number;
-  temperature: number;
-  powerRating: number;
-  lastMaintenance: string;
-  nextMaintenance: string;
-}
-
-export type PlantType = "solar" | "wind";
-export type PlantStatus = "online" | "offline" | "maintenance" | "fault";
-
-export interface Plant {
-  id: string;
-  name: string;
-  type: PlantType;
-  capacity: number;
-  currentOutput: number;
-  efficiency: number;
-  status: PlantStatus;
-  lastUpdate: string;
-  location?: string;
-}
-
-export type ConsumerType = "industrial" | "commercial" | "residential";
-export type ConsumerStatus = "active" | "inactive" | "maintenance";
-
-export interface Consumer {
-  id: string;
-  name: string;
-  type: ConsumerType;
-  capacity: number;
-  currentDemand: number;
-  consumption: number;
-  peakDemand: number;
-  status: ConsumerStatus;
-  location: string;
-  lastUpdate: string;
-  contract: {
-    startDate: string;
-    endDate: string;
-    rate: number;
-  };
-}
-
-export type SiteStatus = "online" | "offline" | "maintenance" | "fault";
-
 export interface Site {
   id: string;
   name: string;
-  type: "generation" | "distribution" | "hybrid";
   location: string;
+  type: "solar" | "wind" | "hybrid";
   capacity: number;
-  status: SiteStatus;
+  status: "online" | "offline" | "maintenance";
   lastUpdate: string;
-  plants: Plant[];
-  consumers: Consumer[];
-  storageUnits: StorageUnit[];
   dailyProduction: number;
   monthlyProduction: number;
   efficiency: number;
   co2Saved: number;
-  energySources: Array<{
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  plants: Plant[];
+  consumers?: {
+    id: string;
+    name: string;
+    consumption: number;
+    type: string;
+  }[];
+  energySources: {
     type: string;
     output: number;
     capacity: number;
     currentOutput: number;
     status: string;
-  }>;
+  }[];
   storage: {
     capacity: number;
     currentCharge: number;
   };
+  storageUnits: StorageUnit[];
   gridConnection: {
     status: string;
     frequency: number;
@@ -88,24 +41,96 @@ export interface Site {
   };
 }
 
-export interface Asset {
+export interface Plant {
   id: string;
   name: string;
-  type: "inverter" | "panel" | "turbine" | "transformer" | "battery";
-  status: "online" | "offline" | "maintenance" | "fault";
-  manufacturer: string;
-  model: string;
-  serialNumber: string;
-  installationDate: string;
-  lastMaintenance: string;
-  nextMaintenance: string;
-  location: string;
-  efficiency?: number;
-  ratedPower?: number;
-  technology?: "lithium-ion" | "lead-acid" | "flow";
-  energyCapacity?: number;
-  stateOfCharge?: number;
-  roundTripEfficiency?: number;
+  type: "solar" | "wind";
+  capacity: number;
+  currentOutput: number;
+  efficiency: number;
+  status: "online" | "offline" | "maintenance";
+  lastUpdate?: string;
+  location?: string;
 }
 
-export type AssetType = Asset;
+export interface StorageUnit {
+  id: string;
+  name: string;
+  capacity: number;
+  currentCharge: number;
+  status: "charging" | "discharging" | "idle" | "offline";
+  powerRating?: number;
+  temperature?: number;
+  health?: number;
+}
+
+interface BaseAsset {
+  id: string;
+  serialNumber: string;
+  model: string;
+  manufacturer: string;
+  installationDate: string;
+  status: "operational" | "faulty" | "maintenance";
+  location: string;
+}
+
+export interface SolarPanel extends BaseAsset {
+  type: "panel";
+  ratedPower: number;
+  efficiency: number;
+  orientation?: string;
+  tilt?: number;
+  lastOutput?: number;
+  temperature?: number;
+  performanceRatio?: number;
+}
+
+export interface Inverter extends BaseAsset {
+  type: "inverter";
+  efficiency: number;
+  ratedPower: number;
+  dcInputRange?: {
+    min: number;
+    max: number;
+  };
+  lastOutput?: number;
+}
+
+export interface WindTurbine extends BaseAsset {
+  type: "turbine";
+  ratedCapacity: number;
+  rotorDiameter: number;
+  hubHeight: number;
+  cutInSpeed: number;
+  cutOutSpeed: number;
+  currentOutput?: number;
+  windSpeed?: number;
+  nacelleDirection?: number;
+  bladePitchAngle?: number;
+}
+
+export interface Transformer extends BaseAsset {
+  type: "transformer";
+  capacity: number;
+  voltageIn: number;
+  voltageOut: number;
+  efficiency: number;
+}
+
+export interface Battery extends BaseAsset {
+  type: "battery";
+  technology: "lithium-ion" | "lead-acid" | "flow";
+  ratedPower: number;
+  energyCapacity: number;
+  stateOfCharge?: number;
+  roundTripEfficiency?: number;
+  cycleCount?: number;
+  thermalManagement?: string;
+}
+
+export type AssetType = SolarPanel | Inverter | WindTurbine | Transformer | Battery;
+
+// For backward compatibility with existing components
+export type SolarAsset = SolarPanel | Inverter;
+export type WindAsset = WindTurbine;
+

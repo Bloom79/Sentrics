@@ -4,122 +4,88 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SiteHeader from "@/components/SiteDetail/SiteHeader";
 import PlantsList from "@/components/SiteDetail/PlantsList";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
-import StorageOverview from "@/components/SiteDetail/Storage/StorageOverview";
+import StorageOverview from "@/components/SiteAnalysis/StorageOverview";
 import { Site } from "@/types/site";
 import { Card } from "@/components/ui/card";
 import { MapPin, Factory, Battery, Zap } from "lucide-react";
 import GridConnectionInfo from "@/components/SiteDetail/GridConnectionInfo";
 
 // Mock data for development
-const mockSites: Site[] = [
-  {
-    id: "1",
-    name: "Milano Nord",
-    location: "Northern Region",
-    type: "solar",
-    capacity: 800,
-    status: "online",
-    lastUpdate: new Date().toISOString(),
-    dailyProduction: 2500,
-    monthlyProduction: 75000,
-    efficiency: 92,
-    co2Saved: 45.2,
-    coordinates: {
-      lat: 45.4642,
-      lng: 9.1900
+const mockSite: Site = {
+  id: "1",
+  name: "Milano Nord",
+  location: "Northern Region",
+  type: "hybrid",
+  status: "online",
+  capacity: 800,
+  lastUpdate: new Date().toISOString(),
+  dailyProduction: 2500,
+  monthlyProduction: 75000,
+  efficiency: 92,
+  co2Saved: 45.2,
+  coordinates: {
+    lat: 45.4642,
+    lng: 9.1900
+  },
+  plants: [
+    {
+      id: "1",
+      name: "Solar Array A",
+      type: "solar",
+      capacity: 500,
+      currentOutput: 350,
+      efficiency: 95,
+      status: "online"
     },
-    plants: [
-      {
-        id: "1",
-        name: "Solar Array A",
-        type: "solar",
-        capacity: 500,
-        currentOutput: 350,
-        efficiency: 95,
-        status: "online"
-      },
-      {
-        id: "2",
-        name: "Wind Farm B",
-        type: "wind",
-        capacity: 300,
-        currentOutput: 250,
-        efficiency: 89,
-        status: "online"
-      }
-    ],
-    consumers: [
-      {
-        id: "1",
-        name: "Industrial Park A",
-        type: "industrial",
-        consumption: 450,
-        status: "online",
-        peakDemand: 600,
-        location: "North Section",
-        lastUpdate: new Date().toISOString()
-      },
-      {
-        id: "2",
-        name: "Commercial Center B",
-        type: "commercial",
-        consumption: 200,
-        status: "online",
-        peakDemand: 300,
-        location: "South Section",
-        lastUpdate: new Date().toISOString()
-      },
-      {
-        id: "3",
-        name: "Residential Complex C",
-        type: "residential",
-        consumption: 150,
-        status: "online",
-        peakDemand: 200,
-        location: "East Section",
-        lastUpdate: new Date().toISOString()
-      }
-    ],
-    energySources: [
-      { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
-      { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
-    ],
-    storage: { capacity: 1000, currentCharge: 750 },
-    storageUnits: [
-      {
-        id: "1",
-        name: "BESS Unit 1",
-        capacity: 1000,
-        currentCharge: 750,
-        powerRating: 500,
-        health: 98,
-        temperature: 25,
-        status: "charging",
-        stateOfHealth: 98,
-        chargingRate: 45,
-        cycleCount: 342,
-        lastMaintenance: "2024-01-15",
-        nextMaintenance: "2024-04-15",
-        efficiency: 95,
-        alerts: ["Temperature slightly above normal"]
-      }
-    ],
-    gridConnection: {
-      status: "connected",
-      frequency: 50.02,
-      voltage: 230.5,
-      congestion: "Low"
+    {
+      id: "2",
+      name: "Wind Farm B",
+      type: "wind",
+      capacity: 300,
+      currentOutput: 250,
+      efficiency: 89,
+      status: "online"
     }
+  ],
+  consumers: [
+    {
+      id: "1",
+      name: "Industrial Park A",
+      consumption: 450,
+      type: "industrial"
+    },
+    {
+      id: "2",
+      name: "Commercial Center B",
+      consumption: 200,
+      type: "commercial"
+    }
+  ],
+  energySources: [
+    { type: "solar", output: 350, capacity: 500, currentOutput: 350, status: "online" },
+    { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
+  ],
+  storage: { capacity: 1000, currentCharge: 750 },
+  storageUnits: [
+    {
+      id: "1",
+      name: "BESS Unit 1",
+      capacity: 1000,
+      currentCharge: 750,
+      status: "charging"
+    }
+  ],
+  gridConnection: {
+    status: "connected",
+    frequency: 50.02,
+    voltage: 230.5,
+    congestion: "Low"
   }
-];
+};
 
 const SiteDetail = () => {
   const { siteId } = useParams();
-  const site = mockSites.find(s => s.id === siteId);
-
-  if (!site) {
-    return <div>Site not found</div>;
-  }
+  const site = mockSite; // In a real app, fetch site data based on siteId
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -184,7 +150,7 @@ const SiteDetail = () => {
         </TabsContent>
 
         <TabsContent value="storage">
-          <StorageOverview siteId={site.id} storageUnits={site.storageUnits} />
+          <StorageOverview siteId={site.id} />
         </TabsContent>
 
         <TabsContent value="grid">

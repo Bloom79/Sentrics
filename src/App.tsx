@@ -13,7 +13,6 @@ import GridAnalysis from "./pages/GridAnalysis";
 import SiteDetail from "./pages/SiteDetail";
 import StorageUnitDetail from "./pages/StorageUnitDetail";
 import PlantDetail from "./pages/PlantDetail";
-import PlantFinancials from "./pages/PlantFinancials";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +41,6 @@ const App = () => {
                       <Route path="/settings" element={<div>Settings</div>} />
                       <Route path="/site/:siteId" element={<SiteDetail />} />
                       <Route path="/storage-unit/:unitId" element={<StorageUnitDetail />} />
-                      <Route path="/plant-financials" element={<PlantFinancials />} />
                     </Routes>
                   </div>
                 </main>
