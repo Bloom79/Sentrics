@@ -7,6 +7,7 @@ import StorageNode from "./FlowNodes/StorageNode";
 import ConsumerNode from "./FlowNodes/ConsumerNode";
 import GridNode from "./FlowNodes/GridNode";
 import NodeDialog from "./NodeDialog";
+import EdgeDialog from "./EdgeDialog";
 
 interface EnergyFlowVisualizationProps {
   site: Site;
@@ -21,17 +22,20 @@ const nodeTypes = {
 
 const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site }) => {
   const [selectedNodes, setSelectedNodes] = useState<Array<{ id: string; type: string }>>([]);
+  const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
 
   const handleNodeClick = (nodeId: string, nodeType: string) => {
     const existingNodeIndex = selectedNodes.findIndex(node => node.id === nodeId);
     
     if (existingNodeIndex >= 0) {
-      // Remove node if already selected
       setSelectedNodes(prev => prev.filter((_, index) => index !== existingNodeIndex));
     } else {
-      // Add new node to selection
       setSelectedNodes(prev => [...prev, { id: nodeId, type: nodeType }]);
     }
+  };
+
+  const handleEdgeClick = (_: React.MouseEvent, edge: Edge) => {
+    setSelectedEdge(edge);
   };
 
   const nodes: Node[] = [
@@ -101,7 +105,12 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         source: `source-${source.id}`,
         target: `storage-${storageIndex}`,
         animated: true,
-        style: { stroke: source.type === "solar" ? "#f59e0b" : "#3b82f6" },
+        style: { stroke: source.type === "solar" ? "#f59e0b" : "#3b82f6", cursor: 'pointer' },
+        data: {
+          energyFlow: 250,
+          efficiency: 98,
+          status: 'active' as const,
+        },
       }))
     ),
 
@@ -112,21 +121,36 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         source: `storage-${storageIndex}`,
         target: "grid",
         animated: true,
-        style: { stroke: "#8b5cf6" },
+        style: { stroke: "#8b5cf6", cursor: 'pointer' },
+        data: {
+          energyFlow: 180,
+          efficiency: 95,
+          status: 'active' as const,
+        },
       },
       {
         id: `storage-${storageIndex}-to-residential`,
         source: `storage-${storageIndex}`,
         target: "residential",
         animated: true,
-        style: { stroke: "#8b5cf6" },
+        style: { stroke: "#8b5cf6", cursor: 'pointer' },
+        data: {
+          energyFlow: 120,
+          efficiency: 97,
+          status: 'active' as const,
+        },
       },
       {
         id: `storage-${storageIndex}-to-industrial`,
         source: `storage-${storageIndex}`,
         target: "industrial",
         animated: true,
-        style: { stroke: "#8b5cf6" },
+        style: { stroke: "#8b5cf6", cursor: 'pointer' },
+        data: {
+          energyFlow: 150,
+          efficiency: 96,
+          status: 'active' as const,
+        },
       },
     ]),
   ];
@@ -140,7 +164,8 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
         fitView
         nodesDraggable={false}
         nodesConnectable={false}
-        elementsSelectable={false}
+        elementsSelectable={true}
+        onEdgeClick={handleEdgeClick}
         proOptions={{ hideAttribution: true }}
       >
         <Controls />
@@ -157,6 +182,23 @@ const EnergyFlowVisualization: React.FC<EnergyFlowVisualizationProps> = ({ site 
           nodeId={node.id}
         />
       ))}
+
+      {selectedEdge && (
+        <EdgeDialog
+          open={true}
+          onClose={() => setSelectedEdge(null)}
+          edgeData={{
+            id: selectedEdge.id,
+            source: selectedEdge.source,
+            target: selectedEdge.target,
+            ...((selectedEdge.data as any) || {
+              energyFlow: 0,
+              efficiency: 0,
+              status: 'inactive',
+            }),
+          }}
+        />
+      )}
     </div>
   );
 };
