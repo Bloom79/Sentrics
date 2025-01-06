@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Battery, Cloud, Wind, Zap, Share2, LineChart, Gauge } from "lucide-react";
+import { Battery, Cloud, Wind, Zap, Share2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SiteProductionGraph from "@/components/SiteAnalysis/SiteProductionGraph";
 import StorageStatus from "@/components/SiteAnalysis/StorageStatus";
@@ -46,9 +46,9 @@ const SiteDetail = () => {
   const site = mockSite; // In a real app, fetch site data based on siteId
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+    <div className="container mx-auto p-4">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <p className="text-muted-foreground">{site.location}</p>
@@ -64,8 +64,8 @@ const SiteDetail = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Solar Production</CardTitle>
@@ -138,28 +138,29 @@ const SiteDetail = () => {
         </Card>
       </div>
 
-      {/* Real-time Status and Historical Data */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ChargingStatus siteId={site.id} />
-        <HistoricalPerformance siteId={site.id} />
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Left Column */}
+        <div className="xl:col-span-2 space-y-6">
+          <SiteProductionGraph siteId={site.id} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ChargingStatus siteId={site.id} />
+            <StorageStatus siteId={site.id} />
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-6">
+          <SiteAlerts siteId={site.id} />
+          <EfficiencyMetrics siteId={site.id} />
+          <HistoricalPerformance siteId={site.id} />
+        </div>
       </div>
 
-      {/* Production Graph and Efficiency Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SiteProductionGraph siteId={site.id} />
-        <EfficiencyMetrics siteId={site.id} />
-      </div>
-
-      {/* Equipment Status and Storage Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <EquipmentStatus siteId={site.id} />
-        <StorageStatus siteId={site.id} />
-      </div>
-
-      {/* Maintenance and Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Bottom Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <MaintenanceSchedule siteId={site.id} />
-        <SiteAlerts siteId={site.id} />
+        <EquipmentStatus siteId={site.id} />
       </div>
     </div>
   );
