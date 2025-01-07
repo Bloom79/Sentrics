@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { DetailedMetrics } from "@/components/Dashboard/DetailedMetrics";
+import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import SiteMonitoring from "@/components/Dashboard/SiteMonitoring";
-import { ProductionOverview } from "@/components/Dashboard/Overview/ProductionOverview";
-import { ForecastOverview } from "@/components/Dashboard/Overview/ForecastOverview";
+import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
+import ForecastOverview from "@/components/Dashboard/Overview/ForecastOverview";
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import GridStatus from "@/components/Dashboard/GridStatus";
@@ -99,7 +99,13 @@ const Index = () => {
       </div>
 
       <EnergyFlow />
-      <DetailedMetrics />
+      <DetailedMetrics 
+        selectedSiteId={null}
+        onSiteSelect={() => {}}
+        searchTerm=""
+        selectedStatus="all"
+        selectedTimeRange="day"
+      />
       <SiteMonitoring onSiteSelect={() => {}} />
     </div>
   );
