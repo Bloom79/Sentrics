@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { format } from "date-fns";
+import { FileUploadSection } from "./ConsumerConsumption/FileUploadSection";
+import { FilesList } from "./ConsumerConsumption/FilesList";
+import { ConsumptionGraph } from "./ConsumerConsumption/ConsumptionGraph";
 
 const ConsumerConsumption = () => {
   const { consumerId } = useParams();
@@ -34,7 +34,6 @@ const ConsumerConsumption = () => {
     if (!file || !consumerId) return;
 
     try {
-      // Upload file to storage
       const fileExt = file.name.split('.').pop();
       const filePath = `${consumerId}/${crypto.randomUUID()}.${fileExt}`;
 
@@ -44,7 +43,6 @@ const ConsumerConsumption = () => {
 
       if (uploadError) throw uploadError;
 
-      // Create database record
       const { error: dbError } = await supabase
         .from('consumption_files')
         .insert({
@@ -72,7 +70,6 @@ const ConsumerConsumption = () => {
       });
     }
 
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -86,7 +83,6 @@ const ConsumerConsumption = () => {
 
       if (error) throw error;
 
-      // Create download link
       const url = URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = url;
@@ -107,14 +103,12 @@ const ConsumerConsumption = () => {
 
   const handleDelete = async (id: string, filePath: string) => {
     try {
-      // Delete from storage
       const { error: storageError } = await supabase.storage
         .from('consumption_files')
         .remove([filePath]);
 
       if (storageError) throw storageError;
 
-      // Delete database record
       const { error: dbError } = await supabase
         .from('consumption_files')
         .delete()
@@ -139,64 +133,32 @@ const ConsumerConsumption = () => {
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Consumption Files</CardTitle>
-        <div className="flex items-center space-x-2">
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileUpload}
-            className="hidden"
-            accept=".csv,.xlsx,.xls"
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Consumption Files</CardTitle>
+          <FileUploadSection
+            consumerId={consumerId || ''}
+            fileInputRef={fileInputRef}
+            onFileUpload={handleFileUpload}
+            refetchFiles={refetchFiles}
           />
-          <Button
-            onClick={() => fileInputRef.current?.click()}
-            className="flex items-center space-x-2"
-          >
-            <Upload className="h-4 w-4" />
-            <span>Upload File</span>
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {files?.length === 0 ? (
-          <p className="text-center text-muted-foreground">No files uploaded yet</p>
-        ) : (
-          <div className="space-y-4">
-            {files?.map((file) => (
-              <div
-                key={file.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="flex-1">
-                  <h4 className="font-medium">{file.filename}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Uploaded on {format(new Date(file.upload_date || ''), 'PPP')}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDownload(file.file_path, file.filename)}
-                  >
-                    Download
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(file.id, file.file_path)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent>
+          {files?.length === 0 ? (
+            <p className="text-center text-muted-foreground">No files uploaded yet</p>
+          ) : (
+            <FilesList
+              files={files}
+              onDownload={handleDownload}
+              onDelete={handleDelete}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      {consumerId && <ConsumptionGraph consumerId={consumerId} />}
+    </div>
   );
 };
 
