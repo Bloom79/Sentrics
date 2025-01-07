@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home } from "lucide-react";
+import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home, Building } from "lucide-react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
@@ -11,6 +11,46 @@ import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import GridStatus from "@/components/Dashboard/GridStatus";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
+import { Badge } from "@/components/ui/badge";
+
+const mockSites = [
+  {
+    id: "1",
+    name: "Milano Nord",
+    location: { latitude: 45.4642, longitude: 9.1900 },
+    status: "online",
+    plants: [],
+    consumers: [],
+    storageUnits: [],
+    totalCapacity: 150,
+    currentProduction: 125,
+    efficiency: 92
+  },
+  {
+    id: "2",
+    name: "Roma Sud",
+    location: { latitude: 41.9028, longitude: 12.4964 },
+    status: "online",
+    plants: [],
+    consumers: [],
+    storageUnits: [],
+    totalCapacity: 200,
+    currentProduction: 180,
+    efficiency: 88
+  },
+  {
+    id: "3",
+    name: "Torino Est",
+    location: { latitude: 45.0703, longitude: 7.6869 },
+    status: "maintenance",
+    plants: [],
+    consumers: [],
+    storageUnits: [],
+    totalCapacity: 175,
+    currentProduction: 140,
+    efficiency: 85
+  }
+];
 
 const Index = () => {
   const navigate = useNavigate();
@@ -21,6 +61,17 @@ const Index = () => {
 
   const handleSiteSelect = (siteId: string) => {
     navigate(`/site/${siteId}`);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "online":
+        return "bg-green-500/10 text-green-500";
+      case "maintenance":
+        return "bg-yellow-500/10 text-yellow-500";
+      default:
+        return "bg-red-500/10 text-red-500";
+    }
   };
 
   return (
@@ -59,6 +110,49 @@ const Index = () => {
             <SolarProduction />
             <WindProduction />
             <StorageStatus />
+          </div>
+
+          {/* Sites Overview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockSites.map((site) => (
+              <Card 
+                key={site.id}
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => handleSiteSelect(site.id)}
+              >
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="flex items-center gap-2">
+                      <Building className="h-5 w-5 text-muted-foreground" />
+                      {site.name}
+                    </CardTitle>
+                    <Badge className={getStatusColor(site.status)}>
+                      {site.status}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Capacity</p>
+                        <p className="font-medium">{site.totalCapacity} MW</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Production</p>
+                        <p className="font-medium">{site.currentProduction} MW</p>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Efficiency</span>
+                        <span className="font-medium">{site.efficiency}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
