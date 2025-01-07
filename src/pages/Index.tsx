@@ -96,7 +96,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => navigate('/consumers')}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-primary" />
