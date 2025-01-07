@@ -1,41 +1,47 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import GridCongestionMap from "@/components/GridAnalysis/GridCongestionMap";
-import GridMetrics from "@/components/GridAnalysis/GridMetrics";
-import CongestionTrends from "@/components/GridAnalysis/CongestionTrends";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { GridOverview } from "@/components/GridAnalysis/GridOverview";
+import { RealTimeExchange } from "@/components/GridAnalysis/RealTimeExchange";
+import { HistoricalData } from "@/components/GridAnalysis/HistoricalData";
+import { ContractsView } from "@/components/GridAnalysis/ContractsView";
+import { FinancialSettlement } from "@/components/GridAnalysis/FinancialSettlement";
 
 const GridAnalysis = () => {
   return (
-    <div className="container py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container space-y-6 p-6">
+      <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Grid Analysis</h1>
       </div>
 
-      <div className="grid gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <GridMetrics />
-        </div>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="realtime">Real-Time Exchange</TabsTrigger>
+          <TabsTrigger value="historical">Historical Data</TabsTrigger>
+          <TabsTrigger value="contracts">Contracts</TabsTrigger>
+          <TabsTrigger value="financial">Financial Settlement</TabsTrigger>
+        </TabsList>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="col-span-1">
-            <CardHeader>
-              <CardTitle>Grid Congestion Map</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GridCongestionMap />
-            </CardContent>
-          </Card>
+        <TabsContent value="overview" className="space-y-4">
+          <GridOverview />
+        </TabsContent>
 
-          <Card className="col-span-1">
-            <CardHeader>
-              <CardTitle>Congestion Trends</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CongestionTrends />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+        <TabsContent value="realtime" className="space-y-4">
+          <RealTimeExchange />
+        </TabsContent>
+
+        <TabsContent value="historical" className="space-y-4">
+          <HistoricalData />
+        </TabsContent>
+
+        <TabsContent value="contracts" className="space-y-4">
+          <ContractsView />
+        </TabsContent>
+
+        <TabsContent value="financial" className="space-y-4">
+          <FinancialSettlement />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
