@@ -5,6 +5,7 @@ import { RealTimeExchange } from "@/components/GridAnalysis/RealTimeExchange";
 import { HistoricalData } from "@/components/GridAnalysis/HistoricalData";
 import { ContractsView } from "@/components/GridAnalysis/ContractsView";
 import { FinancialSettlement } from "@/components/GridAnalysis/FinancialSettlement";
+import { FileExchangeTab } from "@/components/GridAnalysis/FileExchange/FileExchangeTab";
 
 const GridAnalysis = () => {
   return (
@@ -18,6 +19,7 @@ const GridAnalysis = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="realtime">Real-Time Exchange</TabsTrigger>
           <TabsTrigger value="historical">Historical Data</TabsTrigger>
+          <TabsTrigger value="files">File Exchange</TabsTrigger>
           <TabsTrigger value="contracts">Contracts</TabsTrigger>
           <TabsTrigger value="financial">Financial Settlement</TabsTrigger>
         </TabsList>
@@ -32,6 +34,10 @@ const GridAnalysis = () => {
 
         <TabsContent value="historical" className="space-y-4">
           <HistoricalData />
+        </TabsContent>
+
+        <TabsContent value="files" className="space-y-4">
+          <FileExchangeTab />
         </TabsContent>
 
         <TabsContent value="contracts" className="space-y-4">
