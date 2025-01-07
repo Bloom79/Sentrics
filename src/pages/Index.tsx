@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home, Factory } from "lucide-react";
+import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home } from "lucide-react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
@@ -78,23 +78,6 @@ const Index = () => {
 
         <TabsContent value="asset-management" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card 
-              className="cursor-pointer hover:bg-accent/50 transition-colors"
-              onClick={() => navigate('/sites')}
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Factory className="h-5 w-5 text-primary" />
-                  Sites
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  View and manage all sites, including their status and performance metrics.
-                </p>
-              </CardContent>
-            </Card>
-
             <Card 
               className="cursor-pointer hover:bg-accent/50 transition-colors"
               onClick={() => navigate('/plants')}

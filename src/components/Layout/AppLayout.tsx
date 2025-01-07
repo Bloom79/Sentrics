@@ -13,7 +13,6 @@ import Financials from "@/pages/Financials";
 import Consumers from "@/pages/Consumers";
 import UserManagement from "@/pages/UserManagement";
 import ConsumerDetail from "@/components/Consumers/ConsumerDetail";
-import SitesOverview from "@/pages/SitesOverview";
 
 export const AppLayout = () => {
   return (
@@ -28,7 +27,6 @@ export const AppLayout = () => {
             </div>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/sites" element={<SitesOverview />} />
               <Route path="/plants/:plantId" element={<PlantDetail />} />
               <Route path="/plants/:plantId/financials" element={<Financials />} />
               <Route path="/consumers" element={<Consumers />} />
