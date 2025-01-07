@@ -1,69 +1,113 @@
-export type ConsumerType = 'residential' | 'commercial' | 'industrial';
-export type ConsumerStatus = 'active' | 'inactive' | 'pending';
-
-export interface ConsumerSpecs {
-  peakDemand: number;
-  dailyUsage: number;
-  powerFactor: number;
-  connectionType: 'low-voltage' | 'medium-voltage' | 'high-voltage';
-}
-
-export interface Consumer {
-  id: string;
-  full_name: string;
-  type: ConsumerType;
-  consumption: number;
-  status: ConsumerStatus;
-  specs: ConsumerSpecs;
-  address?: string;
-  city?: string;
-  postal_code?: string;
-  country?: string;
-  contact_person?: string;
-  email?: string;
-  phone?: string;
-  vat_number?: string;
-  notes?: string;
-}
+export type AssetStatus = "online" | "offline" | "maintenance";
 
 export type Plant = {
   id: string;
   name: string;
-  type: 'solar' | 'wind';
+  type: "solar" | "wind";
+  status: AssetStatus;
   capacity: number;
   currentOutput: number;
   efficiency: number;
-  status: string;
   location: {
     latitude: number;
     longitude: number;
   };
+  lastUpdate?: string;
+};
+
+export type Consumer = {
+  id: string;
+  name: string;
+  type: "residential" | "industrial" | "commercial";
+  consumption: number;
+  status: string;
+  specs: {
+    peakDemand: number;
+    dailyUsage: number;
+    powerFactor: number;
+    connectionType: string;
+  };
+};
+
+export type StorageUnit = {
+  id: string;
+  name: string;
+  type: "battery" | "thermal" | "mechanical";
+  capacity: number;
+  currentCharge: number;
+  status: string;
+  health: number;
+  temperature: number;
+  powerRating: number;
+  efficiency: number;
+  lastOutput?: number;
+  stateOfCharge?: number;
+};
+
+export type GridConnection = {
+  status: "connected" | "disconnected";
+  frequency: number;
+  voltage: number;
+  congestion: "Low" | "Medium" | "High";
+};
+
+export type EnergySource = {
+  type: "solar" | "wind";
+  output: number;
+  capacity: number;
+  currentOutput: number;
+  status: "online" | "offline" | "maintenance";
 };
 
 export type Site = {
   id: string;
   name: string;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
+  location: string;
+  type: "solar" | "wind" | "hybrid";
+  status: "online" | "offline" | "maintenance";
+  capacity: number;
+  efficiency: number;
+  co2Saved: number;
+  dailyProduction: number;
+  monthlyProduction: number;
   plants: Plant[];
   consumers: Consumer[];
   storageUnits: StorageUnit[];
+  energySources: EnergySource[];
+  storage: {
+    capacity: number;
+    currentCharge: number;
+  };
+  gridConnection: GridConnection;
+  lastUpdate?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 };
 
-export type AssetType = 'panel' | 'inverter' | 'turbine' | 'transformer' | 'battery';
-export type AssetStatus = 'operational' | 'maintenance' | 'faulty';
-
-export type StorageUnit = {
+export type AssetType = {
   id: string;
-  name: string;
-  type: 'battery' | 'hydrogen' | 'thermal';
-  capacity: number;
-  currentCharge: number;
-  status: string;
-  powerRating: number;
-  temperature: number;
-  health: number;
+  type: "panel" | "inverter" | "turbine" | "transformer" | "battery";
+  serialNumber: string;
+  model: string;
+  manufacturer: string;
+  installationDate: string;
+  status: AssetStatus;
+  lastOutput?: number;
   efficiency: number;
+  location: string;
+  ratedPower?: number;
+  technology?: "lithium-ion" | "lead-acid" | "flow";
+  energyCapacity?: number;
+  roundTripEfficiency?: number;
+  stateOfCharge?: number;
+  cutInSpeed?: number;
+  cutOutSpeed?: number;
+  rotorDiameter?: number;
+  hubHeight?: number;
+  ratedCapacity?: number;
+  voltageIn?: number;
+  voltageOut?: number;
+  capacity?: number;
 };

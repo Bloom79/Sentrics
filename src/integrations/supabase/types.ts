@@ -121,11 +121,9 @@ export type Database = {
           address: string | null
           avatar_url: string | null
           city: string | null
-          consumption: number | null
           contact_person: string | null
           country: string | null
           created_at: string
-          email: string | null
           full_name: string | null
           id: string
           invitation_sent_at: string | null
@@ -135,9 +133,7 @@ export type Database = {
           phone: string | null
           postal_code: string | null
           role: string | null
-          specs: Json | null
           status: string | null
-          type: string | null
           updated_at: string
           username: string | null
           vat_number: string | null
@@ -146,11 +142,9 @@ export type Database = {
           address?: string | null
           avatar_url?: string | null
           city?: string | null
-          consumption?: number | null
           contact_person?: string | null
           country?: string | null
           created_at?: string
-          email?: string | null
           full_name?: string | null
           id: string
           invitation_sent_at?: string | null
@@ -160,9 +154,7 @@ export type Database = {
           phone?: string | null
           postal_code?: string | null
           role?: string | null
-          specs?: Json | null
           status?: string | null
-          type?: string | null
           updated_at?: string
           username?: string | null
           vat_number?: string | null
@@ -171,11 +163,9 @@ export type Database = {
           address?: string | null
           avatar_url?: string | null
           city?: string | null
-          consumption?: number | null
           contact_person?: string | null
           country?: string | null
           created_at?: string
-          email?: string | null
           full_name?: string | null
           id?: string
           invitation_sent_at?: string | null
@@ -185,9 +175,7 @@ export type Database = {
           phone?: string | null
           postal_code?: string | null
           role?: string | null
-          specs?: Json | null
           status?: string | null
-          type?: string | null
           updated_at?: string
           username?: string | null
           vat_number?: string | null
