@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home } from "lucide-react";
+import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home, Factory } from "lucide-react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
@@ -82,16 +82,16 @@ const Index = () => {
 
         <TabsContent value="asset-management" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
+            <Card className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => navigate('/sites')}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <LayoutGrid className="h-5 w-5 text-primary" />
-                  Plants
+                  <Factory className="h-5 w-5 text-primary" />
+                  Sites
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Manage and monitor all power plants, including solar arrays and wind turbines.
+                  Manage and monitor all energy production sites and their components.
                 </p>
               </CardContent>
             </Card>
