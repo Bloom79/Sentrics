@@ -1,33 +1,68 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { z } from "zod";
+import { useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ContractFormValues, contractSchema } from "./schema";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 import { v4 as uuidv4 } from 'uuid';
 
+const contractSchema = z.object({
+  type: z.enum(["fixed_rate", "variable_rate", "peak_off_peak"]),
+  rate: z.coerce.number().min(0).optional(),
+  peak_rate: z.coerce.number().min(0).optional(),
+  off_peak_rate: z.coerce.number().min(0).optional(),
+  variable_rate_base: z.coerce.number().min(0).optional(),
+  variable_rate_adjustment_formula: z.string().optional(),
+  start_date: z.string(),
+  end_date: z.string(),
+  minimum_purchase: z.coerce.number().min(0),
+  billing_cycle: z.enum(["monthly", "quarterly", "annually"]),
+  payment_terms: z.coerce.number().min(1),
+  auto_renewal: z.boolean(),
+  termination_notice_days: z.coerce.number().min(1),
+  penalties_for_breach: z.string().optional(),
+});
+
+type ContractFormValues = z.infer<typeof contractSchema>;
+
 interface ContractFormProps {
-  consumerId: string;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
-export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
+export const ContractForm = ({ onSuccess }: ContractFormProps) => {
+  const { consumerId } = useParams();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const form = useForm<ContractFormValues>({
     resolver: zodResolver(contractSchema),
     defaultValues: {
       type: "fixed_rate",
       billing_cycle: "monthly",
-      auto_renewal: false,
       payment_terms: 30,
+      auto_renewal: false,
       termination_notice_days: 30,
-      minimum_purchase: 0,
+      start_date: format(new Date(), "yyyy-MM-dd"),
+      end_date: format(new Date(new Date().setFullYear(new Date().getFullYear() + 1)), "yyyy-MM-dd"),
     },
   });
 
@@ -35,52 +70,41 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
     if (!consumerId) return;
 
     try {
-      const contractData = {
+      const newContract = {
         id: uuidv4(),
         consumer_id: consumerId,
-        start_date: new Date().toISOString(),
-        end_date: new Date(data.end_date).toISOString(),
-        type: data.type,
-        rate: data.rate,
-        minimum_purchase: data.minimum_purchase,
-        billing_cycle: data.billing_cycle,
-        payment_terms: data.payment_terms,
-        auto_renewal: data.auto_renewal,
-        termination_notice_days: data.termination_notice_days,
+        ...data,
         status: 'pending' as const,
-        peak_rate: data.peak_rate,
-        off_peak_rate: data.off_peak_rate,
-        variable_rate_base: data.variable_rate_base,
-        variable_rate_adjustment_formula: data.variable_rate_adjustment_formula,
       };
 
       const { error } = await supabase
         .from("contracts")
-        .insert(contractData);
+        .insert(newContract);
 
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Contract has been created successfully.",
+        title: "Contract created",
+        description: "The contract has been created successfully.",
       });
 
-      if (onSuccess) {
-        onSuccess();
-      }
+      queryClient.invalidateQueries({ queryKey: ["contract", consumerId] });
+      onSuccess();
     } catch (error) {
       console.error("Error creating contract:", error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: "Failed to create contract. Please try again.",
+        description: "There was an error creating the contract. Please try again.",
+        variant: "destructive",
       });
     }
   };
 
+  const contractType = form.watch("type");
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="type"
@@ -104,7 +128,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
           )}
         />
 
-        {form.watch("type") === "fixed_rate" && (
+        {contractType === "fixed_rate" && (
           <FormField
             control={form.control}
             name="rate"
@@ -112,7 +136,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
               <FormItem>
                 <FormLabel>Rate (per kWh)</FormLabel>
                 <FormControl>
-                  <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
+                  <Input type="number" step="0.01" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +144,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
           />
         )}
 
-        {form.watch("type") === "peak_off_peak" && (
+        {contractType === "peak_off_peak" && (
           <>
             <FormField
               control={form.control}
@@ -129,7 +153,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
                 <FormItem>
                   <FormLabel>Peak Rate (per kWh)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
+                    <Input type="number" step="0.01" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +166,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
                 <FormItem>
                   <FormLabel>Off-Peak Rate (per kWh)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
+                    <Input type="number" step="0.01" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -151,7 +175,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
           </>
         )}
 
-        {form.watch("type") === "variable_rate" && (
+        {contractType === "variable_rate" && (
           <>
             <FormField
               control={form.control}
@@ -160,7 +184,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
                 <FormItem>
                   <FormLabel>Base Rate (per kWh)</FormLabel>
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
+                    <Input type="number" step="0.01" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,7 +197,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
                 <FormItem>
                   <FormLabel>Rate Adjustment Formula</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,6 +206,35 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
           </>
         )}
 
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="start_date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Start Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="end_date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>End Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="minimum_purchase"
@@ -189,21 +242,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
             <FormItem>
               <FormLabel>Minimum Purchase (kWh)</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="end_date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>End Date</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
+                <Input type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -240,7 +279,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
             <FormItem>
               <FormLabel>Payment Terms (days)</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                <Input type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -254,7 +293,7 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
             <FormItem>
               <FormLabel>Termination Notice (days)</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                <Input type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -263,23 +302,21 @@ export const ContractForm = ({ consumerId, onSuccess }: ContractFormProps) => {
 
         <FormField
           control={form.control}
-          name="auto_renewal"
+          name="penalties_for_breach"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Auto Renewal</FormLabel>
-              </div>
+            <FormItem>
+              <FormLabel>Penalties for Breach</FormLabel>
               <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Input {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full">Create Contract</Button>
+        <div className="flex justify-end space-x-2">
+          <Button type="submit">Create Contract</Button>
+        </div>
       </form>
     </Form>
   );
