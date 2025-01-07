@@ -5,6 +5,9 @@ import RealTimeExchange from "@/components/GridAnalysis/RealTimeExchange";
 import HistoricalData from "@/components/GridAnalysis/HistoricalData";
 import ContractsAgreements from "@/components/GridAnalysis/ContractsAgreements";
 import FinancialSettlement from "@/components/GridAnalysis/FinancialSettlement";
+import { FileUpload } from "@/components/GridAnalysis/FileExchange/FileUpload";
+import { FileHistory } from "@/components/GridAnalysis/FileExchange/FileHistory";
+import { AutomationSettings } from "@/components/GridAnalysis/FileExchange/AutomationSettings";
 
 const GridAnalysis = () => {
   return (
@@ -19,12 +22,13 @@ const GridAnalysis = () => {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="realtime">Real-Time Exchange</TabsTrigger>
           <TabsTrigger value="historical">Historical Data</TabsTrigger>
           <TabsTrigger value="contracts">Contracts</TabsTrigger>
           <TabsTrigger value="financial">Financial Settlement</TabsTrigger>
+          <TabsTrigger value="file-exchange">File Exchange</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -45,6 +49,14 @@ const GridAnalysis = () => {
 
         <TabsContent value="financial" className="space-y-4">
           <FinancialSettlement />
+        </TabsContent>
+
+        <TabsContent value="file-exchange" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <FileUpload />
+            <AutomationSettings />
+          </div>
+          <FileHistory />
         </TabsContent>
       </Tabs>
     </div>
