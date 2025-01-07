@@ -6,7 +6,7 @@ import HistoricalData from "@/components/GridAnalysis/HistoricalData";
 import ContractsAgreements from "@/components/GridAnalysis/ContractsAgreements";
 import FinancialSettlement from "@/components/GridAnalysis/FinancialSettlement";
 import { FileUpload } from "@/components/GridAnalysis/FileExchange/FileUpload";
-import { FileHistory } from "@/components/GridAnalysis/FileExchange/FileHistory";
+import FileHistory from "@/components/GridAnalysis/FileExchange/FileHistory";
 import { AutomationSettings } from "@/components/GridAnalysis/FileExchange/AutomationSettings";
 
 const GridAnalysis = () => {
