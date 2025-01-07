@@ -13,11 +13,14 @@ const ConsumerDetail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
+  // Validate if consumerId is in UUID format
+  const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(consumerId || '');
+
   const { data: consumer, isLoading, error } = useQuery({
     queryKey: ['consumer', consumerId],
     queryFn: async () => {
-      if (!consumerId) {
-        throw new Error('Consumer ID is required');
+      if (!consumerId || !isValidUUID) {
+        throw new Error('Invalid consumer ID format');
       }
 
       const { data, error } = await supabase
@@ -29,18 +32,40 @@ const ConsumerDetail = () => {
       if (error) throw error;
       if (!data) throw new Error('Consumer not found');
 
-      return data as Consumer;
+      // Map the profile data to match the Consumer type
+      const consumerData: Consumer = {
+        id: data.id,
+        name: data.full_name || 'Unnamed Consumer', // Use full_name as name
+        type: data.type || 'unknown',
+        consumption: data.consumption || 0,
+        status: data.status || 'inactive',
+        specs: data.specs || {
+          dailyUsage: 0,
+          peakDemand: 0,
+          powerFactor: 0,
+          connectionType: 'unknown'
+        }
+      };
+
+      return consumerData;
     },
-    onError: (error) => {
-      console.error('Error fetching consumer:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load consumer details. Please try again.",
-      });
-      navigate('/consumers');
+    enabled: isValidUUID,
+    meta: {
+      onError: (error: Error) => {
+        console.error('Error fetching consumer:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load consumer details. Please try again.",
+        });
+        navigate('/consumers');
+      }
     }
   });
+
+  if (!isValidUUID) {
+    return <div>Invalid consumer ID format</div>;
+  }
 
   if (isLoading) {
     return <div>Loading consumer details...</div>;
