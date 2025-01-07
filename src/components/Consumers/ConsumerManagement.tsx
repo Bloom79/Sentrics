@@ -3,36 +3,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
 import { AddConsumerDialog } from "./AddConsumerDialog";
 import { Consumer } from "@/types/site";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const ConsumerManagement = () => {
-  const mockConsumers: Consumer[] = [
-    {
-      id: "1",
-      name: "Industrial Park A",
-      type: "industrial",
-      consumption: 750,
-      status: "active",
-      specs: {
-        peakDemand: 1000,
-        dailyUsage: 18000,
-        powerFactor: 0.95,
-        connectionType: "high-voltage"
-      }
-    },
-    {
-      id: "2",
-      name: "Shopping Mall B",
-      type: "commercial",
-      consumption: 450,
-      status: "active",
-      specs: {
-        peakDemand: 600,
-        dailyUsage: 10800,
-        powerFactor: 0.92,
-        connectionType: "medium-voltage"
-      }
+  const { data: consumers = [], isLoading } = useQuery({
+    queryKey: ['consumers'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('type', ['industrial', 'commercial']);
+      
+      if (error) throw error;
+      
+      return data.map((profile): Consumer => ({
+        id: profile.id,
+        name: profile.full_name,
+        type: profile.type as 'industrial' | 'commercial',
+        consumption: profile.consumption || 0,
+        status: profile.status || 'active',
+        specs: profile.specs || {
+          peakDemand: 0,
+          dailyUsage: 0,
+          powerFactor: 0,
+          connectionType: 'low-voltage'
+        }
+      }));
     }
-  ];
+  });
 
   return (
     <div className="space-y-4">
@@ -48,7 +47,11 @@ const ConsumerManagement = () => {
           <CardTitle>Active Consumers</CardTitle>
         </CardHeader>
         <CardContent>
-          <ConsumersList consumers={mockConsumers} />
+          {isLoading ? (
+            <div>Loading consumers...</div>
+          ) : (
+            <ConsumersList consumers={consumers} />
+          )}
         </CardContent>
       </Card>
     </div>
