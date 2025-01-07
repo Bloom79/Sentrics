@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Consumer } from "@/types/site";
+import { Consumer, ConsumerSpecs } from "@/types/site";
 import { AddConsumerDialog } from "./AddConsumerDialog";
 
 interface ConsumerManagementProps {
@@ -14,7 +14,12 @@ const ConsumerManagement: React.FC<ConsumerManagementProps> = ({ onSuccess }) =>
     queryFn: async () => {
       const { data, error } = await supabase.from("profiles").select("*");
       if (error) throw new Error(error.message);
-      return data as Consumer[];
+      
+      // Transform the data to match the Consumer type
+      return data.map(profile => ({
+        ...profile,
+        specs: profile.specs as ConsumerSpecs // Type assertion for specs
+      })) as Consumer[];
     }
   });
 
