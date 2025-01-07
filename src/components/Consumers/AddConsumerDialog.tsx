@@ -19,13 +19,31 @@ export const AddConsumerDialog = () => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
-      const userId = uuidv4();
-      
-      // Create the profile directly with the generated ID
+      // First, create a new user in auth.users
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: uuidv4(), // Generate a random password
+        options: {
+          data: {
+            full_name: data.name,
+          },
+        },
+      });
+
+      if (authError) {
+        console.error("Auth error:", authError);
+        throw authError;
+      }
+
+      if (!authData.user) {
+        throw new Error("No user data returned");
+      }
+
+      // Then create the profile using the new user's ID
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
-          id: userId,
+          id: authData.user.id,
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
