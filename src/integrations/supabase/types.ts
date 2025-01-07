@@ -9,44 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      consumption_files: {
-        Row: {
-          consumer_id: string
-          content_type: string | null
-          file_path: string
-          file_size: number | null
-          filename: string
-          id: string
-          upload_date: string | null
-        }
-        Insert: {
-          consumer_id: string
-          content_type?: string | null
-          file_path: string
-          file_size?: number | null
-          filename: string
-          id?: string
-          upload_date?: string | null
-        }
-        Update: {
-          consumer_id?: string
-          content_type?: string | null
-          file_path?: string
-          file_size?: number | null
-          filename?: string
-          id?: string
-          upload_date?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "consumption_files_consumer_id_fkey"
-            columns: ["consumer_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       contracts: {
         Row: {
           auto_renewal: boolean
