@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      consumption_files: {
+        Row: {
+          consumer_id: string
+          content_type: string | null
+          file_path: string
+          file_size: number | null
+          file_type: string
+          filename: string
+          id: string
+          upload_date: string | null
+        }
+        Insert: {
+          consumer_id: string
+          content_type?: string | null
+          file_path: string
+          file_size?: number | null
+          file_type?: string
+          filename: string
+          id?: string
+          upload_date?: string | null
+        }
+        Update: {
+          consumer_id?: string
+          content_type?: string | null
+          file_path?: string
+          file_size?: number | null
+          file_type?: string
+          filename?: string
+          id?: string
+          upload_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consumption_files_consumer_id_fkey"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           auto_renewal: boolean
@@ -121,9 +162,11 @@ export type Database = {
           address: string | null
           avatar_url: string | null
           city: string | null
+          consumption: number | null
           contact_person: string | null
           country: string | null
           created_at: string
+          email: string | null
           full_name: string | null
           id: string
           invitation_sent_at: string | null
@@ -133,7 +176,9 @@ export type Database = {
           phone: string | null
           postal_code: string | null
           role: string | null
+          specs: Json | null
           status: string | null
+          type: string | null
           updated_at: string
           username: string | null
           vat_number: string | null
@@ -142,30 +187,11 @@ export type Database = {
           address?: string | null
           avatar_url?: string | null
           city?: string | null
+          consumption?: number | null
           contact_person?: string | null
           country?: string | null
           created_at?: string
-          full_name?: string | null
-          id: string
-          invitation_sent_at?: string | null
-          invitation_token?: string | null
-          invited_by?: string | null
-          notes?: string | null
-          phone?: string | null
-          postal_code?: string | null
-          role?: string | null
-          status?: string | null
-          updated_at?: string
-          username?: string | null
-          vat_number?: string | null
-        }
-        Update: {
-          address?: string | null
-          avatar_url?: string | null
-          city?: string | null
-          contact_person?: string | null
-          country?: string | null
-          created_at?: string
+          email?: string | null
           full_name?: string | null
           id?: string
           invitation_sent_at?: string | null
@@ -175,7 +201,34 @@ export type Database = {
           phone?: string | null
           postal_code?: string | null
           role?: string | null
+          specs?: Json | null
           status?: string | null
+          type?: string | null
+          updated_at?: string
+          username?: string | null
+          vat_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          consumption?: number | null
+          contact_person?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          invitation_sent_at?: string | null
+          invitation_token?: string | null
+          invited_by?: string | null
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          role?: string | null
+          specs?: Json | null
+          status?: string | null
+          type?: string | null
           updated_at?: string
           username?: string | null
           vat_number?: string | null

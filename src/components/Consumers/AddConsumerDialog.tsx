@@ -7,7 +7,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Consumer } from "@/types/site";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -26,7 +25,7 @@ type ConsumerFormData = {
   notes: string;
 };
 
-export const AddConsumerDialog = () => {
+export const AddConsumerDialog = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { toast } = useToast();
   const form = useForm<ConsumerFormData>();
 
@@ -57,6 +56,9 @@ export const AddConsumerDialog = () => {
         description: "Consumer has been created successfully.",
       });
       form.reset();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error("Error creating consumer:", error);
       toast({

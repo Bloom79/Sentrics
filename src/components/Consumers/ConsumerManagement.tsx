@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ConsumersList from "@/components/SiteDetail/ConsumersList";
-import { Consumer } from "@/types/site";
 import { AddConsumerDialog } from "./AddConsumerDialog";
+import { Consumer } from "@/types/site";
 
 const ConsumerManagement = () => {
   const mockConsumers: Consumer[] = [
