@@ -1,10 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { Site } from "@/types/site";
 
 interface SiteHeaderProps {
   site: Site;
+  onUpdate?: (data: Partial<Site>) => void;
 }
 
 const SiteHeader = ({ site }: SiteHeaderProps) => {
@@ -16,7 +17,7 @@ const SiteHeader = ({ site }: SiteHeaderProps) => {
             <CardTitle className="text-2xl">{site.name}</CardTitle>
             <div className="flex items-center gap-2 text-muted-foreground mt-1">
               <MapPin className="h-4 w-4" />
-              <span>{site.location}</span>
+              <span>{`${site.location.latitude}, ${site.location.longitude}`}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
