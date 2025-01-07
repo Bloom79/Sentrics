@@ -9,7 +9,6 @@ import PlantAssets from "@/components/PlantDetail/PlantAssets";
 import { PlantSettings } from "@/components/PlantDetail/PlantSettings";
 import { useToast } from "@/components/ui/use-toast";
 
-// Mock data - in a real app, this would come from an API
 const mockPlant: Plant = {
   id: "1",
   name: "Milano Nord Plant 1",
@@ -18,6 +17,7 @@ const mockPlant: Plant = {
   currentOutput: 750,
   efficiency: 75,
   status: "online",
+  location: "Milano, Italy",
   lastUpdate: new Date().toISOString()
 };
 
