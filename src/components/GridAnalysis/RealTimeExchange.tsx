@@ -2,13 +2,14 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Gauge } from "@/components/ui/gauge";
-import { Bolt, Wave } from "lucide-react";
+import { Bolt, Waves } from "lucide-react";
 
 const mockData = [
   { time: "00:00", import: 200, export: 50 },
   { time: "00:05", import: 220, export: 45 },
   { time: "00:10", import: 180, export: 60 },
-  // ... Add more data points
+  { time: "00:15", import: 190, export: 55 },
+  { time: "00:20", import: 210, export: 40 },
 ];
 
 export const RealTimeExchange = () => {
@@ -47,7 +48,7 @@ export const RealTimeExchange = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Grid Frequency</CardTitle>
-            <Wave className="h-4 w-4 text-muted-foreground" />
+            <Waves className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">50.2 Hz</div>
@@ -59,9 +60,8 @@ export const RealTimeExchange = () => {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Export Capacity</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">40%</div>
-            <p className="text-xs text-muted-foreground">200/500 kW limit</p>
+          <CardContent className="flex justify-center">
+            <Gauge value={200} max={500} label="200/500 kW" />
           </CardContent>
         </Card>
       </div>
