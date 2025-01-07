@@ -35,15 +35,20 @@ const ConsumerDetail = () => {
       // Map the profile data to match the Consumer type
       const consumerData: Consumer = {
         id: data.id,
-        name: data.full_name || 'Unnamed Consumer', // Use full_name as name
-        type: data.type || 'unknown',
+        name: data.full_name || 'Unnamed Consumer',
+        type: (data.type as 'industrial' | 'commercial') || 'commercial',
         consumption: data.consumption || 0,
         status: data.status || 'inactive',
-        specs: data.specs || {
-          dailyUsage: 0,
+        specs: data.specs ? {
+          peakDemand: data.specs.peakDemand || 0,
+          dailyUsage: data.specs.dailyUsage || 0,
+          powerFactor: data.specs.powerFactor || 0,
+          connectionType: data.specs.connectionType || 'low-voltage'
+        } : {
           peakDemand: 0,
+          dailyUsage: 0,
           powerFactor: 0,
-          connectionType: 'unknown'
+          connectionType: 'low-voltage'
         }
       };
 
