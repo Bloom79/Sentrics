@@ -1,41 +1,52 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import GridCongestionMap from "@/components/GridAnalysis/GridCongestionMap";
-import GridMetrics from "@/components/GridAnalysis/GridMetrics";
-import CongestionTrends from "@/components/GridAnalysis/CongestionTrends";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GridOverview from "@/components/GridAnalysis/GridOverview";
+import RealTimeExchange from "@/components/GridAnalysis/RealTimeExchange";
+import HistoricalData from "@/components/GridAnalysis/HistoricalData";
+import ContractsAgreements from "@/components/GridAnalysis/ContractsAgreements";
+import FinancialSettlement from "@/components/GridAnalysis/FinancialSettlement";
 
 const GridAnalysis = () => {
   return (
-    <div className="container py-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Grid Analysis</h1>
-      </div>
-
-      <div className="grid gap-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <GridMetrics />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="col-span-1">
-            <CardHeader>
-              <CardTitle>Grid Congestion Map</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GridCongestionMap />
-            </CardContent>
-          </Card>
-
-          <Card className="col-span-1">
-            <CardHeader>
-              <CardTitle>Congestion Trends</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CongestionTrends />
-            </CardContent>
-          </Card>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Grid Exchange</h1>
+          <p className="text-muted-foreground">
+            Monitor and manage your grid connection with Terna
+          </p>
         </div>
       </div>
+
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="realtime">Real-Time Exchange</TabsTrigger>
+          <TabsTrigger value="historical">Historical Data</TabsTrigger>
+          <TabsTrigger value="contracts">Contracts</TabsTrigger>
+          <TabsTrigger value="financial">Financial Settlement</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-4">
+          <GridOverview />
+        </TabsContent>
+
+        <TabsContent value="realtime" className="space-y-4">
+          <RealTimeExchange />
+        </TabsContent>
+
+        <TabsContent value="historical" className="space-y-4">
+          <HistoricalData />
+        </TabsContent>
+
+        <TabsContent value="contracts" className="space-y-4">
+          <ContractsAgreements />
+        </TabsContent>
+
+        <TabsContent value="financial" className="space-y-4">
+          <FinancialSettlement />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
