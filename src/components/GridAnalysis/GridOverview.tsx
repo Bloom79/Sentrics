@@ -41,7 +41,7 @@ export const GridOverview = () => {
         </Card>
       </div>
 
-      <Alert>
+      <Alert variant="warning">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Warning</AlertTitle>
         <AlertDescription>
