@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LayoutGrid, Users, Grid as GridIcon, LineChart, Wrench, Settings, Home } from "lucide-react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
+import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import ProductionOverview from "@/components/Dashboard/Overview/ProductionOverview";
 import { SolarProduction, WindProduction } from "@/components/Dashboard/Overview/SourceProduction";
 import StorageStatus from "@/components/Dashboard/Overview/StorageStatus";
-import DetailedMetrics from "@/components/Dashboard/DetailedMetrics";
 import GridStatus from "@/components/Dashboard/GridStatus";
 import EnergyFlow from "@/components/Dashboard/EnergyFlow";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { language, setLanguage } = useLanguage();
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("24h");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
@@ -28,8 +26,6 @@ const Index = () => {
       <DashboardHeader
         selectedTimeRange={selectedTimeRange}
         setSelectedTimeRange={setSelectedTimeRange}
-        language={language}
-        setLanguage={setLanguage}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         selectedStatus={selectedStatus}
@@ -82,7 +78,10 @@ const Index = () => {
 
         <TabsContent value="asset-management" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
+            <Card 
+              className="cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => navigate('/plants')}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <LayoutGrid className="h-5 w-5 text-primary" />
@@ -96,7 +95,10 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card 
+              className="cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => navigate('/consumers')}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-primary" />
@@ -110,7 +112,10 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card 
+              className="cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => navigate('/grid-analysis')}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <GridIcon className="h-5 w-5 text-primary" />
@@ -128,7 +133,10 @@ const Index = () => {
 
         <TabsContent value="analysis-admin" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
+            <Card 
+              className="cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => navigate('/analytics')}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <LineChart className="h-5 w-5 text-primary" />
@@ -142,7 +150,10 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card 
+              className="cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => navigate('/maintenance')}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Wrench className="h-5 w-5 text-primary" />
@@ -156,7 +167,10 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card 
+              className="cursor-pointer hover:bg-accent/50 transition-colors"
+              onClick={() => navigate('/settings')}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="h-5 w-5 text-primary" />
