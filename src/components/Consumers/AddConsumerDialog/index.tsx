@@ -12,23 +12,15 @@ import { ConsumerContactInfo } from "./ConsumerContactInfo";
 import { ConsumerAddressInfo } from "./ConsumerAddressInfo";
 import { ConsumerBusinessInfo } from "./ConsumerBusinessInfo";
 
-interface AddConsumerDialogProps {
-  onSuccess?: () => void;
-}
-
-export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
+export const AddConsumerDialog = () => {
   const { toast } = useToast();
   const form = useForm<ConsumerFormData>();
-  const [open, setOpen] = React.useState(false);
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
-      console.log("Submitting consumer data:", data); // Debug log
-
       const { error } = await supabase
         .from('profiles')
         .insert({
-          id: crypto.randomUUID(),
           full_name: data.name,
           type: data.type,
           consumption: data.consumption,
@@ -41,27 +33,16 @@ export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
           phone: data.phone,
           vat_number: data.vat_number,
           notes: data.notes,
-          status: 'active',
-          specs: {
-            peakDemand: 0,
-            dailyUsage: 0,
-            powerFactor: 0,
-            connectionType: 'low-voltage'
-          }
+          status: 'active'
         });
 
       if (error) throw error;
 
-      console.log("Consumer created successfully"); // Debug log
-      
       toast({
         title: "Success",
         description: "Consumer has been created successfully.",
       });
-      
       form.reset();
-      setOpen(false);
-      onSuccess?.();
     } catch (error) {
       console.error("Error creating consumer:", error);
       toast({
@@ -73,7 +54,7 @@ export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" /> Add Consumer
