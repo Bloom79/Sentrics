@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/Layout/AppSidebar";
 import { AppBreadcrumb } from "@/components/Layout/Breadcrumb";
 import { UserProfile } from "@/components/Layout/UserProfile";
 import Index from "@/pages/Index";
+import Sites from "@/pages/Sites";
 import GridAnalysis from "@/pages/GridAnalysis";
 import SiteDetail from "@/pages/SiteDetail";
 import StorageUnitDetail from "@/pages/StorageUnitDetail";
@@ -27,6 +28,7 @@ export const AppLayout = () => {
             </div>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/sites" element={<Sites />} />
               <Route path="/plants/:plantId" element={<PlantDetail />} />
               <Route path="/plants/:plantId/financials" element={<Financials />} />
               <Route path="/consumers" element={<Consumers />} />
