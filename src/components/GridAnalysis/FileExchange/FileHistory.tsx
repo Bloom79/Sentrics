@@ -1,83 +1,58 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Download, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
-// Mock data - replace with actual data from your backend
-const fileHistory = [
+interface File {
+  id: string;
+  name: string;
+  timestamp: string;
+  status: "success" | "error";
+}
+
+const files: File[] = [
   {
     id: "1",
-    filename: "schedule_2024_03_15.csv",
-    type: "schedule",
-    direction: "outbound",
+    name: "File Exchange 1",
+    timestamp: "2024-01-01 10:00",
     status: "success",
-    timestamp: "2024-03-15T10:00:00",
-    user: "John Doe",
   },
   {
     id: "2",
-    filename: "meter_data_2024_03_14.xml",
-    type: "meter-data",
-    direction: "inbound",
+    name: "File Exchange 2",
+    timestamp: "2024-01-02 11:00",
     status: "error",
-    timestamp: "2024-03-14T15:30:00",
-    user: "Jane Smith",
+  },
+  {
+    id: "3",
+    name: "File Exchange 3",
+    timestamp: "2024-01-03 12:00",
+    status: "success",
   },
 ];
 
-export const FileHistory = () => {
+const FileHistory = () => {
   return (
     <Card>
       <CardHeader>
         <CardTitle>File Exchange History</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Filename</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Direction</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Timestamp</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {fileHistory.map((file) => (
-              <TableRow key={file.id}>
-                <TableCell>{file.filename}</TableCell>
-                <TableCell className="capitalize">{file.type}</TableCell>
-                <TableCell>
-                  <Badge variant={file.direction === "inbound" ? "secondary" : "outline"}>
-                    {file.direction}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Badge variant={file.status === "success" ? "success" : "destructive"}>
-                    {file.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{file.user}</TableCell>
-                <TableCell>{new Date(file.timestamp).toLocaleString()}</TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" size="icon">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="space-y-4">
+          {files.map((file) => (
+            <div key={file.id} className="flex items-center justify-between p-2 border rounded">
+              <div>
+                <p className="font-medium">{file.name}</p>
+                <p className="text-sm text-muted-foreground">{file.timestamp}</p>
+              </div>
+              <Badge variant={file.status === "success" ? "default" : "destructive"}>
+                {file.status}
+              </Badge>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
 };
+
+export default FileHistory;

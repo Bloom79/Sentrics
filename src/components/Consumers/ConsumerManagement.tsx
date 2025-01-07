@@ -23,16 +23,11 @@ const ConsumerManagement = () => {
         type: (profile.type as 'industrial' | 'commercial') || 'commercial',
         consumption: profile.consumption || 0,
         status: profile.status || 'active',
-        specs: profile.specs ? {
-          peakDemand: profile.specs.peakDemand || 0,
-          dailyUsage: profile.specs.dailyUsage || 0,
-          powerFactor: profile.specs.powerFactor || 0,
-          connectionType: profile.specs.connectionType || 'low-voltage'
-        } : {
-          peakDemand: 0,
-          dailyUsage: 0,
-          powerFactor: 0,
-          connectionType: 'low-voltage'
+        specs: {
+          peakDemand: profile.specs?.peakDemand || 0,
+          dailyUsage: profile.specs?.dailyUsage || 0,
+          powerFactor: profile.specs?.powerFactor || 0,
+          connectionType: profile.specs?.connectionType || 'low-voltage'
         }
       }));
     }

@@ -9,24 +9,15 @@ import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisuali
 import StorageTab from "@/components/SiteDetail/StorageTab";
 import { InfoTab } from "@/components/SiteDetail/InfoTab";
 import { GridTab } from "@/components/SiteDetail/GridTab";
-import { Site } from "@/types/site";
+import { Site, Plant, Consumer, StorageUnit } from "@/types/site";
 
-// Mock data for development
+// Update mock data to include all required properties
 const mockSite: Site = {
   id: "1",
   name: "Milano Nord",
-  location: "Northern Region",
-  type: "hybrid",
-  status: "online",
-  capacity: 800,
-  lastUpdate: new Date().toISOString(),
-  dailyProduction: 2500,
-  monthlyProduction: 75000,
-  efficiency: 92,
-  co2Saved: 45.2,
-  coordinates: {
-    lat: 45.4642,
-    lng: 9.1900
+  location: {
+    latitude: 45.4642,
+    longitude: 9.1900
   },
   plants: [
     {
@@ -37,7 +28,11 @@ const mockSite: Site = {
       currentOutput: 350,
       efficiency: 95,
       status: "online",
-      lastUpdate: new Date().toISOString()
+      lastUpdate: new Date().toISOString(),
+      location: {
+        latitude: 45.4642,
+        longitude: 9.1900
+      }
     },
     {
       id: "2",
@@ -47,7 +42,11 @@ const mockSite: Site = {
       currentOutput: 250,
       efficiency: 89,
       status: "online",
-      lastUpdate: new Date().toISOString()
+      lastUpdate: new Date().toISOString(),
+      location: {
+        latitude: 45.4642,
+        longitude: 9.1900
+      }
     }
   ],
   consumers: [
@@ -56,20 +55,33 @@ const mockSite: Site = {
       name: "Industrial Park A",
       type: "industrial",
       consumption: 450,
-      status: "active"
+      status: "active",
+      specs: {
+        peakDemand: 500,
+        dailyUsage: 10000,
+        powerFactor: 0.95,
+        connectionType: "high-voltage"
+      }
     },
     {
       id: "2",
       name: "Commercial Center B",
       type: "commercial",
       consumption: 200,
-      status: "active"
+      status: "active",
+      specs: {
+        peakDemand: 250,
+        dailyUsage: 5000,
+        powerFactor: 0.92,
+        connectionType: "low-voltage"
+      }
     }
   ],
   storageUnits: [
     {
       id: "1",
       name: "BESS Unit 1",
+      type: "battery",
       capacity: 1000,
       currentCharge: 750,
       status: "charging",
@@ -81,6 +93,7 @@ const mockSite: Site = {
     {
       id: "2",
       name: "BESS Unit 2",
+      type: "battery",
       capacity: 1000,
       currentCharge: 600,
       status: "discharging",
@@ -90,32 +103,10 @@ const mockSite: Site = {
       efficiency: 94
     }
   ],
-  energySources: [
-    {
-      type: "solar",
-      output: 350,
-      capacity: 500,
-      currentOutput: 350,
-      status: "online"
-    },
-    {
-      type: "wind",
-      output: 250,
-      capacity: 300,
-      currentOutput: 250,
-      status: "online"
-    }
-  ],
-  storage: {
-    capacity: 2000,
-    currentCharge: 1350
-  },
-  gridConnection: {
-    status: "connected",
-    frequency: 50.02,
-    voltage: 230.5,
-    congestion: "Low"
-  }
+  status: "online",
+  totalCapacity: 800,
+  currentProduction: 600,
+  efficiency: 92
 };
 
 const SiteDetail = () => {

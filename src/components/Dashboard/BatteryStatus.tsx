@@ -10,6 +10,7 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
   {
     id: "1",
     name: "Storage Unit 1",
+    type: "battery",
     siteId: "1",
     siteName: "Milano Nord",
     capacity: 1000,
@@ -23,6 +24,7 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
   {
     id: "2",
     name: "Storage Unit 2",
+    type: "battery",
     siteId: "2",
     siteName: "Roma Est",
     capacity: 1500,
@@ -36,6 +38,7 @@ const mockStorageUnits: (StorageUnit & { siteName: string; siteId: string })[] =
   {
     id: "3",
     name: "Storage Unit 3",
+    type: "battery",
     siteId: "1",
     siteName: "Milano Nord",
     capacity: 1200,

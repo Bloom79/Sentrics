@@ -72,9 +72,9 @@ const GridOverview = () => {
           </CardContent>
         </Card>
       </div>
-
+      
       {gridStatus.alerts.map((alert, index) => (
-        <Alert key={index} variant="warning">
+        <Alert key={index} variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Warning</AlertTitle>
           <AlertDescription>{alert.message}</AlertDescription>
