@@ -12,10 +12,3 @@ export type ConsumerFormData = {
   vat_number: string;
   notes: string;
 };
-
-export type ConsumerSpecs = {
-  peakDemand: number;
-  dailyUsage: number;
-  powerFactor: number;
-  connectionType: 'low-voltage' | 'medium-voltage' | 'high-voltage';
-};

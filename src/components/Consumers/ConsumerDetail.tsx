@@ -47,13 +47,6 @@ const ConsumerDetail = () => {
         throw new Error('Consumer not found');
       }
 
-      const defaultSpecs: ConsumerSpecs = {
-        peakDemand: 0,
-        dailyUsage: 0,
-        powerFactor: 0,
-        connectionType: 'low-voltage'
-      };
-
       // Transform the data to match our Consumer type
       const consumer: Consumer = {
         id: data.id,
@@ -61,9 +54,12 @@ const ConsumerDetail = () => {
         type: (data.type || 'residential') as ConsumerType,
         consumption: data.consumption || 0,
         status: (data.status || 'active') as ConsumerStatus,
-        specs: typeof data.specs === 'object' && data.specs !== null
-          ? { ...defaultSpecs, ...data.specs } as ConsumerSpecs
-          : defaultSpecs,
+        specs: (data.specs || {
+          peakDemand: 0,
+          dailyUsage: 0,
+          powerFactor: 0,
+          connectionType: 'low-voltage'
+        }) as ConsumerSpecs,
         address: data.address,
         city: data.city,
         postal_code: data.postal_code,
