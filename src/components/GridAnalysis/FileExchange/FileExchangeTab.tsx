@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileUploader } from "./FileUploader";
 import { FilesList } from "./FilesList";
 import { FileGenerator } from "./FileGenerator";
-import { FileDown, FileUp } from "lucide-react";
+import { FileImport, FileExport } from "lucide-react";
 
 export const FileExchangeTab = () => {
   return (
@@ -12,11 +12,11 @@ export const FileExchangeTab = () => {
       <Tabs defaultValue="inbound" className="space-y-4">
         <TabsList>
           <TabsTrigger value="inbound">
-            <FileDown className="h-4 w-4 mr-2" />
+            <FileImport className="h-4 w-4 mr-2" />
             Inbound Files
           </TabsTrigger>
           <TabsTrigger value="outbound">
-            <FileUp className="h-4 w-4 mr-2" />
+            <FileExport className="h-4 w-4 mr-2" />
             Outbound Files
           </TabsTrigger>
         </TabsList>

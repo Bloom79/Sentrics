@@ -8,6 +8,7 @@ const mockSites: Site[] = [
   {
     id: "1",
     name: "North Site",
+    location: "Northern Region",
     type: "hybrid",
     capacity: 800,
     status: "online",
@@ -16,7 +17,6 @@ const mockSites: Site[] = [
     monthlyProduction: 75000,
     efficiency: 92,
     co2Saved: 45.2,
-    location: { latitude: 45.4642, longitude: 9.1900 },
     plants: [],
     consumers: [],
     storageUnits: [],
@@ -25,17 +25,12 @@ const mockSites: Site[] = [
       { type: "wind", output: 250, capacity: 300, currentOutput: 250, status: "online" }
     ],
     storage: { capacity: 5000, currentCharge: 4200 },
-    gridConnection: { 
-      status: "connected", 
-      frequency: 50.02, 
-      voltage: 230.5, 
-      congestion: "Low",
-      capacity: 1000
-    }
+    gridConnection: { status: "connected", frequency: 50.02, voltage: 230.5, congestion: "Low" }
   },
   {
     id: "2",
     name: "South Site",
+    location: "Southern Region",
     type: "hybrid",
     capacity: 700,
     status: "online",
@@ -44,7 +39,6 @@ const mockSites: Site[] = [
     monthlyProduction: 63000,
     efficiency: 88,
     co2Saved: 38.5,
-    location: { latitude: 41.9028, longitude: 12.4964 },
     plants: [],
     consumers: [],
     storageUnits: [],
@@ -53,13 +47,7 @@ const mockSites: Site[] = [
       { type: "wind", output: 200, capacity: 250, currentOutput: 200, status: "online" }
     ],
     storage: { capacity: 4000, currentCharge: 2800 },
-    gridConnection: { 
-      status: "connected", 
-      frequency: 49.98, 
-      voltage: 229.8, 
-      congestion: "Medium",
-      capacity: 800
-    }
+    gridConnection: { status: "connected", frequency: 49.98, voltage: 229.8, congestion: "Medium" }
   }
 ];
 
@@ -125,3 +113,4 @@ const GridStatus = () => {
 };
 
 export default GridStatus;
+
