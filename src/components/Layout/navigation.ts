@@ -20,11 +20,6 @@ export const navigationGroups = [
         icon: LayoutDashboard,
       },
       {
-        title: "Sites",
-        path: "/sites",
-        icon: Factory,
-      },
-      {
         title: "Users",
         path: "/users",
         icon: Users,
@@ -36,8 +31,8 @@ export const navigationGroups = [
     items: [
       {
         title: "Sites",
+        path: "/sites",
         icon: Factory,
-        isExpandable: true,
       },
       {
         title: "Consumers",
