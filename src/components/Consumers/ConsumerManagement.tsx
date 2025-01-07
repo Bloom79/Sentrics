@@ -1,35 +1,85 @@
 import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ConsumersList from "@/components/SiteDetail/ConsumersList";
+import { Consumer } from "@/types/site";
+import { AddConsumerDialog } from "./AddConsumerDialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Consumer } from "@/types/site";
-import AddConsumerDialog from "./AddConsumerDialog";
 
-interface ConsumerManagementProps {
-  onSuccess?: () => void;
-}
+const ConsumerManagement = () => {
+  const { data: consumers, refetch } = useQuery({
+    queryKey: ['consumers'],
+    queryFn: async () => {
+      console.log("Fetching consumers from profiles table");
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .not('type', 'is', null);
+      
+      if (error) {
+        console.error("Error fetching consumers:", error);
+        throw error;
+      }
+      
+      console.log("Raw profiles data:", data);
+      
+      return data?.map(profile => {
+        let specs;
+        if (typeof profile.specs === 'string') {
+          try {
+            specs = JSON.parse(profile.specs);
+          } catch (e) {
+            specs = {
+              peakDemand: 0,
+              dailyUsage: 0,
+              powerFactor: 0,
+              connectionType: 'low-voltage'
+            };
+          }
+        } else {
+          specs = profile.specs || {
+            peakDemand: 0,
+            dailyUsage: 0,
+            powerFactor: 0,
+            connectionType: 'low-voltage'
+          };
+        }
 
-const ConsumerManagement: React.FC<ConsumerManagementProps> = ({ onSuccess }) => {
-  const { data: consumers, isLoading } = useQuery<Consumer[]>(["consumers"], async () => {
-    const { data, error } = await supabase.from("profiles").select("*");
-    if (error) throw new Error(error.message);
-    return data as Consumer[];
+        return {
+          id: profile.id,
+          full_name: profile.full_name || '',
+          type: (profile.type as "residential" | "commercial" | "industrial") || 'residential',
+          consumption: Number(profile.consumption) || 0,
+          status: (profile.status as "active" | "inactive" | "pending") || 'active',
+          specs: {
+            peakDemand: Number(specs.peakDemand) || 0,
+            dailyUsage: Number(specs.dailyUsage) || 0,
+            powerFactor: Number(specs.powerFactor) || 0,
+            connectionType: specs.connectionType || 'low-voltage'
+          }
+        };
+      }) as Consumer[] || [];
+    }
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div>
-      <AddConsumerDialog onSuccess={onSuccess} />
-      <div>
-        {consumers?.map((consumer) => (
-          <div key={consumer.id}>
-            <h3>{consumer.full_name}</h3>
-            <p>{consumer.type}</p>
-          </div>
-        ))}
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Consumer Management
+        </h2>
+        <AddConsumerDialog onSuccess={refetch} />
       </div>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Active Consumers</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ConsumersList consumers={consumers || []} />
+        </CardContent>
+      </Card>
     </div>
   );
 };

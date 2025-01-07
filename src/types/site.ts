@@ -26,20 +26,7 @@ export interface Consumer {
   notes?: string;
 }
 
-export interface StorageUnit {
-  id: string;
-  name: string;
-  type: 'battery' | 'thermal' | 'hydro';
-  capacity: number;
-  currentCharge: number;
-  status: string;
-  health: number;
-  temperature: number;
-  powerRating: number;
-  efficiency: number;
-}
-
-export interface Plant {
+export type Plant = {
   id: string;
   name: string;
   type: 'solar' | 'wind';
@@ -47,42 +34,62 @@ export interface Plant {
   currentOutput: number;
   efficiency: number;
   status: string;
-  location: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
   lastUpdate?: string;
-}
+};
 
-export interface EnergySource {
-  type: string;
-  output: number;
-  capacity: number;
-  currentOutput: number;
-  status: string;
-}
-
-export interface GridConnection {
-  status: string;
-  capacity: number;
-  voltage: number;
-  frequency: number;
-  congestion: 'Low' | 'Medium' | 'High';
-}
-
-export interface Site {
+export type Site = {
   id: string;
   name: string;
-  location: string;
-  type: string;
-  capacity: number;
-  status: string;
-  lastUpdate: string;
-  dailyProduction: number;
-  monthlyProduction: number;
-  efficiency: number;
-  co2Saved: number;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
   plants: Plant[];
   consumers: Consumer[];
   storageUnits: StorageUnit[];
-  energySources: EnergySource[];
-  storage: { capacity: number; currentCharge: number };
-  gridConnection: GridConnection;
-}
+  status?: string;
+  type?: string;
+  capacity?: number;
+  efficiency?: number;
+  co2Saved?: number;
+  gridConnection?: {
+    status: string;
+    capacity: number;
+    voltage: number;
+    frequency: number;
+  };
+  energySources?: {
+    solar: number;
+    wind: number;
+    storage: number;
+  };
+};
+
+export type AssetType = {
+  id: string;
+  type: 'panel' | 'inverter' | 'turbine' | 'transformer' | 'battery';
+  status: 'operational' | 'maintenance' | 'faulty';
+  serialNumber: string;
+  model: string;
+  manufacturer: string;
+  installationDate: string;
+  location: string;
+  specs: Record<string, unknown>;
+};
+
+export type StorageUnit = {
+  id: string;
+  name: string;
+  type: 'battery' | 'hydrogen' | 'thermal';
+  capacity: number;
+  currentCharge: number;
+  status: string;
+  powerRating: number;
+  temperature: number;
+  health: number;
+  efficiency: number;
+};
