@@ -5,8 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { Upload, Download } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Upload } from "lucide-react";
 
 interface ConsumptionFile {
   id: string;
@@ -15,19 +14,10 @@ interface ConsumptionFile {
   content_type: string;
   file_size: number;
   file_path: string;
-  file_type: string;
 }
-
-const FILE_TYPES = {
-  contract: "Contract Consumption",
-  actual: "Actual Consumption",
-  forecast: "Consumption Forecast",
-  other: "Other"
-};
 
 const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
   const [uploading, setUploading] = useState(false);
-  const [selectedFileType, setSelectedFileType] = useState<string>("actual");
   const { toast } = useToast();
 
   const { data: files, refetch } = useQuery({
@@ -51,6 +41,7 @@ const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
 
       setUploading(true);
 
+      // Upload file to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const filePath = `${consumerId}/${crypto.randomUUID()}.${fileExt}`;
 
@@ -60,6 +51,7 @@ const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
 
       if (uploadError) throw uploadError;
 
+      // Create record in consumption_files table
       const { error: dbError } = await supabase
         .from('consumption_files')
         .insert({
@@ -67,8 +59,7 @@ const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
           filename: file.name,
           file_path: filePath,
           content_type: file.type,
-          file_size: file.size,
-          file_type: selectedFileType
+          file_size: file.size
         });
 
       if (dbError) throw dbError;
@@ -99,6 +90,7 @@ const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
 
       if (error) throw error;
 
+      // Create a download link
       const url = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = url;
@@ -116,59 +108,26 @@ const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
     }
   };
 
-  const downloadTemplate = () => {
-    const templateContent = "Date,Hour,Consumption (kWh)\n2024-01-01,0,100\n2024-01-01,1,95";
-    const blob = new Blob([templateContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'consumption_template.csv';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Consumption Files</CardTitle>
-        <div className="flex gap-4">
+        <div>
           <Button
             variant="outline"
-            onClick={downloadTemplate}
+            disabled={uploading}
+            onClick={() => document.getElementById('file-upload')?.click()}
           >
-            <Download className="mr-2 h-4 w-4" />
-            Download Template
+            <Upload className="mr-2 h-4 w-4" />
+            Upload File
           </Button>
-          <div className="flex items-center gap-2">
-            <Select value={selectedFileType} onValueChange={setSelectedFileType}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select file type" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(FILE_TYPES).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              variant="outline"
-              disabled={uploading}
-              onClick={() => document.getElementById('file-upload')?.click()}
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              Upload File
-            </Button>
-            <input
-              id="file-upload"
-              type="file"
-              className="hidden"
-              onChange={handleFileUpload}
-              accept=".csv,.xlsx,.xls"
-            />
-          </div>
+          <input
+            id="file-upload"
+            type="file"
+            className="hidden"
+            onChange={handleFileUpload}
+            accept=".csv,.xlsx,.xls"
+          />
         </div>
       </CardHeader>
       <CardContent>
@@ -184,7 +143,7 @@ const ConsumptionFiles = ({ consumerId }: { consumerId: string }) => {
                 <div className="space-y-1">
                   <p className="font-medium">{file.filename}</p>
                   <p className="text-sm text-muted-foreground">
-                    {FILE_TYPES[file.file_type as keyof typeof FILE_TYPES]} - Uploaded on {format(new Date(file.upload_date), 'PPp')}
+                    Uploaded on {format(new Date(file.upload_date), 'PPp')}
                   </p>
                 </div>
                 <Button
