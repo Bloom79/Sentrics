@@ -38,7 +38,6 @@ export type Plant = {
     latitude: number;
     longitude: number;
   };
-  lastUpdate?: string;
 };
 
 export type Site = {
@@ -51,35 +50,10 @@ export type Site = {
   plants: Plant[];
   consumers: Consumer[];
   storageUnits: StorageUnit[];
-  status?: string;
-  type?: string;
-  capacity?: number;
-  efficiency?: number;
-  co2Saved?: number;
-  gridConnection?: {
-    status: string;
-    capacity: number;
-    voltage: number;
-    frequency: number;
-  };
-  energySources?: {
-    solar: number;
-    wind: number;
-    storage: number;
-  };
 };
 
-export type AssetType = {
-  id: string;
-  type: 'panel' | 'inverter' | 'turbine' | 'transformer' | 'battery';
-  status: 'operational' | 'maintenance' | 'faulty';
-  serialNumber: string;
-  model: string;
-  manufacturer: string;
-  installationDate: string;
-  location: string;
-  specs: Record<string, unknown>;
-};
+export type AssetType = 'panel' | 'inverter' | 'turbine' | 'transformer' | 'battery';
+export type AssetStatus = 'operational' | 'maintenance' | 'faulty';
 
 export type StorageUnit = {
   id: string;
