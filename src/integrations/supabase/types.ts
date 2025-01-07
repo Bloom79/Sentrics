@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      consumption_data: {
+        Row: {
+          consumer_id: string
+          created_at: string | null
+          granularity: string
+          id: string
+          timestamp: string
+          value: number
+        }
+        Insert: {
+          consumer_id: string
+          created_at?: string | null
+          granularity: string
+          id?: string
+          timestamp: string
+          value: number
+        }
+        Update: {
+          consumer_id?: string
+          created_at?: string | null
+          granularity?: string
+          id?: string
+          timestamp?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consumption_data_consumer_id_fkey"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consumption_files: {
         Row: {
           consumer_id: string

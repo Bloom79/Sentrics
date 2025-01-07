@@ -6,14 +6,20 @@ import { addDays } from "date-fns";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { DateRange } from "react-day-picker";
 
 interface ConsumptionGraphProps {
   consumerId: string;
 }
 
+type ConsumptionData = {
+  timestamp: string;
+  value: number;
+}
+
 export const ConsumptionGraph = ({ consumerId }: ConsumptionGraphProps) => {
   const [granularity, setGranularity] = React.useState("hourly");
-  const [dateRange, setDateRange] = React.useState({
+  const [dateRange, setDateRange] = React.useState<DateRange>({
     from: addDays(new Date(), -7),
     to: new Date(),
   });
@@ -21,26 +27,26 @@ export const ConsumptionGraph = ({ consumerId }: ConsumptionGraphProps) => {
   const { data: consumptionData } = useQuery({
     queryKey: ['consumption', consumerId, granularity, dateRange],
     queryFn: async () => {
-      // This is a placeholder query - you'll need to adjust based on your actual data structure
+      if (!dateRange.from || !dateRange.to) return [];
+
       const { data, error } = await supabase
         .from('consumption_data')
         .select('*')
         .eq('consumer_id', consumerId)
+        .eq('granularity', granularity)
         .gte('timestamp', dateRange.from.toISOString())
-        .lte('timestamp', dateRange.to.toISOString());
+        .lte('timestamp', dateRange.to.toISOString())
+        .order('timestamp');
 
       if (error) throw error;
-      return data || [];
+      return (data || []) as ConsumptionData[];
     },
+    enabled: Boolean(dateRange.from && dateRange.to),
   });
 
-  // Mock data for demonstration - replace with actual data processing
-  const chartData = [
-    { timestamp: '2024-01-01', value: 100 },
-    { timestamp: '2024-01-02', value: 120 },
-    { timestamp: '2024-01-03', value: 150 },
-    // ... more data points
-  ];
+  const handleDateRangeChange = (range: DateRange) => {
+    setDateRange(range);
+  };
 
   return (
     <Card className="mt-6">
@@ -60,20 +66,26 @@ export const ConsumptionGraph = ({ consumerId }: ConsumptionGraphProps) => {
           </Select>
           <DatePickerWithRange
             date={dateRange}
-            setDate={setDateRange}
+            setDate={handleDateRangeChange}
           />
         </div>
       </CardHeader>
       <CardContent>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
+            <LineChart data={consumptionData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="timestamp" 
                 tickFormatter={(value) => new Date(value).toLocaleDateString()} 
               />
-              <YAxis label={{ value: 'Consumption (kWh)', angle: -90, position: 'insideLeft' }} />
+              <YAxis 
+                label={{ 
+                  value: 'Consumption (kWh)', 
+                  angle: -90, 
+                  position: 'insideLeft' 
+                }} 
+              />
               <Tooltip 
                 labelFormatter={(value) => new Date(value).toLocaleString()}
                 formatter={(value) => [`${value} kWh`, 'Consumption']}
