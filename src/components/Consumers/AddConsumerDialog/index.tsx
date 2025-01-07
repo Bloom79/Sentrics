@@ -16,14 +16,14 @@ interface AddConsumerDialogProps {
   onSuccess?: () => void;
 }
 
-export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
+export const AddConsumerDialog: React.FC<AddConsumerDialogProps> = ({ onSuccess }) => {
   const { toast } = useToast();
   const form = useForm<ConsumerFormData>();
   const [open, setOpen] = React.useState(false);
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
-      console.log("Submitting consumer data:", data); // Debug log
+      console.log("Submitting consumer data:", data);
 
       const { error } = await supabase
         .from('profiles')
@@ -52,7 +52,7 @@ export const AddConsumerDialog = ({ onSuccess }: AddConsumerDialogProps) => {
 
       if (error) throw error;
 
-      console.log("Consumer created successfully"); // Debug log
+      console.log("Consumer created successfully");
       
       toast({
         title: "Success",

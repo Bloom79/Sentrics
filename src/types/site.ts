@@ -24,6 +24,19 @@ export interface Consumer {
   phone?: string;
   vat_number?: string;
   notes?: string;
+  created_at?: string;
+  updated_at?: string;
+  avatar_url?: string;
+  invitation_sent_at?: string;
+  invited_by?: string;
+  invitation_token?: string;
+  role?: string;
+  username?: string;
+}
+
+export interface Location {
+  latitude: number;
+  longitude: number;
 }
 
 export interface StorageUnit {
@@ -47,7 +60,7 @@ export interface Plant {
   currentOutput: number;
   efficiency: number;
   status: string;
-  location: string;
+  location: Location;
   lastUpdate?: string;
 }
 
@@ -70,13 +83,11 @@ export interface GridConnection {
 export interface Site {
   id: string;
   name: string;
-  location: string;
+  location: Location;
   type: string;
   capacity: number;
   status: string;
   lastUpdate: string;
-  dailyProduction: number;
-  monthlyProduction: number;
   efficiency: number;
   co2Saved: number;
   plants: Plant[];
@@ -85,4 +96,25 @@ export interface Site {
   energySources: EnergySource[];
   storage: { capacity: number; currentCharge: number };
   gridConnection: GridConnection;
+  dailyProduction: number;
+  monthlyProduction: number;
+}
+
+export interface AssetType {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  manufacturer?: string;
+  model?: string;
+  serialNumber?: string;
+  installationDate?: string;
+  lastMaintenance?: string;
+  nextMaintenance?: string;
+  efficiency?: number;
+  notes?: string;
+  lastOutput?: number;
+  ratedCapacity?: number;
+  capacity?: number;
+  technology?: string;
 }
