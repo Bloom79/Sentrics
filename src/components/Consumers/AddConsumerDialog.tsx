@@ -18,6 +18,7 @@ export const AddConsumerDialog = () => {
 
   const onSubmit = async (data: ConsumerFormData) => {
     try {
+      // Create the profile directly
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({

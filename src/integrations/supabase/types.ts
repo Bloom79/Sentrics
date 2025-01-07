@@ -152,7 +152,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           full_name?: string | null
-          id?: string
+          id: string
           invitation_sent_at?: string | null
           invitation_token?: string | null
           invited_by?: string | null
