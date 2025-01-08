@@ -1,0 +1,13 @@
+{
+  "name": "renewergy-harmony",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "cd frontend && npm install --legacy-peer-deps && cd ../backend && pip install -r requirements.txt",
+    "dev": "concurrently \"cd frontend && npm run dev\" \"cd backend && python run_local.py\"",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
