@@ -58,3 +58,17 @@ export interface Site {
   currentProduction: number;
   efficiency: number;
 }
+
+export interface POD {
+  id: string;
+  name: string;
+  connection_type: 'high-voltage' | 'low-voltage';
+  status: 'active' | 'inactive';
+  installed_capacity: number;
+  location: string;
+  current_consumption: number;
+  peak_demand: number;
+  daily_usage: number;
+  tariff_plan: string;
+  last_maintenance: string;
+}

@@ -1,113 +1,93 @@
-export type AssetStatus = "online" | "offline" | "maintenance";
+import { Location } from './location';
 
-export type Plant = {
+export interface Consumer {
   id: string;
   name: string;
-  type: "solar" | "wind";
-  status: AssetStatus;
+  full_name: string;
+  type: 'industrial' | 'commercial' | 'residential';
+  status: 'active' | 'inactive' | 'pending';
+  created_at: string;
+  specs: ConsumerSpecs;
+  contact_person?: string;
+  phone?: string;
+  email?: string;
+  vat_number?: string;
+  address?: string;
+  city?: string;
+  postal_code?: string;
+  country?: string;
+  notes?: string;
+}
+
+export interface ConsumerSpecs {
+  peakDemand: number;
+  dailyUsage: number;
+  powerFactor: number;
+  connectionType: string;
+}
+
+export interface Plant {
+  id: string;
+  name: string;
+  type: 'solar' | 'wind' | 'hydro';
+  capacity: number;
+  status: 'active' | 'inactive' | 'maintenance';
+  location: Location;
+  efficiency: number;
+  currentOutput: number;
+}
+
+export interface StorageUnit {
+  id: string;
+  name: string;
+  capacity: number;
+  chargeLevel: number;
+  status: 'active' | 'inactive' | 'maintenance';
+  efficiency: number;
+  technology: string;
+}
+
+export interface Site {
+  id: string;
+  name: string;
+  location: Location;
+  type: 'industrial' | 'commercial' | 'residential';
+  status: 'active' | 'inactive' | 'maintenance';
   capacity: number;
   currentOutput: number;
   efficiency: number;
-  location: {
-    latitude: number;
-    longitude: number;
-  };
-  lastUpdate?: string;
-};
+  plants: Plant[];
+  storage: StorageUnit[];
+  energySources: EnergySource[];
+  gridConnection: GridConnection;
+}
 
-export type Consumer = {
+export interface EnergySource {
   id: string;
   name: string;
-  type: "residential" | "industrial" | "commercial";
-  consumption: number;
-  status: string;
-  specs: {
-    peakDemand: number;
-    dailyUsage: number;
-    powerFactor: number;
-    connectionType: string;
-  };
-};
-
-export type StorageUnit = {
-  id: string;
-  name: string;
-  type: "battery" | "thermal" | "mechanical";
+  type: string;
   capacity: number;
-  currentCharge: number;
-  status: string;
-  health: number;
-  temperature: number;
-  powerRating: number;
-  efficiency: number;
-  lastOutput?: number;
-  stateOfCharge?: number;
-};
+  currentOutput: number;
+  output: number;
+}
 
-export type GridConnection = {
-  status: "connected" | "disconnected";
+export interface GridConnection {
+  status: 'connected' | 'disconnected';
+  capacity: number;
+  currentLoad: number;
   frequency: number;
   voltage: number;
-  congestion: "Low" | "Medium" | "High";
-};
-
-export type EnergySource = {
-  type: "solar" | "wind";
-  output: number;
-  capacity: number;
-  currentOutput: number;
-  status: "online" | "offline" | "maintenance";
-};
-
-export type Site = {
-  id: string;
-  name: string;
-  location: string;
-  type: "solar" | "wind" | "hybrid";
-  status: "online" | "offline" | "maintenance";
-  capacity: number;
-  efficiency: number;
-  co2Saved: number;
-  dailyProduction: number;
-  monthlyProduction: number;
-  plants: Plant[];
-  consumers: Consumer[];
-  storageUnits: StorageUnit[];
-  energySources: EnergySource[];
-  storage: {
-    capacity: number;
-    currentCharge: number;
-  };
-  gridConnection: GridConnection;
-  lastUpdate?: string;
-  coordinates?: {
-    lat: number;
-    lng: number;
-  };
-};
+  congestion: number;
+}
 
 export type AssetType = {
   id: string;
-  type: "panel" | "inverter" | "turbine" | "transformer" | "battery";
+  type: string;
   serialNumber: string;
   model: string;
   manufacturer: string;
   installationDate: string;
-  status: AssetStatus;
-  lastOutput?: number;
-  efficiency: number;
+  status: 'operational' | 'maintenance' | 'faulty';
   location: string;
-  ratedPower?: number;
-  technology?: "lithium-ion" | "lead-acid" | "flow";
-  energyCapacity?: number;
-  roundTripEfficiency?: number;
-  stateOfCharge?: number;
-  cutInSpeed?: number;
-  cutOutSpeed?: number;
-  rotorDiameter?: number;
-  hubHeight?: number;
-  ratedCapacity?: number;
-  voltageIn?: number;
-  voltageOut?: number;
-  capacity?: number;
+  [key: string]: any;
 };

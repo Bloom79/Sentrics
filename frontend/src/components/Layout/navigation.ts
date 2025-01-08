@@ -7,7 +7,8 @@ import {
   Settings, 
   Wrench,
   DollarSign,
-  FileText
+  FileText,
+  PlayCircle
 } from "lucide-react";
 
 export const navigationGroups = [
@@ -43,6 +44,11 @@ export const navigationGroups = [
         title: "Energy Grid",
         path: "/grid-analysis",
         icon: Power,
+      },
+      {
+        title: "Simulation",
+        path: "/simulation",
+        icon: PlayCircle,
       },
     ],
   },

@@ -15,6 +15,7 @@ export type Database = {
           created_at: string | null
           granularity: string
           id: string
+          pod_id: string | null
           timestamp: string
           value: number
         }
@@ -23,6 +24,7 @@ export type Database = {
           created_at?: string | null
           granularity: string
           id?: string
+          pod_id?: string | null
           timestamp: string
           value: number
         }
@@ -31,6 +33,7 @@ export type Database = {
           created_at?: string | null
           granularity?: string
           id?: string
+          pod_id?: string | null
           timestamp?: string
           value?: number
         }
@@ -40,6 +43,13 @@ export type Database = {
             columns: ["consumer_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consumption_data_pod_id_fkey"
+            columns: ["pod_id"]
+            isOneToOne: false
+            referencedRelation: "pods"
             referencedColumns: ["id"]
           },
         ]
@@ -191,6 +201,146 @@ export type Database = {
           token?: string
         }
         Relationships: []
+      }
+      pods: {
+        Row: {
+          activation_date: string | null
+          annual_usage: number | null
+          billing_cycle: string | null
+          billing_status: string | null
+          city: string | null
+          connection_type: string
+          consumer_id: string
+          country: string | null
+          created_at: string | null
+          current_consumption: number | null
+          daily_usage: number | null
+          deactivation_date: string | null
+          energy_source: string | null
+          energy_type: string | null
+          frequency_deviation: number | null
+          id: string
+          installed_capacity: number
+          last_maintenance: string | null
+          last_meter_reading: number | null
+          last_meter_reading_date: string | null
+          latitude: number | null
+          location: string
+          longitude: number | null
+          maintenance_notes: string | null
+          maintenance_status: string | null
+          meter_id: string | null
+          metering_type: string | null
+          monthly_usage: number | null
+          name: string
+          outstanding_charges: number | null
+          peak_demand: number | null
+          postal_code: string | null
+          power_factor: number | null
+          renewable_percentage: number | null
+          smart_meter_id: string | null
+          state: string | null
+          status: string
+          street_address: string | null
+          tariff_plan: string | null
+          updated_at: string | null
+          voltage_stability: number | null
+        }
+        Insert: {
+          activation_date?: string | null
+          annual_usage?: number | null
+          billing_cycle?: string | null
+          billing_status?: string | null
+          city?: string | null
+          connection_type: string
+          consumer_id: string
+          country?: string | null
+          created_at?: string | null
+          current_consumption?: number | null
+          daily_usage?: number | null
+          deactivation_date?: string | null
+          energy_source?: string | null
+          energy_type?: string | null
+          frequency_deviation?: number | null
+          id?: string
+          installed_capacity: number
+          last_maintenance?: string | null
+          last_meter_reading?: number | null
+          last_meter_reading_date?: string | null
+          latitude?: number | null
+          location: string
+          longitude?: number | null
+          maintenance_notes?: string | null
+          maintenance_status?: string | null
+          meter_id?: string | null
+          metering_type?: string | null
+          monthly_usage?: number | null
+          name: string
+          outstanding_charges?: number | null
+          peak_demand?: number | null
+          postal_code?: string | null
+          power_factor?: number | null
+          renewable_percentage?: number | null
+          smart_meter_id?: string | null
+          state?: string | null
+          status?: string
+          street_address?: string | null
+          tariff_plan?: string | null
+          updated_at?: string | null
+          voltage_stability?: number | null
+        }
+        Update: {
+          activation_date?: string | null
+          annual_usage?: number | null
+          billing_cycle?: string | null
+          billing_status?: string | null
+          city?: string | null
+          connection_type?: string
+          consumer_id?: string
+          country?: string | null
+          created_at?: string | null
+          current_consumption?: number | null
+          daily_usage?: number | null
+          deactivation_date?: string | null
+          energy_source?: string | null
+          energy_type?: string | null
+          frequency_deviation?: number | null
+          id?: string
+          installed_capacity?: number
+          last_maintenance?: string | null
+          last_meter_reading?: number | null
+          last_meter_reading_date?: string | null
+          latitude?: number | null
+          location?: string
+          longitude?: number | null
+          maintenance_notes?: string | null
+          maintenance_status?: string | null
+          meter_id?: string | null
+          metering_type?: string | null
+          monthly_usage?: number | null
+          name?: string
+          outstanding_charges?: number | null
+          peak_demand?: number | null
+          postal_code?: string | null
+          power_factor?: number | null
+          renewable_percentage?: number | null
+          smart_meter_id?: string | null
+          state?: string | null
+          status?: string
+          street_address?: string | null
+          tariff_plan?: string | null
+          updated_at?: string | null
+          voltage_stability?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pods_consumer_id_fkey"
+            columns: ["consumer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

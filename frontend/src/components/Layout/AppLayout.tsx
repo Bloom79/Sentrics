@@ -14,6 +14,7 @@ import Financials from "@/pages/Financials";
 import Consumers from "@/pages/Consumers";
 import UserManagement from "@/pages/UserManagement";
 import ConsumerDetail from "@/components/Consumers/ConsumerDetail";
+import Simulation from "@/pages/Simulation";
 
 export const AppLayout = () => {
   return (
@@ -34,6 +35,7 @@ export const AppLayout = () => {
               <Route path="/consumers" element={<Consumers />} />
               <Route path="/consumers/:consumerId" element={<ConsumerDetail />} />
               <Route path="/grid-analysis" element={<GridAnalysis />} />
+              <Route path="/simulation" element={<Simulation />} />
               <Route path="/analytics" element={<div>Analytics Dashboard</div>} />
               <Route path="/maintenance" element={<div>Maintenance Overview</div>} />
               <Route path="/settings" element={<div>Settings</div>} />

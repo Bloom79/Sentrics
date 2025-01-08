@@ -9,15 +9,24 @@ import EnergyFlowVisualization from "@/components/SiteAnalysis/EnergyFlowVisuali
 import StorageTab from "@/components/SiteDetail/StorageTab";
 import { InfoTab } from "@/components/SiteDetail/InfoTab";
 import { GridTab } from "@/components/SiteDetail/GridTab";
-import { Site, Plant, Consumer, StorageUnit } from "@/types/site";
+import { Site } from "@/types/site";
 
-// Update mock data to include all required properties
+// Mock data for development
 const mockSite: Site = {
   id: "1",
   name: "Milano Nord",
-  location: {
-    latitude: 45.4642,
-    longitude: 9.1900
+  location: "Northern Region",
+  type: "hybrid",
+  status: "online",
+  capacity: 800,
+  lastUpdate: new Date().toISOString(),
+  dailyProduction: 2500,
+  monthlyProduction: 75000,
+  efficiency: 92,
+  co2Saved: 45.2,
+  coordinates: {
+    lat: 45.4642,
+    lng: 9.1900
   },
   plants: [
     {
@@ -29,10 +38,7 @@ const mockSite: Site = {
       efficiency: 95,
       status: "online",
       lastUpdate: new Date().toISOString(),
-      location: {
-        latitude: 45.4642,
-        longitude: 9.1900
-      }
+      location: "Array A"
     },
     {
       id: "2",
@@ -43,10 +49,7 @@ const mockSite: Site = {
       efficiency: 89,
       status: "online",
       lastUpdate: new Date().toISOString(),
-      location: {
-        latitude: 45.4642,
-        longitude: 9.1900
-      }
+      location: "Array B"
     }
   ],
   consumers: [
@@ -73,7 +76,7 @@ const mockSite: Site = {
         peakDemand: 250,
         dailyUsage: 5000,
         powerFactor: 0.92,
-        connectionType: "low-voltage"
+        connectionType: "medium-voltage"
       }
     }
   ],
@@ -103,10 +106,32 @@ const mockSite: Site = {
       efficiency: 94
     }
   ],
-  status: "online",
-  totalCapacity: 800,
-  currentProduction: 600,
-  efficiency: 92
+  energySources: [
+    {
+      type: "solar",
+      output: 350,
+      capacity: 500,
+      currentOutput: 350,
+      status: "online"
+    },
+    {
+      type: "wind",
+      output: 250,
+      capacity: 300,
+      currentOutput: 250,
+      status: "online"
+    }
+  ],
+  storage: {
+    capacity: 2000,
+    currentCharge: 1350
+  },
+  gridConnection: {
+    status: "connected",
+    frequency: 50.02,
+    voltage: 230.5,
+    congestion: "Low"
+  }
 };
 
 const SiteDetail = () => {

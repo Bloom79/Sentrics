@@ -9,7 +9,6 @@ import PlantAssets from "@/components/PlantDetail/PlantAssets";
 import { PlantSettings } from "@/components/PlantDetail/PlantSettings";
 import { useToast } from "@/components/ui/use-toast";
 
-// Mock data - in a real app, this would come from an API
 const mockPlant: Plant = {
   id: "1",
   name: "Milano Nord Plant 1",
@@ -18,19 +17,19 @@ const mockPlant: Plant = {
   currentOutput: 750,
   efficiency: 75,
   status: "online",
+  location: "Northern Region",
   lastUpdate: new Date().toISOString()
 };
 
 const PlantDetail = () => {
   const { plantId } = useParams();
-  const [plant, setPlant] = React.useState(mockPlant); // In a real app, fetch plant data based on plantId
+  const [plant, setPlant] = React.useState(mockPlant);
   const { toast } = useToast();
 
   const PlantTypeIcon = plant.type === "solar" ? Sun : Wind;
 
   const handlePlantUpdate = (updatedData: Partial<Plant>) => {
     setPlant((prev) => ({ ...prev, ...updatedData }));
-    // In a real app, you would make an API call here to update the plant data
     toast({
       title: "Success",
       description: "Plant settings have been updated.",
@@ -77,11 +76,9 @@ const PlantDetail = () => {
         </TabsContent>
         <TabsContent value="monitoring" className="space-y-4">
           <h3 className="text-lg font-medium">Monitoring Content</h3>
-          {/* Monitoring content will be implemented in the next phase */}
         </TabsContent>
         <TabsContent value="maintenance" className="space-y-4">
           <h3 className="text-lg font-medium">Maintenance Content</h3>
-          {/* Maintenance content will be implemented in the next phase */}
         </TabsContent>
       </Tabs>
     </div>

@@ -20,9 +20,10 @@ const ConsumerManagement = () => {
       return data.map((profile): Consumer => ({
         id: profile.id,
         name: profile.full_name || '',
+        full_name: profile.full_name || '',
         type: (profile.type as 'industrial' | 'commercial') || 'commercial',
-        consumption: profile.consumption || 0,
         status: profile.status || 'active',
+        created_at: profile.created_at,
         specs: {
           peakDemand: profile.specs?.peakDemand || 0,
           dailyUsage: profile.specs?.dailyUsage || 0,
