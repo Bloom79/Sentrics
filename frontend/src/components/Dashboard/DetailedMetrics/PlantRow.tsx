@@ -1,7 +1,6 @@
 import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { StatusIcon } from "./StatusIcon";
 import { Plant } from "@/types/site";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +15,21 @@ export const PlantRow: React.FC<PlantRowProps> = ({ plant }) => {
     navigate(`/plants/${plant.id}`);
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'active':
+      case 'online':
+        return 'bg-green-100 text-green-800';
+      case 'inactive':
+      case 'offline':
+        return 'bg-red-100 text-red-800';
+      case 'maintenance':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
     <TableRow 
       className="bg-muted/30 cursor-pointer hover:bg-muted/50"
@@ -24,9 +38,9 @@ export const PlantRow: React.FC<PlantRowProps> = ({ plant }) => {
       <TableCell></TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <StatusIcon status={plant.status} />
-          <span className="text-sm font-medium">
-            {plant.status.charAt(0).toUpperCase() + plant.status.slice(1)}
+          <span className={`h-2.5 w-2.5 rounded-full ${getStatusColor(plant.status)}`} />
+          <span className="text-sm font-medium capitalize">
+            {plant.status || 'Unknown'}
           </span>
         </div>
       </TableCell>
@@ -38,9 +52,9 @@ export const PlantRow: React.FC<PlantRowProps> = ({ plant }) => {
       </TableCell>
       <TableCell>-</TableCell>
       <TableCell>-</TableCell>
-      <TableCell className="text-right">{plant.currentOutput.toLocaleString()}</TableCell>
+      <TableCell className="text-right">{plant.current_output?.toLocaleString() || 0}</TableCell>
       <TableCell className="text-right">-</TableCell>
-      <TableCell className="text-right">{plant.efficiency}%</TableCell>
+      <TableCell className="text-right">{plant.efficiency || 0}%</TableCell>
       <TableCell className="text-right">-</TableCell>
     </TableRow>
   );

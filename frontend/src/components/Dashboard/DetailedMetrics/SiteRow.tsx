@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Site } from "@/types/site";
 import { useNavigate } from "react-router-dom";
 import { PlantRow } from "./PlantRow";
-import { Plant } from "@/types/plant";
 
 interface SiteRowProps {
   site: Site;
@@ -20,9 +19,11 @@ export const SiteRow = ({ site, isExpanded, onToggle }: SiteRowProps) => {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
+      case 'active':
       case 'online':
         return 'bg-green-100 text-green-800';
+      case 'inactive':
       case 'offline':
         return 'bg-red-100 text-red-800';
       case 'maintenance':
@@ -65,25 +66,22 @@ export const SiteRow = ({ site, isExpanded, onToggle }: SiteRowProps) => {
           <div className="flex items-center gap-2">
             <span className={`h-2.5 w-2.5 rounded-full ${getStatusColor(site.status)}`} />
             <span className="text-sm font-medium capitalize">
-              {site.status}
+              {site.status || 'Unknown'}
             </span>
           </div>
         </TableCell>
         <TableCell className="font-medium">{site.name}</TableCell>
         <TableCell>
-          <Badge variant="outline">{site.type}</Badge>
+          <Badge variant="outline">{site.type || 'Unknown'}</Badge>
         </TableCell>
-        <TableCell>{site.energySources.length}</TableCell>
-        <TableCell>{site.plants.length}</TableCell>
-        <TableCell className="text-right">{site.storage.currentCapacity}</TableCell>
-        <TableCell className="text-right">
-          {site.gridConnection.importCapacity}
-        </TableCell>
-        <TableCell className="text-right">{site.dailyProduction}</TableCell>
-        <TableCell className="text-right">{site.monthlyProduction}</TableCell>
-        <TableCell className="text-right">{site.co2Saved}</TableCell>
+        <TableCell>{site.plants?.length || 0}</TableCell>
+        <TableCell>{site.plants?.length || 0}</TableCell>
+        <TableCell className="text-right">-</TableCell>
+        <TableCell className="text-right">-</TableCell>
+        <TableCell className="text-right">{site.efficiency || 0}%</TableCell>
+        <TableCell className="text-right">-</TableCell>
       </TableRow>
-      {isExpanded && site.plants.map((plant: Plant) => (
+      {isExpanded && site.plants?.map((plant) => (
         <PlantRow key={plant.id} plant={plant} />
       ))}
     </>

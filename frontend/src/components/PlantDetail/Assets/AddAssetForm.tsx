@@ -1,121 +1,125 @@
 import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { Plant } from "@/types/site";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { assetSchema } from "./schemas/assetSchemas";
 import { CommonFields } from "./FormFields/CommonFields";
-import { SolarPanelFields } from "./FormFields/SolarPanelFields";
-import { InverterFields } from "./FormFields/InverterFields";
-import { WindTurbineFields } from "./FormFields/WindTurbineFields";
-import { TransformerFields } from "./FormFields/TransformerFields";
-import { BatteryFields } from "./FormFields/BatteryFields";
+import { AssetTypeFields } from "./FormFields/AssetTypeFields";
+import { DynamicFields } from "./FormFields/DynamicFields";
+
+const assetSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  type_id: z.string().min(1, "Asset type is required"),
+  model: z.string().min(1, "Model is required"),
+  manufacturer: z.string().min(1, "Manufacturer is required"),
+  installation_date: z.string().min(1, "Installation date is required"),
+  location: z.string().min(1, "Location is required"),
+  rated_power: z.coerce.number().min(0).optional(),
+  efficiency: z.coerce.number().min(0).max(100).optional(),
+  notes: z.string().optional(),
+  dynamic_attributes: z.record(z.any()).optional(),
+});
+
+type AssetFormValues = z.infer<typeof assetSchema>;
 
 interface AddAssetFormProps {
-  plantType: "solar" | "wind" | "hybrid";
+  plant: Plant;
+  onSuccess?: () => void;
 }
 
-export const AddAssetForm = ({ plantType }: AddAssetFormProps) => {
+export const AddAssetForm = ({ plant, onSuccess }: AddAssetFormProps) => {
   const { toast } = useToast();
-  const [selectedType, setSelectedType] = React.useState<string>("panel");
-  
-  const form = useForm({
+  const queryClient = useQueryClient();
+
+  const { data: assetTypes, isLoading: isLoadingAssetTypes } = useQuery({
+    queryKey: ['asset_types'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('asset_types')
+        .select('*')
+        .order('name', { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const form = useForm<AssetFormValues>({
     resolver: zodResolver(assetSchema),
     defaultValues: {
-      type: "panel",
-      status: "operational",
+      name: "",
+      type_id: "",
+      model: "",
+      manufacturer: "",
+      location: "",
+      installation_date: new Date().toISOString().split("T")[0],
+      notes: "",
+      dynamic_attributes: {},
     },
   });
 
-  const onSubmit = (values: any) => {
-    console.log(values);
-    toast({
-      title: "Asset added successfully",
-      description: `New ${values.type} has been added to the plant.`,
-    });
-  };
+  const selectedTypeId = form.watch("type_id");
+  const selectedType = assetTypes?.find(type => type.id === selectedTypeId);
 
-  // Get available asset types based on plant type
-  const getAssetTypes = () => {
-    switch (plantType) {
-      case "solar":
-        return [
-          { value: "panel", label: "Solar Panel" },
-          { value: "inverter", label: "Inverter" },
-          { value: "transformer", label: "Transformer" },
-          { value: "battery", label: "Battery Storage" },
-        ];
-      case "wind":
-        return [
-          { value: "turbine", label: "Wind Turbine" },
-          { value: "transformer", label: "Transformer" },
-          { value: "battery", label: "Battery Storage" },
-        ];
-      case "hybrid":
-        return [
-          { value: "panel", label: "Solar Panel" },
-          { value: "inverter", label: "Inverter" },
-          { value: "turbine", label: "Wind Turbine" },
-          { value: "transformer", label: "Transformer" },
-          { value: "battery", label: "Battery Storage" },
-        ];
+  const onSubmit = async (data: AssetFormValues) => {
+    try {
+      const { error } = await supabase
+        .from("assets")
+        .insert({
+          ...data,
+          plant_id: plant.id,
+          status: "operational",
+          installation_date: new Date(data.installation_date).toISOString(),
+          dynamic_attributes: data.dynamic_attributes || {},
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Asset created",
+        description: "The asset has been created successfully.",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["assets", plant.id] });
+      form.reset();
+      onSuccess?.();
+    } catch (error: any) {
+      console.error("Error creating asset:", error);
+      toast({
+        title: "Error",
+        description: "There was an error creating the asset. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
-  const renderAssetSpecificFields = () => {
-    switch (selectedType) {
-      case "panel":
-        return <SolarPanelFields form={form} />;
-      case "inverter":
-        return <InverterFields form={form} />;
-      case "turbine":
-        return <WindTurbineFields form={form} />;
-      case "transformer":
-        return <TransformerFields form={form} />;
-      case "battery":
-        return <BatteryFields form={form} />;
-      default:
-        return null;
-    }
-  };
+  if (isLoadingAssetTypes) {
+    return <div>Loading asset types...</div>;
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-4">
-          <div className="mb-6">
-            <label className="text-sm font-medium">Asset Type</label>
-            <Select 
-              onValueChange={(value) => {
-                setSelectedType(value);
-                form.reset({ type: value as any, status: "operational" });
-              }} 
-              defaultValue={selectedType}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select asset type" />
-              </SelectTrigger>
-              <SelectContent>
-                {getAssetTypes().map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <CommonFields form={form} assetTypes={assetTypes || []} />
+        
+        {selectedType && (
+          <AssetTypeFields 
+            form={form} 
+            assetType={selectedType.name}
+          />
+        )}
 
-          <CommonFields form={form} />
-          {renderAssetSpecificFields()}
-        </div>
+        {selectedType?.attributes && (
+          <DynamicFields 
+            form={form} 
+            attributes={selectedType.attributes} 
+          />
+        )}
 
         <Button type="submit" className="w-full">Add Asset</Button>
       </form>

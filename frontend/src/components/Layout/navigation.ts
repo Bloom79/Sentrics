@@ -34,6 +34,7 @@ export const navigationGroups = [
         title: "Sites",
         path: "/sites",
         icon: Factory,
+        isExpandable: true
       },
       {
         title: "Consumers",
@@ -65,6 +66,7 @@ export const navigationGroups = [
         paths: {
           site: "/sites/:siteId/contracts/consumers",
           plant: "/plants/:plantId/contracts/consumers",
+          consumer: "/consumers/:consumerId/contracts"
         },
         icon: FileText,
       },

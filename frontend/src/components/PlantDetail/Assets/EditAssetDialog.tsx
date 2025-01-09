@@ -1,40 +1,24 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { AssetType } from "@/types/site";
-import { EditAssetForm } from "./EditAssetForm";
+import { useNavigate } from "react-router-dom";
+import { Asset } from "@/types/site";
 
 interface EditAssetDialogProps {
-  asset: AssetType;
-  onEdit: (asset: AssetType) => void;
+  asset: Asset;
 }
 
-export const EditAssetDialog = ({ asset, onEdit }: EditAssetDialogProps) => {
+export const EditAssetDialog = ({ asset }: EditAssetDialogProps) => {
+  const navigate = useNavigate();
+
+  const handleEditClick = () => {
+    navigate(`/assets/${asset.id}?tab=edit`);
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Pencil className="h-4 w-4 mr-2" />
-          Edit
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit Asset</DialogTitle>
-          <DialogDescription>
-            Make changes to the asset information below.
-          </DialogDescription>
-        </DialogHeader>
-        <EditAssetForm asset={asset} onSubmit={onEdit} />
-      </DialogContent>
-    </Dialog>
+    <Button variant="outline" size="sm" onClick={handleEditClick}>
+      <Pencil className="h-4 w-4 mr-2" />
+      Edit
+    </Button>
   );
 };

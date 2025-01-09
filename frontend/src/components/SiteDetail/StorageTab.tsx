@@ -11,8 +11,8 @@ interface StorageTabProps {
 const StorageTab: React.FC<StorageTabProps> = ({ site }) => {
   return (
     <div className="space-y-6">
-      <StorageMetrics storageUnits={site.storageUnits} />
-      <StorageOverview storageUnits={site.storageUnits} />
+      <StorageMetrics storage={site.storage} />
+      <StorageOverview storage={site.storage[0]} />
     </div>
   );
 };

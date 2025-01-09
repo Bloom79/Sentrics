@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Layout/AppSidebar";
-import { AppBreadcrumb } from "@/components/Layout/Breadcrumb";
+import { Breadcrumb } from "@/components/Layout/Breadcrumb";
 import { UserProfile } from "@/components/Layout/UserProfile";
 import Index from "@/pages/Index";
 import Sites from "@/pages/Sites";
@@ -15,6 +15,7 @@ import Consumers from "@/pages/Consumers";
 import UserManagement from "@/pages/UserManagement";
 import ConsumerDetail from "@/components/Consumers/ConsumerDetail";
 import Simulation from "@/pages/Simulation";
+import AssetDetail from "@/pages/AssetDetail";
 
 export const AppLayout = () => {
   return (
@@ -24,7 +25,7 @@ export const AppLayout = () => {
         <main className="flex-1 overflow-x-hidden bg-background">
           <div className="container py-6">
             <div className="flex justify-between items-center mb-6">
-              <AppBreadcrumb />
+              <Breadcrumb />
               <UserProfile />
             </div>
             <Routes>
@@ -39,9 +40,10 @@ export const AppLayout = () => {
               <Route path="/analytics" element={<div>Analytics Dashboard</div>} />
               <Route path="/maintenance" element={<div>Maintenance Overview</div>} />
               <Route path="/settings" element={<div>Settings</div>} />
-              <Route path="/site/:siteId" element={<SiteDetail />} />
+              <Route path="/sites/:siteId" element={<SiteDetail />} />
               <Route path="/storage-unit/:unitId" element={<StorageUnitDetail />} />
               <Route path="/users" element={<UserManagement />} />
+              <Route path="/assets/:assetId" element={<AssetDetail />} />
             </Routes>
           </div>
         </main>

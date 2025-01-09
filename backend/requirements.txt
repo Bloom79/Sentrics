@@ -1,11 +1,9 @@
 # Core dependencies
-fastapi==0.109.1
-uvicorn==0.27.0
-pydantic==2.6.0
-python-dotenv==1.0.0
-
-# CORS support is included in FastAPI, no need to specify starlette separately
-# starlette is automatically installed as a dependency of FastAPI
+fastapi==0.109.2
+uvicorn==0.27.1
+pandas==2.2.0
+numpy==1.26.3
+python-multipart==0.0.9
 
 # Database
 sqlalchemy==2.0.25
@@ -15,7 +13,6 @@ alembic==1.13.1
 # Authentication
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-python-multipart==0.0.6
 
 # Utils
 requests==2.31.0

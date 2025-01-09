@@ -3,12 +3,13 @@ import { Battery, Sun, Wind } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const EnergyFlow = () => {
   const { t } = useLanguage();
-  
-  // Mock data - replace with actual aggregated data later
-  const energyData = {
+
+  const { data: energyData = {
     solar: {
       output: 630,
       irradiance: 850,
@@ -32,9 +33,114 @@ const EnergyFlow = () => {
       storageCharging: 210
     },
     systemEfficiency: 92
-  };
+  }, isLoading } = useQuery({
+    queryKey: ['energy-flow'],
+    queryFn: async () => {
+      const { data: sites, error } = await supabase
+        .from('sites')
+        .select(`
+          id,
+          name,
+          capacity,
+          efficiency,
+          plants (
+            id,
+            type,
+            capacity,
+            status,
+            efficiency,
+            current_output
+          ),
+          storage_units (
+            id,
+            capacity,
+            charge_level,
+            status,
+            efficiency
+          )
+        `)
+        .limit(1)  // Add limit to get only one site
+        .maybeSingle(); // Use maybeSingle instead of single
+
+      if (error) throw error;
+
+      if (!sites) {
+        console.warn('No sites found, using default values');
+        return {
+          solar: {
+            output: 0,
+            irradiance: 0,
+            activeArrays: 0
+          },
+          wind: {
+            output: 0,
+            speed: "0 m/s",
+            direction: "N/A",
+            activeTurbines: 0
+          },
+          storage: {
+            level: 0,
+            capacity: 0,
+            chargingRate: 0,
+            temperature: 0
+          },
+          distribution: {
+            directConsumption: 0,
+            gridDelivery: 0,
+            storageCharging: 0
+          },
+          systemEfficiency: 0
+        };
+      }
+
+      // Transform the data to match our energyData structure
+      const solarPlants = sites?.plants?.filter(p => p.type === 'solar') || [];
+      const windPlants = sites?.plants?.filter(p => p.type === 'wind') || [];
+      const storage = sites?.storage_units?.[0] || null;
+
+      return {
+        solar: {
+          output: solarPlants.reduce((sum, p) => sum + (p.current_output || 0), 0),
+          irradiance: 850, // Mock value as it's not in DB
+          activeArrays: solarPlants.filter(p => p.status === 'active').length
+        },
+        wind: {
+          output: windPlants.reduce((sum, p) => sum + (p.current_output || 0), 0),
+          speed: "12 m/s", // Mock value as it's not in DB
+          direction: "NORD", // Mock value as it's not in DB
+          activeTurbines: windPlants.filter(p => p.status === 'active').length
+        },
+        storage: {
+          level: storage?.charge_level || 0,
+          capacity: storage?.capacity || 0,
+          chargingRate: 45, // Mock value as it's not in DB
+          temperature: storage?.temperature || 0
+        },
+        distribution: {
+          directConsumption: 520, // Mock value as it's not in DB
+          gridDelivery: 300, // Mock value as it's not in DB
+          storageCharging: 210 // Mock value as it's not in DB
+        },
+        systemEfficiency: sites?.efficiency || 0
+      };
+    }
+  });
 
   const totalProduction = energyData.solar.output + energyData.wind.output;
+
+  if (isLoading) {
+    return (
+      <Card className="p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div className="space-y-3">
+            <div className="h-8 bg-gray-200 rounded"></div>
+            <div className="h-8 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="p-6">
@@ -100,7 +206,9 @@ const EnergyFlow = () => {
             <div>
               <div className="flex justify-between text-sm mb-3">
                 <span className="font-medium">Direct Consumption</span>
-                <span className="text-muted-foreground">{Math.round(energyData.distribution.directConsumption / totalProduction * 100)}%</span>
+                <span className="text-muted-foreground">
+                  {Math.round(energyData.distribution.directConsumption / totalProduction * 100)}%
+                </span>
               </div>
               <Progress 
                 value={energyData.distribution.directConsumption / totalProduction * 100} 
@@ -112,7 +220,9 @@ const EnergyFlow = () => {
             <div>
               <div className="flex justify-between text-sm mb-3">
                 <span className="font-medium">Grid Export</span>
-                <span className="text-muted-foreground">{Math.round(energyData.distribution.gridDelivery / totalProduction * 100)}%</span>
+                <span className="text-muted-foreground">
+                  {Math.round(energyData.distribution.gridDelivery / totalProduction * 100)}%
+                </span>
               </div>
               <Progress 
                 value={energyData.distribution.gridDelivery / totalProduction * 100} 
@@ -124,7 +234,9 @@ const EnergyFlow = () => {
             <div>
               <div className="flex justify-between text-sm mb-3">
                 <span className="font-medium">Storage Charging</span>
-                <span className="text-muted-foreground">{Math.round(energyData.distribution.storageCharging / totalProduction * 100)}%</span>
+                <span className="text-muted-foreground">
+                  {Math.round(energyData.distribution.storageCharging / totalProduction * 100)}%
+                </span>
               </div>
               <Progress 
                 value={energyData.distribution.storageCharging / totalProduction * 100} 

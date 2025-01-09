@@ -18,7 +18,7 @@ const generateMockData = () => {
 
 const PlantOverview: React.FC<PlantOverviewProps> = ({ plant }) => {
   const data = generateMockData();
-  const lastUpdate = plant.lastUpdate ? new Date(plant.lastUpdate) : new Date();
+  const lastUpdate = plant.updated_at ? new Date(plant.updated_at) : new Date();
 
   const getPlantTypeIcon = () => {
     return plant.type === "solar" ? (
@@ -37,9 +37,9 @@ const PlantOverview: React.FC<PlantOverviewProps> = ({ plant }) => {
             <Zap className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{plant.currentOutput} kW</div>
+            <div className="text-2xl font-bold">{plant.current_output} kW</div>
             <p className="text-xs text-muted-foreground">
-              {((plant.currentOutput / plant.capacity) * 100).toFixed(1)}% of capacity
+              {((plant.current_output / plant.capacity) * 100).toFixed(1)}% of capacity
             </p>
           </CardContent>
         </Card>

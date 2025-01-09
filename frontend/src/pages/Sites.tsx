@@ -3,46 +3,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { Factory, Power, Battery, Users } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Sites = () => {
   const navigate = useNavigate();
 
-  const sites = [
-    {
-      id: "1",
-      name: "Milano Nord",
-      status: "online",
-      plants: 2,
-      consumers: 2,
-      totalCapacity: 150,
-      storageUnits: 1,
-      efficiency: 92,
-    },
-    {
-      id: "2",
-      name: "Roma Sud",
-      status: "online",
-      plants: 2,
-      consumers: 2,
-      totalCapacity: 200,
-      storageUnits: 2,
-      efficiency: 88,
-    },
-    {
-      id: "3",
-      name: "Torino Est",
-      status: "maintenance",
-      plants: 2,
-      consumers: 2,
-      totalCapacity: 175,
-      storageUnits: 1,
-      efficiency: 85,
-    },
-  ];
+  const { data: sites = [], isLoading } = useQuery({
+    queryKey: ['sites'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('sites')
+        .select('*');
+      
+      if (error) throw error;
+      return data || [];
+    }
+  });
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "online":
+      case "active":
         return "bg-green-500/10 text-green-500";
       case "maintenance":
         return "bg-yellow-500/10 text-yellow-500";
@@ -50,6 +31,10 @@ const Sites = () => {
         return "bg-red-500/10 text-red-500";
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6">
@@ -63,13 +48,13 @@ const Sites = () => {
           <Card 
             key={site.id}
             className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate(`/site/${site.id}`)}
+            onClick={() => navigate(`/sites/${site.id}`)}
           >
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-xl">{site.name}</CardTitle>
-                <Badge className={getStatusColor(site.status)}>
-                  {site.status}
+                <Badge className={getStatusColor(site.status || 'inactive')}>
+                  {site.status || 'inactive'}
                 </Badge>
               </div>
             </CardHeader>
@@ -77,25 +62,25 @@ const Sites = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-2">
                   <Factory className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{site.plants} Plants</span>
+                  <span className="text-sm">Plants</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{site.consumers} Consumers</span>
+                  <span className="text-sm">Consumers</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Power className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{site.totalCapacity} MW</span>
+                  <span className="text-sm">{site.capacity || 0} MW</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Battery className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{site.storageUnits} Storage</span>
+                  <span className="text-sm">Storage</span>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Efficiency</span>
-                  <span className="font-medium">{site.efficiency}%</span>
+                  <span className="font-medium">{site.efficiency || 0}%</span>
                 </div>
               </div>
             </CardContent>

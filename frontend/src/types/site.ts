@@ -1,93 +1,34 @@
-import { Location } from './location';
-
-export interface Consumer {
+export interface Site {
   id: string;
   name: string;
-  full_name: string;
-  type: 'industrial' | 'commercial' | 'residential';
-  status: 'active' | 'inactive' | 'pending';
-  created_at: string;
-  specs: ConsumerSpecs;
-  contact_person?: string;
-  phone?: string;
-  email?: string;
-  vat_number?: string;
-  address?: string;
-  city?: string;
-  postal_code?: string;
-  country?: string;
-  notes?: string;
-}
-
-export interface ConsumerSpecs {
-  peakDemand: number;
-  dailyUsage: number;
-  powerFactor: number;
-  connectionType: string;
+  type: string;
+  status: "active" | "inactive" | "maintenance";
+  capacity: number;
+  efficiency: number;
+  operational_status: "Active" | "Inactive" | "Under Construction" | "Under Maintenance";
+  storage_units: StorageUnit[];
+  plants: Plant[];
 }
 
 export interface Plant {
   id: string;
   name: string;
-  type: 'solar' | 'wind' | 'hydro';
+  type: "solar" | "wind";
   capacity: number;
-  status: 'active' | 'inactive' | 'maintenance';
-  location: Location;
+  current_output: number;
   efficiency: number;
-  currentOutput: number;
+  status: "active" | "inactive" | "maintenance";
+  location: string;
 }
 
 export interface StorageUnit {
   id: string;
-  name: string;
   capacity: number;
-  chargeLevel: number;
-  status: 'active' | 'inactive' | 'maintenance';
+  charge_level: number;
+  status: "active" | "inactive" | "maintenance";
   efficiency: number;
-  technology: string;
+  current_charge: number;
+  power_rating: number;
+  temperature?: number;
+  health?: number;
 }
-
-export interface Site {
-  id: string;
-  name: string;
-  location: Location;
-  type: 'industrial' | 'commercial' | 'residential';
-  status: 'active' | 'inactive' | 'maintenance';
-  capacity: number;
-  currentOutput: number;
-  efficiency: number;
-  plants: Plant[];
-  storage: StorageUnit[];
-  energySources: EnergySource[];
-  gridConnection: GridConnection;
-}
-
-export interface EnergySource {
-  id: string;
-  name: string;
-  type: string;
-  capacity: number;
-  currentOutput: number;
-  output: number;
-}
-
-export interface GridConnection {
-  status: 'connected' | 'disconnected';
-  capacity: number;
-  currentLoad: number;
-  frequency: number;
-  voltage: number;
-  congestion: number;
-}
-
-export type AssetType = {
-  id: string;
-  type: string;
-  serialNumber: string;
-  model: string;
-  manufacturer: string;
-  installationDate: string;
-  status: 'operational' | 'maintenance' | 'faulty';
-  location: string;
-  [key: string]: any;
-};

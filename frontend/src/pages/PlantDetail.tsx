@@ -1,45 +1,94 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wind, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Wind, Sun, ArrowLeft } from "lucide-react";
 import { Plant } from "@/types/site";
 import PlantOverview from "@/components/PlantDetail/PlantOverview";
 import PlantAssets from "@/components/PlantDetail/PlantAssets";
 import { PlantSettings } from "@/components/PlantDetail/PlantSettings";
-import { useToast } from "@/components/ui/use-toast";
-
-const mockPlant: Plant = {
-  id: "1",
-  name: "Milano Nord Plant 1",
-  type: "solar",
-  capacity: 1000,
-  currentOutput: 750,
-  efficiency: 75,
-  status: "online",
-  location: "Northern Region",
-  lastUpdate: new Date().toISOString()
-};
+import { useToast } from "@/hooks/use-toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const PlantDetail = () => {
   const { plantId } = useParams();
-  const [plant, setPlant] = React.useState(mockPlant);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: plant, isLoading: isLoadingPlant } = useQuery({
+    queryKey: ['plant', plantId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('plants')
+        .select(`
+          *,
+          site:site_id(id, name)
+        `)
+        .eq('id', plantId)
+        .single();
+
+      if (error) throw error;
+      return data as Plant & { site: { id: string; name: string } };
+    }
+  });
+
+  const handleBack = () => {
+    if (plant?.site?.id) {
+      navigate(`/sites/${plant.site.id}`);
+    } else {
+      navigate('/sites');
+    }
+  };
+
+  const handlePlantUpdate = async (values: Partial<Plant>) => {
+    try {
+      const { error } = await supabase
+        .from('plants')
+        .update(values)
+        .eq('id', plantId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Plant updated successfully",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ['plant', plantId] });
+    } catch (error) {
+      console.error('Error updating plant:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update plant. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (isLoadingPlant || !plant) {
+    return <div>Loading...</div>;
+  }
 
   const PlantTypeIcon = plant.type === "solar" ? Sun : Wind;
-
-  const handlePlantUpdate = (updatedData: Partial<Plant>) => {
-    setPlant((prev) => ({ ...prev, ...updatedData }));
-    toast({
-      title: "Success",
-      description: "Plant settings have been updated.",
-    });
-  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-2"
+              onClick={handleBack}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to {plant.site?.name || 'Sites'}
+            </Button>
+          </div>
           <h2 className="text-2xl font-bold tracking-tight">
             {plant.name}
           </h2>
@@ -49,7 +98,7 @@ const PlantDetail = () => {
               {plant.type.charAt(0).toUpperCase() + plant.type.slice(1)}
             </Badge>
             <Badge 
-              variant={plant.status === "online" ? "default" : "destructive"}
+              variant={plant.status === "active" ? "default" : "destructive"}
             >
               {plant.status}
             </Badge>
