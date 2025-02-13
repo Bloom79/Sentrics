@@ -1,0 +1,109 @@
+The Sentrics Project Application is designed to provide a comprehensive, scalable, and user-friendly platform for managing energy assets and optimizing their operation. Its primary aim is to support the management of renewable energy plants, including solar and wind installations, along with associated components such as inverters, batteries, sensors, and SCADA systems. The application also facilitates data monitoring, performance optimization, compliance management, and financial analysis.
+
+Project Aim
+The Sentrics application aims to:
+
+Centralize Asset Management:
+Provide a unified platform for managing all components of renewable energy installations, including solar plants, arrays, panels, inverters, sensors, batteries, and SCADA systems.
+Optimize Energy Production:
+Enable real-time and historical performance monitoring to maximize energy output and minimize inefficiencies.
+Ensure Regulatory Compliance:
+Facilitate data entry and reporting to comply with national and international standards (e.g., Gaudì registration in Italy for photovoltaic systems).
+Improve Maintenance Efficiency:
+Track and schedule maintenance activities to reduce downtime and prolong the lifespan of assets.
+Support Decision-Making:
+Provide analytics and visualizations to inform decisions regarding energy usage, storage, and grid interactions.
+Enhance Sustainability:
+Promote renewable energy adoption by providing tools to measure and optimize the environmental and economic impact of energy installations.
+Key Features
+1. Asset Management
+Hierarchy-Based Asset Organization:
+Manage solar plants, arrays, panels, inverters, sensors, and batteries in a structured hierarchy.
+Link assets to specific sites for multi-location management.
+Detailed Asset Attributes:
+Store both nominal values (e.g., rated power, efficiency) for regulatory purposes and real-time values (e.g., instantaneous power, voltage) for operational monitoring.
+Asset Editing & Visualization:
+Edit attributes with an intuitive UI.
+Visualize relationships between components (e.g., solar panels connected to inverters).
+2. Real-Time Monitoring
+Instantaneous Data Tracking:
+Monitor real-time performance metrics such as power output, voltage, current, irradiance, and temperature.
+Historical Data Analysis:
+Display historical trends for performance evaluation (e.g., daily, weekly, monthly).
+Threshold Alerts:
+Configure acceptable ranges for instantaneous values (relative to nominal values) and trigger alerts for anomalies.
+Graphical Representation:
+Time-series graphs with X-axis (time), Y-axis (value), and horizontal lines representing nominal values.
+3. Maintenance Management
+Maintenance Scheduling:
+Create, track, and manage maintenance schedules for all assets.
+Define maintenance intervals based on usage or time.
+Maintenance Records:
+Store details of past maintenance activities, including date, type, and performed by.
+Predictive Maintenance:
+Use real-time monitoring data to predict when components are likely to fail and plan maintenance proactively.
+4. SCADA Integration
+Centralized Monitoring and Control:
+Integrate with SCADA systems to collect and manage data from sensors and control devices (e.g., inverters, batteries).
+Data Consolidation:
+Aggregate data from multiple sources for unified analysis.
+Remote Control:
+Allow remote configuration and control of devices like inverters and storage systems.
+5. Regulatory Compliance
+Gaudì Registration Support:
+Collect and manage nominal data required for registering photovoltaic systems in compliance with Italian regulations.
+Data Validation:
+Ensure consistency between nominal and operational data for auditing purposes.
+6. Energy Optimization
+Performance Benchmarks:
+Compare actual performance against nominal specifications to identify inefficiencies.
+Energy Storage Management:
+Optimize battery energy storage usage by tracking charge/discharge cycles, state of charge (SoC), and efficiency.
+Grid Interaction:
+Analyze energy exchanged with the grid to maximize self-consumption and minimize grid dependency.
+7. Financial Management
+Cost and Revenue Tracking:
+Track installation, maintenance, and operational costs.
+Monitor energy production revenue and savings from self-consumption.
+Financial Analysis:
+Provide insights into return on investment (ROI), payback periods, and financial incentives.
+Incentive Management:
+Track and manage grants, subsidies, and tax incentives for renewable energy production.
+8. User Management
+Role-Based Access Control:
+Assign user roles (e.g., administrator, operator, viewer) with specific permissions.
+Multi-Site Management:
+Allow users to manage assets across multiple sites from a single dashboard.
+9. Simulation and Forecasting
+Energy Forecasting:
+Predict future energy production based on historical data and weather forecasts.
+Simulation Tools:
+Model system behavior under different scenarios (e.g., increased load, reduced irradiance).
+Digital Twin:
+Create a virtual model of the plant to test and optimize strategies without impacting real operations.
+10. Analytics and Reporting
+Performance Analytics:
+Provide KPIs such as energy yield, capacity factor, and self-consumption ratio.
+Custom Reports:
+Generate and export reports for operational performance, maintenance activities, and financial metrics.
+Environmental Impact Metrics:
+Measure CO2 emissions avoided and other sustainability indicators.
+Target Users
+Plant Owners and Operators:
+Manage day-to-day operations and maintenance activities.
+Energy Managers:
+Optimize energy production, storage, and usage.
+Regulatory Bodies:
+Access compliance-related data and reports.
+Investors and Financial Analysts:
+Monitor financial performance and ROI of renewable energy projects.
+Service Providers:
+Conduct maintenance and repair services.
+Value Proposition
+The Sentrics application enables renewable energy operators to:
+
+Streamline operations and maintenance activities.
+Maximize energy production efficiency and minimize downtime.
+Ensure regulatory compliance with minimal effort.
+Improve financial decision-making and ROI tracking.
+Enhance environmental sustainability through optimized energy management.

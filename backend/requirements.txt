@@ -1,0 +1,50 @@
+# Core dependencies
+fastapi==0.109.0
+uvicorn==0.27.0
+pydantic==2.10.6
+pydantic-settings==2.7.1
+python-multipart==0.0.6
+email_validator==2.2.0
+
+# Database
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+alembic==1.13.1
+geoalchemy2==0.14.3
+shapely==2.0.2
+
+# Authentication
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+
+# Data processing
+pandas==2.1.4
+numpy==1.26.3
+
+# Geographic tools
+pyproj==3.6.1
+scipy==1.12.0
+
+# API and HTTP
+aiohttp==3.9.1
+requests==2.31.0
+httpx==0.26.0
+
+# Task Queue and Background Jobs
+celery==5.4.0
+redis>=5.0.1
+kombu==5.4.2
+flower==2.0.1
+
+# Development and Testing
+pytest==7.4.4
+pytest-cov==6.0.0
+coverage==7.6.10
+
+# Optimization
+pulp==2.7.0
+
+# Utilities
+python-dateutil==2.8.2
+typing_extensions==4.12.2

@@ -1,0 +1,44 @@
+﻿ Category,Specific Feature,Sentrics,PVGIS,RatedPower,Notes
+ System Design & Simulation,Solar PV system design,⚠️,✅,✅,Sentrics: Advanced system design with AI optimization and real-time monitoring via MQTT; RatedPower: Full-site design with AC/DC-coupled BESS switching
+ System Design & Simulation,Wind energy simulation,❌,❌,❌,Sentrics: Integrated wind modeling with AI forecasting and MQTT sensor data integration
+ System Design & Simulation,Battery storage optimization,⚠️,⚠️,✅,Sentrics: AI-driven BESS optimization with real-time monitoring and dynamic capacity tracking; RatedPower: Advanced BESS configuration
+ System Design & Simulation,Multi-orientation PV systems,❌,✅,✅,Sentrics: AI-optimized orientation with real-time performance tracking; RatedPower: Batch design iterations
+ System Design & Simulation,GPS geolocation integration,❌,✅,✅,Sentrics: Enhanced geolocation with AI terrain analysis and sensor integration; RatedPower: Google Earth + custom topography/SHP imports
+ System Design & Simulation,Tracker configuration (MPPT),❌,⚠️,✅,"Sentrics: AI-optimized tracker settings with real-time monitoring; RatedPower: Adjustable pitch, tilt, DC/AC ratio, and inverter clipping limits"
+ Energy Data & Forecasting,Historical solar irradiance data,✅,✅,✅,"Sentrics: AI-enhanced data analysis with MQTT sensor integration; RatedPower: Integrates PVGIS, NASA_SSE, SolarAnywhere; supports custom TMY datasets"
+ Energy Data & Forecasting,Real-time weather integration,❌,⚠️,❌,Sentrics: AI-powered real-time weather predictions with MQTT sensor data; RatedPower uses historical TMY data
+ Energy Data & Forecasting,AI-driven energy forecasting,❌,❌,❌,Sentrics: Predictive analytics for energy demand and supply; RatedPower: Load profile assumptions
+ Energy Data & Forecasting,Smart meter integration,❌,❌,❌,Sentrics: Real-time data ingestion and analysis from smart meters; RatedPower: Manual load profile inputs
+ Energy Data & Forecasting,Grid outage prediction,❌,❌,❌,Sentrics: AI-based outage forecasting and grid stability analysis; RatedPower: Grid interconnection studies
+ Energy Data & Forecasting,Demand response optimization,❌,❌,❌,Sentrics: AI-optimized demand response strategies; RatedPower: TOU rate structures
+ Asset Management,Predictive maintenance,❌,❌,❌,Sentrics: AI-powered predictive maintenance for solar assets; No CMMS tools
+ Asset Management,Maintenance scheduling,❌,❌,❌,Sentrics: AI-powered predictive maintenance with real-time asset health monitoring; No CMMS tools
+ Compliance & Reporting,TIDE/Gaudì compliance (Italy),❌,❌,❌,Sentrics: AI-assisted compliance with automated monitoring; No region-specific compliance
+ Compliance & Reporting,Automated report generation,❌,⚠️,✅,Sentrics: AI-generated reports with real-time data integration; RatedPower: 400+ pages in 8 languages (PDF/XLSX/DWG/DXF)
+ Compliance & Reporting,EU self-consumption rule compliance,❌,⚠️,❌,Sentrics: AI-powered compliance checks with real-time consumption monitoring; PVGIS data feeds into third-party tools
+ Geospatial Analysis,Solar potential maps,❌,✅,✅,Sentrics: AI-enhanced solar mapping with real-time performance validation; RatedPower: Google Earth layers + terrain slope analysis
+ Geospatial Analysis,Shadow analysis,❌,✅,⚠️,Sentrics: AI-powered shadow analysis with real-time sensor data; RatedPower: 3D terrain previews but no explicit shading tools
+ Geospatial Analysis,Terrain-based shadow analysis,❌,✅,✅,Sentrics: AI-driven terrain analysis with sensor validation; RatedPower: Topography-driven slope analysis (E-W/N-S)
+ Technical Tools,Loss analysis,❌,✅,✅,"Sentrics: AI-optimized loss analysis with real-time monitoring; RatedPower: Transformer losses, voltage drop, and grid line losses"
+ Technical Tools,Bifacial panel modeling,❌,⚠️,❌,Sentrics: AI-enhanced bifacial modeling with real-time performance tracking; No bifacial support
+ Technical Tools,Updated PV performance model,✅,✅,✅,"Sentrics: AI-powered performance modeling with MQTT integration; RatedPower: Modern inverters (e.g., Siemens Sinacon PV5000)"
+ User & Access Control,Role-based access,⚠️,❌,❌,Sentrics: AI-enhanced access control with activity monitoring; Single-user design process
+ Integration,SCADA/Grid integration,❌,❌,✅,"Sentrics: AI-powered grid integration with DNP3, IEC61850, OPC UA protocols; RatedPower: Grid interconnection design (MV/HV levels, substations)"
+ Integration,API capabilities,⚠️,✅,⚠️,Sentrics: Full REST API with AI endpoints and real-time data access; RatedPower: File uploads (KML/KMZ/CAD) but no public API
+ Integration,IoT platform integration,❌,❌,❌,Sentrics: AI-powered IoT integration with MQTT for real-time monitoring; No IoT connectivity
+ Output Formats,CSV/Excel/PDF exports,⚠️,✅,✅,Sentrics: AI-enhanced reporting with real-time data exports; RatedPower: CAD formats (DWG/DXF) and financial reports
+ Accessibility,Client Portal,❌,❌,❌,Sentrics: AI-enhanced client portal with real-time insights and monitoring; No portals
+ Accessibility,Mobile Application,❌,❌,❌,Sentrics: AI-powered mobile app with real-time monitoring and alerts; Browser-based
+ Accessibility,Multi-language support,❌,❌,❌,Sentrics: AI-driven translation for global user base; English only
+ Accessibility,WCAG compliance,❌,❌,❌,Sentrics: AI-audited accessibility for visually impaired users; Not WCAG compliant
+ Design,Form-based inputs,✅,✅,✅,Form-based inputs for all tools
+ Design,Interactive UI elements,✅,✅,✅,Modern UI with interactive components
+ Design,Configurable parameters,✅,✅,✅,Users can adjust various system parameters
+ Design,3D Solar Layout Modeling,❌,❌,✅,Sentrics: AI-powered 3D modeling with real-time performance visualization; RatedPower: 3D terrain and overhead line previews
+ Monitoring,Real-Time Metrics & Alerts,⚠️,❌,❌,"Sentrics: AI-driven real-time monitoring with predictive alerts via MQTT; Design-focused, not operational"
+ Maintenance,AI-Powered Predictions,❌,❌,⚠️,Sentrics: Predictive maintenance alerts with real-time sensor data; RatedPower: Limited to design-phase analytics
+ Project Management,Gantt Charts,❌,❌,❌,Sentrics: AI-optimized project timelines with real-time progress tracking; RatedPower: No PM tools
+ Sales,Lead Tracking,❌,❌,❌,Sentrics: AI-driven lead scoring with performance analytics; Technical focus
+ UI/UX,Customizable Dashboards,❌,❌,✅,Sentrics: AI-curated dashboards with real-time monitoring; RatedPower: Tabs for BESS/Grid/Layout
+ UI/UX,Modern frontend interface,✅,✅,✅,Sentrics: AI-driven UX with real-time data visualization; RatedPower: Interactive 3D layers + real-time metrics
+ UI/UX,Drag-and-Drop Interface,❌,❌,❌,Form-based inputs for all tools

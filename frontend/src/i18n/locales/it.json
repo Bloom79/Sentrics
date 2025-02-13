@@ -1,0 +1,85 @@
+{
+  "cer": {
+    "configurations": {
+      "title": "Configurazioni Energetiche",
+      "new": {
+        "title": "Nuova Configurazione Energetica",
+        "description": "Crea una nuova configurazione energetica compilando le informazioni sottostanti.",
+        "tabs": {
+          "description": "Descrizione",
+          "technical": "Info Tecniche",
+          "costs": "Costi"
+        },
+        "form": {
+          "name": {
+            "label": "Nome",
+            "placeholder": "Inserisci il nome della configurazione"
+          },
+          "description": {
+            "label": "Descrizione",
+            "placeholder": "Inserisci la descrizione"
+          },
+          "type": {
+            "label": "Tipo di Configurazione",
+            "placeholder": "Seleziona il tipo",
+            "options": {
+              "simulation": "Simulazione",
+              "active": "Attiva"
+            },
+            "help": "Le configurazioni di simulazione sono limitate a 365 giorni e non hanno costi. Le configurazioni attive includono tutte le funzionalità e i costi."
+          },
+          "legal_type": {
+            "label": "Tipo Legale",
+            "placeholder": "Seleziona il tipo legale",
+            "options": {
+              "cooperative": "Cooperativa",
+              "association": "Associazione"
+            }
+          },
+          "primary_substation_id": {
+            "label": "ID Cabina Primaria",
+            "placeholder": "Inserisci ID cabina"
+          },
+          "region": {
+            "label": "Regione",
+            "placeholder": "Inserisci la regione"
+          }
+        },
+        "costs": {
+          "title": "Informazioni sui Costi",
+          "description": "Le informazioni sui costi saranno disponibili solo per le configurazioni attive. Le configurazioni di simulazione non hanno costi associati."
+        },
+        "buttons": {
+          "cancel": "Annulla",
+          "create": "Crea Configurazione",
+          "creating": "Creazione in corso..."
+        }
+      },
+      "list": {
+        "title": "Configurazioni Energetiche",
+        "new_button": "Nuova Configurazione",
+        "columns": {
+          "name": "Nome",
+          "legal_type": "Tipo Legale",
+          "status": "Stato",
+          "substation_id": "ID Cabina",
+          "capacity": "Capacità",
+          "gse_compliance": "Conformità GSE",
+          "members": "Membri",
+          "created": "Creato"
+        },
+        "status": {
+          "draft": "BOZZA",
+          "pending_gse": "IN ATTESA GSE",
+          "active": "ATTIVA",
+          "archived": "ARCHIVIATA"
+        },
+        "member_types": {
+          "producers": "P",
+          "consumers": "C",
+          "prosumers": "PR"
+        }
+      }
+    }
+  }
+} 

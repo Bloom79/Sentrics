@@ -1,0 +1,10 @@
+Phase,Feature,Priority,Implementation Complexity,Integration Strategy,Notes
+1,Energy Performance Certification,1,High,"Create new module in Sentrics for energy certification","Integrate with existing energy data systems"
+1,EPgl Calculation,1,Medium,"Add calculation engine to Sentrics core","Use MyCER algorithms with Sentrics data"
+1,Regulatory Compliance,1,High,"Develop compliance module","Focus on Italian regulations first"
+2,Thermal Envelope Analysis,2,High,"Integrate with Sentrics geospatial tools","Requires 3D modeling enhancements"
+2,HVAC System Evaluation,2,Medium,"Add HVAC analysis to system design","Integrate with existing simulation tools"
+2,Renewable Energy Integration,2,Medium,"Enhance system design module","Align with Sentrics' AI optimization"
+3,APE Generation,3,Medium,"Develop reporting module","Integrate with Sentrics' document generation"
+3,Technical Documentation,3,Medium,"Enhance reporting capabilities","Use existing Sentrics templates"
+3,Compliance Reports,3,Low,"Add compliance-specific reports","Extend current reporting system" 

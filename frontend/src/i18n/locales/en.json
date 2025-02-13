@@ -1,0 +1,85 @@
+{
+  "cer": {
+    "configurations": {
+      "title": "Energy Configurations",
+      "new": {
+        "title": "New Energy Configuration",
+        "description": "Create a new energy configuration by filling out the information below.",
+        "tabs": {
+          "description": "Description",
+          "technical": "Technical Info",
+          "costs": "Costs"
+        },
+        "form": {
+          "name": {
+            "label": "Name",
+            "placeholder": "Enter configuration name"
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Enter description"
+          },
+          "type": {
+            "label": "Configuration Type",
+            "placeholder": "Select type",
+            "options": {
+              "simulation": "Simulation",
+              "active": "Active"
+            },
+            "help": "Simulation configurations are limited to 365 days and have no costs. Active configurations include all features and costs."
+          },
+          "legal_type": {
+            "label": "Legal Type",
+            "placeholder": "Select legal type",
+            "options": {
+              "cooperative": "Cooperative",
+              "association": "Association"
+            }
+          },
+          "primary_substation_id": {
+            "label": "Primary Substation ID",
+            "placeholder": "Enter substation ID"
+          },
+          "region": {
+            "label": "Region",
+            "placeholder": "Enter region"
+          }
+        },
+        "costs": {
+          "title": "Cost Information",
+          "description": "Cost information will be available for active configurations only. Simulation configurations have no associated costs."
+        },
+        "buttons": {
+          "cancel": "Cancel",
+          "create": "Create Configuration",
+          "creating": "Creating..."
+        }
+      },
+      "list": {
+        "title": "Energy Configurations",
+        "new_button": "New Configuration",
+        "columns": {
+          "name": "Name",
+          "legal_type": "Legal Type",
+          "status": "Status",
+          "substation_id": "Substation ID",
+          "capacity": "Capacity",
+          "gse_compliance": "GSE Compliance",
+          "members": "Members",
+          "created": "Created"
+        },
+        "status": {
+          "draft": "DRAFT",
+          "pending_gse": "PENDING GSE",
+          "active": "ACTIVE",
+          "archived": "ARCHIVED"
+        },
+        "member_types": {
+          "producers": "P",
+          "consumers": "C",
+          "prosumers": "PR"
+        }
+      }
+    }
+  }
+} 

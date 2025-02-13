@@ -1,0 +1,239 @@
+flowchart LR
+    %% --------------------------------------------------
+    %% 1) Power Generation + BESS + Central + Edge Layers
+    %% --------------------------------------------------
+
+    %% Enhanced Solar Power Plant
+    subgraph Solar["Solar Power Plant"]
+        direction BT
+        %% Physical Elements
+        Panels["PV Panels"]:::physical -->|Connected to| Strings["Panel Strings"]:::physical
+        Strings -->|Connected to| Arrays["String Arrays"]:::physical
+
+        %% Sensors
+        Panels --> P_Sensors["Panel Sensors<br><i>Irradiance, Temp, I/V, Soiling</i>"]:::sensors
+        P_Sensors -->|Raw Telemetry| S_Combiner["String Combiner<br><i>Smart Aggregation</i>"]:::aggregation
+        Strings -->|Data from Strings| S_Combiner
+
+        %% Data Flow
+        S_Combiner -->|Optimized DC Data| Array_Inverter["Array Inverter<br><i>MPPT + Predictive Maintenance</i>"]:::aggregation
+        Array_Inverter -->|AC Power + Degradation Alerts| S_SCADA["Solar SCADA<br><i>Integrated PV-LIB Digital Twin</i>"]:::scada
+        Meteo_Station["Advanced Meteo Station<br><i>GHI, POA, Albedo, Precip</i>"]:::physical -->|Multi-Spectral Data| S_SCADA
+        Thermography["String Thermography<br><i>Hotspot Detection</i>"]:::sensors -->|Hotspot Data| S_SCADA
+
+        %% Data Lineage within Solar
+        PV_Module["PV Module"]:::physical --> Soiling_Sensor["Soiling Sensor"]:::sensors
+        Soiling_Sensor -->|"Dust Accumulation"| String_Optimizer["String Optimizer"]:::aggregation
+        String_Optimizer --> Array_Controller["Array Controller"]:::aggregation
+        Array_Controller --> Plant_Controller["Plant Controller"]:::centralStyle
+        Plant_Controller --> Cloud_Storage["Cloud Storage"]:::enterprise
+        PV_Module --> Microinverter["Microinverter"]:::sensors
+        Microinverter -->|"IV Curve Data"| String_Optimizer
+        Microinverter --> SCADA_System["SCADA System"]:::scada
+    end
+
+    %% Enhanced Wind Power Plant
+    subgraph Wind["Wind Power Plant"]
+        direction BT
+        %% Physical Elements
+        Wind_Turbine["Wind Turbine"]:::physical -->|Connected to| Wind_Sensors1["Turbine Sensors<br><i>RPM, Blade Stress, Oil Temp</i>"]:::sensors
+        Wind_Turbine -->|Connected to| Wind_Sensors2["Turbine Sensors<br><i>Vibration, Pitch Errors</i>"]:::sensors
+
+        %% Controllers
+        Wind_Turbine --> Blade_Pitch_Controller["Blade Pitch Controller"]:::controllers
+        Wind_Turbine --> Yaw_Drive["Yaw Drive"]:::controllers
+
+        %% Data Flow
+        Wind_Sensors1 -->|"Condition Monitoring"| Cluster_Controller["Cluster Controller<br><i>Edge Analytics</i>"]:::aggregation
+        Wind_Sensors2 --> Cluster_Controller
+        Blade_Pitch_Controller --> Turbine_PLC["Turbine PLC"]:::centralStyle
+        Yaw_Drive --> Turbine_PLC
+
+        Turbine_PLC --> Cluster_SCADA["Cluster SCADA"]:::scada
+        Cluster_SCADA --> Plant_Controller
+        LiDAR_Profiler["LiDAR Wind Profiler<br><i>3D Wind Mapping</i>"]:::physical -->|Turbulence Data| W_SCADA["Wind SCADA<br><i>Digital Twin Interface</i>"]:::scada
+        Ice_Detection["Ice Detection System<br><i>Rotor De-Icing</i>"]:::sensors -->|Ice Data| W_SCADA
+
+        %% Data Lineage within Wind
+        Wind_Turbine --> Blade_Pitch_Controller
+        Blade_Pitch_Controller --> Turbine_PLC
+        Turbine_PLC --> Cluster_SCADA
+        Cluster_SCADA --> Plant_Controller
+        Wind_Turbine --> Yaw_Drive
+        Yaw_Drive --> Turbine_PLC
+        Yaw_Drive --> Weather_Model["Weather Model"]:::edge
+    end
+
+    %% Enhanced BESS Architecture
+    subgraph BESS["Battery Energy Storage System (BESS)"]
+        direction BT
+        %% Physical Elements
+        Batteries["Batteries"]:::physical -->|Connected to| Storage_Units["Storage Units"]:::physical
+
+        %% Sensors
+        Batteries --> Battery_Sensors1["Battery Sensors<br><i>SOC, SOH, ΔTemp</i>"]:::sensors
+        Battery_Sensors1 -->|Cell Balancing| BMS["Module BMS<br><i>Thermal Runaway Prevention</i>"]:::aggregation
+        Batteries --> Battery_Sensors2["Battery Sensors<br><i>Impedance Spectroscopy</i>"]:::sensors
+        Battery_Sensors2 --> BMS
+        Batteries --> Thermal_Imaging["Thermal Imaging<br><i>Module-Level Monitoring</i>"]:::sensors
+        Thermal_Imaging --> B_SCADA["BESS SCADA<br><i>Cycling Optimization</i>"]:::scada
+        Hybrid_Converter["Hybrid Converter<br><i>VSG Control</i>"]:::physical -->|Grid-Forming Data| B_SCADA
+
+        %% Data Flow
+        BMS -->|State Estimation| Battery_Controller["Battery Controller"]:::centralStyle
+        Battery_Controller --> Plant_Controller["Plant Controller"]:::centralStyle
+        B_SCADA --> Plant_Controller
+        BESS_System["BESS (System)"]:::physical --> Dynamic_SOC_Limits["Dynamic SOC Limits"]:::sensors
+        Dynamic_SOC_Limits --> EMS["Energy Management System"]:::aggregation
+        EMS --> Plant_Controller
+        Degradation_Calculator["Degradation Calculator"]:::sensors --> Financial_System["Financial System"]:::enterprise
+    end
+
+    %% Central Systems Upgrades
+    subgraph Central["Central Operations"]
+        direction LR
+        MF_SCADA["Unified Farm SCADA<br><i>Predictive Analytics Engine</i>"]:::centralStyle
+        INVENTAR["Smart Asset Registry<br><i>Digital Twin Database</i>"]:::centralStyle
+        METEO_HUB["Meteorological Aggregator<br><i>Nowcasting Integration</i>"]:::centralStyle
+    end
+
+    %% Enhanced Edge & Cloud
+    subgraph Edge["Edge & Cloud"]
+        direction TB
+        EDGE_Node["AI Edge Node<br><i>TensorRT Inference</i>"]:::edge
+        IOTHUB["Azure IoT Hub<br><i>Time-Series Contextualization</i>"]:::edge
+        API["Energy Market API<br><i>FERC 881 Compliance</i>"]:::edge
+        Wind_Digital_Twin["Wind Digital Twin<br><i>Physics-Informed ML</i>"]:::edge
+        PV_Digital_Twin["PV Digital Twin<br><i>Degradation Modeling</i>"]:::edge
+    end
+
+    %% --------------------------------------------------
+    %% 2) Expanded Application Layer - Sentrics
+    %% --------------------------------------------------
+    subgraph App["Application Layer - Sentrics"]
+        direction TB
+
+        %% Visualization & Analytics
+        VIZ["Operational Intelligence Suite
+        ---
+        - Real-time Dashboards
+        - Prescriptive Analytics
+        - Digital Twin Visualization
+        - Multi-site Comparison"]:::app
+
+        %% Control Interface
+        CMD["Adaptive Control Interface
+        ---
+        - RL-Based Optimization
+        - Maintenance Automation
+        - Asset Configuration
+        - SCADA Overrides"]:::app
+
+        %% Market Integration
+        MRKT["Dynamic Market Integrator
+        ---
+        - Real-time PPA Signals
+        - Carbon Credit Tracking
+        - FERC 881 Compliance
+        - Terna API Gateway"]:::app
+
+        %% Additional Core Modules
+        AM["Asset Lifecycle Manager
+        ---
+        - Hierarchical Organization
+        - Dynamic Attributes
+        - Maintenance Scheduling
+        - Depreciation Tracking"]:::app
+
+        COMPLIANCE["Regulatory Engine
+        ---
+        - Gaudì Data Validation
+        - TIDE Compliance
+        - Automated Reporting
+        - Audit Trail"]:::app
+
+        SIM["Simulation Hub
+        ---
+        - Energy Forecasting
+        - Failure Scenarios
+        - Digital Twin Sandbox
+        - Performance Benchmarks"]:::app
+
+        %% Internal Data Flows of the Application Layer
+        API -->|"Optimization Signals"| CMD
+        API -->|"Business Data"| VIZ
+        API -->|"Market Streams"| MRKT
+        CMD -->|"Control Actions"| AM
+        AM -->|"Asset Health Data"| COMPLIANCE
+        SIM -->|"Scenario Data"| VIZ
+        MRKT -->|"Price Signals"| SIM
+    end
+
+    %% --------------------------------------------------
+    %% 3) Linking Everything Together
+    %% --------------------------------------------------
+
+    %% SCADA to Central
+    S_SCADA["Solar SCADA"]:::scada -->|"PV Performance Metrics"| MF_SCADA
+    W_SCADA["Wind SCADA"]:::scada -->|"Turbine Health Data"| MF_SCADA
+    B_SCADA["BESS SCADA"]:::scada -->|"BESS Cycling Patterns"| MF_SCADA
+
+    %% Central to Edge
+    MF_SCADA -->|"Normalized Fleet Data"| EDGE_Node
+    EDGE_Node -->|"Anomaly Detection Streams"| IOTHUB
+    IOTHUB -->|"Contextualized Telemetry"| API
+
+    %% Ancillary Streams
+    METEO_HUB -->|"Microclimate Models"| MF_SCADA
+    INVENTAR -->|"Asset Digital Twins"| EDGE_Node
+
+    %% Market Flows
+    MRKT -->|"Real-Time PPA Signals"| CMD 
+
+    %% Predictive Command Flow (Dotted Lines)
+    CMD -.->|"Prescriptive Actions"| API
+    API -.->|"Digital Twin Updates"| IOTHUB
+    IOTHUB -.->|"Edge ML Models"| EDGE_Node
+    EDGE_Node -.->|"Adaptive Setpoints"| MF_SCADA
+
+    %% Additional Data Lineage Paths
+    Financial_System["Financial System"]:::enterprise --> Cloud_Data_Lake["Cloud Data Lake"]:::enterprise
+    Cloud_Storage["Cloud Storage"]:::enterprise --> Financial_System
+
+    %% --------------------------------------------------
+    %% 4) Diagram Styling
+    %% --------------------------------------------------
+
+    %% Subgraph Styling
+    style Solar fill:#d9e8f5,stroke:#335a7a
+    style Wind fill:#d9e8f5,stroke:#335a7a
+    style BESS fill:#d9e8f5,stroke:#335a7a
+    style Central fill:#e9e3d1,stroke:#756646
+    style Edge fill:#e2e9f5,stroke:#1f4e84
+    style App fill:#e5f0e5,stroke:#3a7d5f
+
+    %% Link Styling
+    linkStyle 0,1,2,3,4,5,6,7,8,9,10,11 stroke:#3b546a,stroke-width:1.5px
+    linkStyle 12,13 stroke:#756646,stroke-width:1.5px,stroke-dasharray:5
+
+    %% Class Definitions
+    classDef physical fill:#ffe6cc,stroke:#d48806,stroke-width:2px
+    classDef sensors fill:#c2dfff,stroke:#335a7a
+    classDef aggregation fill:#d9e8f5,stroke:#335a7a
+    classDef scada fill:#e9e3d1,stroke:#756646
+    classDef controllers fill:#ffdfba,stroke:#d48806
+    classDef edge fill:#e2e9f5,stroke:#1f4e84
+    classDef app fill:#e5f0e5,stroke:#3a7d5f
+    classDef centralStyle fill:#e9e3d1,stroke:#756646
+    classDef enterprise fill:#fce4b2,stroke:#d48806
+
+    %% Assign Classes
+    class Panels,Strings,Arrays,PV_Module,Wind_Turbine,Batteries,Storage_Units,BESS_System physical
+    class P_Sensors,Soiling_Sensor,Wind_Sensors1,Wind_Sensors2,Thermography,Battery_Sensors1,Battery_Sensors2,Degradation_Calculator sensors
+    class S_Combiner,String_Optimizer,Array_Inverter,Cluster_Controller,BMS,EMS aggregation
+    class S_SCADA,W_SCADA,B_SCADA,SCADA_System,Cluster_SCADA scada
+    class Blade_Pitch_Controller,Yaw_Drive controllers
+    class Plant_Controller,Turbine_PLC,Battery_Controller centralStyle
+    class Edge_Node,IOTHUB,API,Weather_Model edge
+    class VIZ,CMD,MRKT,AM,COMPLIANCE,SIM app
+    class Financial_System,Cloud_Storage,Cloud_Data_Lake enterprise

@@ -1,0 +1,21 @@
+import { Building2, Zap } from 'lucide-react';
+
+export const navigationItems = [
+  {
+    title: 'Energy Communities',
+    icon: <Building2 className="h-4 w-4" />,
+    href: '/cer/communities',
+    items: [
+      {
+        title: 'Communities',
+        href: '/cer/communities',
+        icon: <Building2 className="h-4 w-4" />,
+      },
+      {
+        title: 'Energy Sharing',
+        href: '/cer/transactions',
+        icon: <Zap className="h-4 w-4" />,
+      },
+    ],
+  },
+]; 

@@ -1,24 +1,80 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Dependencies
+node_modules/
+**/node_modules/
+package-lock.json
+yarn.lock
 
-node_modules
-dist
-dist-ssr
-*.local
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+**/venv/
+env/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and Editor files
+.vscode/
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.DS_Store
+
+# Logs and databases
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.sqlite
+*.db
+
+# Development files
+.cursor/
+.cursorrules
+tools/
+project_doc_sources/
+screenshots_backup*/
+upload/
+supabase/
+iot/
+edgex-compose/
+back2/
+frontend copy/
+renewergy-harmony-24/
+
+# Production
+dist/
+build/
+
+# Local development scripts that shouldn't be in repo
+sync-and-publish.py
+sync-frontend.ps1
+prepare-public-branch.ps1
+rename_screenshots.py
+convert_docs.py
+dump_schema.py
+execute_fix_routes.py
+
+# Keep these files
+!run_local_dev.py
+!backend/docker-compose.yml
+!backend/init.sql
+!backend/alembic/
+!backend/requirements.txt
+!frontend/package.json
+!README.md 

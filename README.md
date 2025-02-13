@@ -1,69 +1,128 @@
-# Welcome to your Lovable project
+# SentricS Energy Management Platform
 
-## Project info
+A comprehensive platform for managing energy communities and monitoring energy production/consumption.
 
-**URL**: https://lovable.dev/projects/231f0653-3262-49eb-aa7d-02e332825ebf
+## Prerequisites
 
-## How can I edit this code?
+- Python 3.10 or higher
+- Node.js 18 or higher
+- PostgreSQL 15 with PostGIS extension
+- Docker and Docker Compose
 
-There are several ways of editing your application.
+## Project Structure
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/231f0653-3262-49eb-aa7d-02e332825ebf) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+.
+├── backend/                 # FastAPI backend
+│   ├── alembic/            # Database migrations
+│   ├── app/                # Application code
+│   ├── docker-compose.yml  # PostgreSQL setup
+│   └── requirements.txt    # Python dependencies
+├── frontend/               # React frontend
+│   ├── src/               # Source code
+│   └── package.json       # Node.js dependencies
+└── run_local_dev.py       # Development setup script
 ```
 
-**Edit a file directly in GitHub**
+## Quick Start
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/sentrics.git
+   cd sentrics
+   ```
 
-**Use GitHub Codespaces**
+2. Start the PostgreSQL database:
+   ```bash
+   cd backend
+   docker-compose up -d
+   ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+3. Create and activate a Python virtual environment:
+   ```bash
+   # Windows
+   python -m venv backend/venv
+   backend/venv/Scripts/activate
 
-## What technologies are used for this project?
+   # Linux/Mac
+   python -m venv backend/venv
+   source backend/venv/bin/activate
+   ```
 
-This project is built with .
+4. Install backend dependencies:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+5. Run database migrations:
+   ```bash
+   alembic upgrade head
+   ```
 
-## How can I deploy this project?
+6. Install frontend dependencies:
+   ```bash
+   cd frontend
+   npm install
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/231f0653-3262-49eb-aa7d-02e332825ebf) and click on Share -> Publish.
+7. Start development servers:
+   ```bash
+   # Option 1: Run both servers with the development script
+   python run_local_dev.py
 
-## I want to use a custom domain - is that possible?
+   # Option 2: Run servers separately
+   # Terminal 1 (Backend)
+   cd backend
+   python run_local.py
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+   # Terminal 2 (Frontend)
+   cd frontend
+   npm run dev
+   ```
+
+The application will be available at:
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+
+## Default Credentials
+
+Administrator account:
+- Email: admin@sentrics.com
+- Password: Admin123!
+
+## Development
+
+### Database Migrations
+
+To create a new migration:
+```bash
+cd backend
+alembic revision --autogenerate -m "description of changes"
+```
+
+To apply migrations:
+```bash
+alembic upgrade head
+```
+
+### Environment Variables
+
+Create a `.env` file in the backend directory:
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5433/sentrics
+SECRET_KEY=your-secret-key
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

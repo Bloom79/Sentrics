@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+.venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local development
+*.db
+*.sqlite
+*.sqlite3
+.coverage
+htmlcov/
+.pytest_cache/
+.coverage.*
+
+# Logs
+*.log
+celerybeat-schedule
+celerybeat.pid
+
+# Keep these files
+!docker-compose.yml
+!init.sql
+!alembic/
+!requirements.txt
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# FastAPI specific
+instance/
+
+# Alembic migrations
+migrations/versions/__pycache__/
+migrations/__pycache__/
+migrations/versions/*.pyc
+
+# Generated files
+*.generated.*
+schema.json 
